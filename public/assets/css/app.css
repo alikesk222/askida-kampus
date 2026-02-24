@@ -1,0 +1,26 @@
+/* AYBU Renk Paleti */
+:root {
+    --aybu-primary:   #00A3B4;
+    --aybu-dark:      #007A8A;
+    --aybu-light:     #E0F7FA;
+    --aybu-accent:    #FF6B35;
+    --aybu-gray:      #F4F6F8;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--aybu-gray);
+}
+
+.btn-primary {
+    background-color: var(--aybu-primary);
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: var(--aybu-dark);
+}
+
+.nav-link-active {
+    background-color: rgba(255,255,255,0.15);
+    border-left: 3px solid #fff;
+}

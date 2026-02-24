@@ -1,0 +1,24 @@
+# Ortam değişkenleri — asla commit edilmez
+.env
+
+# Yüklenen dosyalar
+public/uploads/
+
+# PHP geçici dosyaları
+*.log
+*.cache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Geçici debug scriptleri
+public/debug.php
+public/reset_seed.php
+public/fix_data.php
+public/gen_seed.php

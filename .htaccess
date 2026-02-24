@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase /askida/
+
+# Gerçek dosya veya dizin ise dokunma
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Her şeyi public/index.php'ye yönlendir
+RewriteRule ^(.*)$ public/index.php [QSA,L]
