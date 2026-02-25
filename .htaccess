@@ -1,8 +1,20 @@
-RewriteEngine On
-RewriteBase /askida/
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Dinamik base path - otomatik algılama
+    RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+    RewriteRule ^(.*) - [E=BASE:%1]
+    
+    # Gerçek dosya veya dizin ise dokunma
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Her şeyi public/index.php'ye yönlendir
+    RewriteRule ^(.*)$ public/index.php [QSA,L]
+</IfModule>
 
-# Gerçek dosya veya dizin ise dokunma
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-# Her şeyi public/index.php'ye yönlendir
-RewriteRule ^(.*)$ public/index.php [QSA,L]
+# Güvenlik: .env ve diğer hassas dosyaları engelle
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

@@ -6,6 +6,8 @@ use Core\Database;
 use Models\DonationModel;
 use Models\StockModel;
 use Models\AuditLogModel;
+use Models\UserModel;
+use Models\VenueModel;
 
 class DonationService
 {
@@ -63,7 +65,7 @@ class DonationService
     }
 
     /**
-     * Bağışı onayla: status = 'paid', stok artır
+     * Bağışı onayla: status = 'paid', stok artır, email gönder
      */
     public function approve(int $donationId, int $approvedBy): void
     {
@@ -93,9 +95,47 @@ class DonationService
             );
 
             $db->commit();
+            
+            // Email gönder
+            $this->sendThankYouEmail($donation, $items);
+            
         } catch (\Throwable $e) {
             $db->rollBack();
             throw $e;
+        }
+    }
+
+    /**
+     * Bağışçıya teşekkür emaili gönder
+     */
+    private function sendThankYouEmail(array $donation, array $items): void
+    {
+        try {
+            $userModel = new UserModel();
+            $venueModel = new VenueModel();
+            
+            $donor = $userModel->findById($donation['donor_id']);
+            $venue = $venueModel->findById($donation['venue_id']);
+            
+            if (!$donor || !$venue) {
+                return;
+            }
+
+            $donationDetails = [
+                'venue_name' => $venue['name'],
+                'total_amount' => $donation['total_amount'],
+                'created_at' => $donation['created_at'],
+                'items' => $items
+            ];
+
+            $donorName = $donor['full_name'] ?? $donor['email'];
+            
+            $emailService = new EmailService();
+            $emailService->sendDonationThankYouEmail($donor['email'], $donorName, $donationDetails);
+            
+        } catch (\Throwable $e) {
+            // Email gönderme hatası bağış onayını etkilemesin
+            error_log("Bağış teşekkür emaili gönderilemedi: " . $e->getMessage());
         }
     }
 }

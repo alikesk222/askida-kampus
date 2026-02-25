@@ -56,7 +56,9 @@
                 <?php foreach ($items as $item): ?>
                 <div class="flex justify-between text-sm">
                     <span class="text-gray-700"><?= e($item['product_name']) ?> × <?= e($item['quantity']) ?></span>
+                    <?php if (auth()['role'] !== 'student'): ?>
                     <span class="text-gray-500">₺<?= number_format($item['price_snapshot'] * $item['quantity'], 2, ',', '.') ?></span>
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>

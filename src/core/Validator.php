@@ -66,6 +66,20 @@ class Validator
         return $this;
     }
 
+    public function same(string $field, string $otherField, string $label = ''): static
+    {
+        $label = $label ?: $field;
+        if (isset($this->data[$field]) && isset($this->data[$otherField]) && $this->data[$field] !== $this->data[$otherField]) {
+            $this->errors[$field] = "$label eşleşmiyor.";
+        }
+        return $this;
+    }
+
+    public function passes(): bool
+    {
+        return empty($this->errors);
+    }
+
     public function fails(): bool
     {
         return !empty($this->errors);

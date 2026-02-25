@@ -45,10 +45,16 @@
             <div class="mb-4"></div>
             <?php endif; ?>
 
-            <a href="<?= url('isletmeler/' . $venue['id'] . '/rezerve') ?>"
-               class="block w-full text-center py-2 bg-[#00A3B4] hover:bg-[#007A8A] text-white rounded-lg text-sm font-medium transition">
-                Rezervasyon Yap
-            </a>
+            <div class="flex gap-2">
+                <a href="<?= url('isletmeler/' . $venue['id']) ?>"
+                   class="flex-1 text-center py-2 border border-[#00A3B4] text-[#00A3B4] hover:bg-[#00A3B4] hover:text-white rounded-lg text-sm font-medium transition">
+                    Detay
+                </a>
+                <a href="<?= url('isletmeler/' . $venue['id'] . '/rezerve') ?>"
+                   class="flex-1 text-center py-2 bg-[#00A3B4] hover:bg-[#007A8A] text-white rounded-lg text-sm font-medium transition">
+                    Rezerve Et
+                </a>
+            </div>
         </div>
     </div>
     <?php endforeach; ?>

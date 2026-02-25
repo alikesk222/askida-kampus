@@ -22,22 +22,51 @@
             </div>
         </div>
 
-        <!-- Sağ: Nav -->
+        <!-- Sağ: Desktop Nav -->
         <nav class="hidden md:flex items-center gap-6 text-[13px] text-gray-600 font-medium">
-            <a href="#nasil-calisir" class="hover:text-[#00A3B4] transition">Hakkımızda</a>
-            <a href="#isletmeler"    class="hover:text-[#00A3B4] transition">İşletmeler</a>
             <a href="#nasil-calisir" class="hover:text-[#00A3B4] transition">Nasıl Çalışır?</a>
+            <a href="#isletmeler"    class="hover:text-[#00A3B4] transition">İşletmeler</a>
             <a href="<?= url('giris') ?>"
                class="ml-4 px-4 py-1.5 border border-[#00A3B4] text-[#00A3B4] hover:bg-[#00A3B4] hover:text-white rounded transition text-[13px]">
                 Giriş Yap
             </a>
         </nav>
 
-        <!-- Mobil: sadece giriş butonu -->
-        <a href="<?= url('giris') ?>"
-           class="md:hidden px-4 py-1.5 border border-[#00A3B4] text-[#00A3B4] text-sm rounded transition">
-            Giriş Yap
-        </a>
+        <!-- Mobil: Hamburger Menü Butonu -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Mobil Menü Overlay -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+    
+    <!-- Mobil Menü - Sağdan Slide -->
+    <div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-72 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 md:hidden">
+        <div class="h-full flex flex-col">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Menü</h3>
+                <button id="mobile-menu-close" class="p-2 hover:bg-gray-100 rounded-lg transition">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Nav Links -->
+            <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                <a href="#nasil-calisir" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition">Nasıl Çalışır?</a>
+                <a href="#isletmeler" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition">İşletmeler</a>
+                <div class="pt-4 mt-4 border-t border-gray-200">
+                    <a href="<?= url('giris') ?>" class="block w-full text-center px-4 py-3 bg-[#00A3B4] hover:bg-[#008899] text-white font-medium rounded-lg transition">
+                        Giriş Yap
+                    </a>
+                </div>
+            </nav>
+        </div>
     </div>
 </header>
 
@@ -164,20 +193,21 @@
         <p class="text-gray-500 text-center text-sm mb-8">Bu işletmelerde askıda ürün rezervasyonu yapabilirsiniz</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <?php foreach ($venues as $v): ?>
-            <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition">
+            <a href="<?= url('isletme/' . $v['id']) ?>" class="border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#00A3B4] transition block">
                 <div class="flex items-start gap-3">
                     <div class="w-10 h-10 bg-[#E0F7FA] rounded-lg flex items-center justify-center flex-shrink-0">
                         <span class="text-[#00A3B4] font-bold text-sm"><?= mb_substr(e($v['name']), 0, 1) ?></span>
                     </div>
-                    <div>
+                    <div class="flex-1">
                         <p class="font-semibold text-gray-800 text-sm"><?= e($v['name']) ?></p>
                         <p class="text-xs text-gray-400"><?= e($v['campus_name']) ?></p>
                         <?php if ($v['location']): ?>
                         <p class="text-xs text-gray-400 mt-0.5"><?= e($v['location']) ?></p>
                         <?php endif; ?>
+                        <span class="inline-block mt-2 text-xs text-[#00A3B4] font-medium">Detayları Gör →</span>
                     </div>
                 </div>
-            </div>
+            </a>
             <?php endforeach; ?>
         </div>
     </div>
@@ -192,7 +222,7 @@
             <!-- Sol: Logo + Slogan -->
             <div class="flex flex-col gap-5">
                 <div class="flex items-center gap-3">
-                    <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-12 w-auto brightness-0 invert">
+                    <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-12 w-auto">
                     <span class="text-2xl font-extrabold tracking-wide text-white">AYBÜ</span>
                 </div>
                 <p class="text-[#00C8DC] text-xl font-light italic leading-snug">Geçmişten Geleceğe...</p>
@@ -253,5 +283,38 @@
     </div>
 </footer>
 
+<script>
+// Mobil menü toggle
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+function openMobileMenu() {
+    mobileMenu.classList.remove('translate-x-full');
+    mobileMenuOverlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMobileMenu() {
+    mobileMenu.classList.add('translate-x-full');
+    mobileMenuOverlay.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+// Hamburger butona tıklayınca aç
+mobileMenuBtn?.addEventListener('click', openMobileMenu);
+
+// Kapatma butonuna tıklayınca kapat
+mobileMenuClose?.addEventListener('click', closeMobileMenu);
+
+// Overlay'e tıklayınca kapat
+mobileMenuOverlay?.addEventListener('click', closeMobileMenu);
+
+// Menü linklerine tıklandığında menüyü kapat
+document.querySelectorAll('#mobile-menu a').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+});
+</script>
 </body>
 </html>

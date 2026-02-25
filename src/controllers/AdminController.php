@@ -10,6 +10,7 @@ use Models\VenueModel;
 use Models\ProductModel;
 use Models\DonationModel;
 use Models\ReservationModel;
+use Models\SettingsModel;
 use Services\DonationService;
 
 class AdminController
@@ -286,5 +287,59 @@ class AdminController
         $total            = $reservationModel->countAll();
         $pageTitle        = 'Rezervasyonlar';
         view('admin/reservations/index', compact('pageTitle', 'reservations', 'page', 'total'));
+    }
+
+    // ── Ayarlar ───────────────────────────────────────────────
+
+    public function settingsForm(): void
+    {
+        $settingsModel = new SettingsModel();
+        $mailSettings = $settingsModel->getMailSettings();
+        
+        // Email template ayarlarını getir
+        $emailSettings = [
+            'donation_subject' => $settingsModel->get('email_donation_subject'),
+            'donation_greeting' => $settingsModel->get('email_donation_greeting'),
+            'donation_body' => $settingsModel->get('email_donation_body'),
+            'donation_footer_text' => $settingsModel->get('email_donation_footer_text'),
+            'donation_signature' => $settingsModel->get('email_donation_signature'),
+        ];
+        
+        $pageTitle = 'Sistem Ayarları';
+        $errors = flash('errors') ?? [];
+        view('admin/settings', compact('pageTitle', 'mailSettings', 'emailSettings', 'errors'));
+    }
+
+    public function settingsUpdate(): void
+    {
+        CSRF::verify();
+        Auth::requireRole(['super-admin']);
+
+        $settingsModel = new SettingsModel();
+        $tab = $_POST['tab'] ?? 'smtp';
+
+        if ($tab === 'smtp') {
+            // SMTP ayarlarını kaydet
+            $settingsModel->set('mail_host', $_POST['mail_host'] ?? '', 'SMTP sunucu adresi');
+            $settingsModel->set('mail_port', $_POST['mail_port'] ?? '587', 'SMTP port numarası');
+            $settingsModel->set('mail_username', $_POST['mail_username'] ?? '', 'SMTP kullanıcı adı');
+            $settingsModel->set('mail_password', $_POST['mail_password'] ?? '', 'SMTP şifresi');
+            $settingsModel->set('mail_encryption', $_POST['mail_encryption'] ?? 'tls', 'Şifreleme türü');
+            $settingsModel->set('mail_from_address', $_POST['mail_from_address'] ?? '', 'Gönderen email adresi');
+            $settingsModel->set('mail_from_name', $_POST['mail_from_name'] ?? 'AYBÜ Askıda Kampüs', 'Gönderen adı');
+            
+            flash('success', 'SMTP ayarları başarıyla güncellendi.');
+        } elseif ($tab === 'email') {
+            // Email template ayarlarını kaydet
+            $settingsModel->set('email_donation_subject', $_POST['email_donation_subject'] ?? '', 'Bağış teşekkür emaili konusu');
+            $settingsModel->set('email_donation_greeting', $_POST['email_donation_greeting'] ?? '', 'Email selamlama');
+            $settingsModel->set('email_donation_body', $_POST['email_donation_body'] ?? '', 'Email ana içerik');
+            $settingsModel->set('email_donation_footer_text', $_POST['email_donation_footer_text'] ?? '', 'Email alt bilgi');
+            $settingsModel->set('email_donation_signature', $_POST['email_donation_signature'] ?? '', 'Email imza');
+            
+            flash('success', 'Email içerikleri başarıyla güncellendi.');
+        }
+
+        redirect('/admin/ayarlar');
     }
 }

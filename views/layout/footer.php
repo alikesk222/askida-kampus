@@ -1,6 +1,7 @@
+</div>
 </main>
 
-<footer class="bg-[#0d1b3e] text-white">
+<footer id="main-footer" class="bg-[#0d1b3e] text-white transition-all duration-300 relative z-40">
     <!-- Ana footer -->
     <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -8,8 +9,8 @@
             <!-- Sol: Logo + Slogan -->
             <div class="flex flex-col gap-5">
                 <div class="flex items-center gap-3">
-                    <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-12 w-auto brightness-0 invert">
-                    <span class="text-2xl font-extrabold tracking-wide text-white">AYBÜ</span>
+                    <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-12 w-auto">
+                    <span class="text-2xl font-extrabold tracking-wide text-white">AYBÜ</span>
                 </div>
                 <p class="text-[#00C8DC] text-xl font-light italic leading-snug">Geçmişten Geleceğe...</p>
             </div>
@@ -89,5 +90,17 @@
 </footer>
 
 <script src="<?= url('assets/js/app.js') ?>"></script>
+<script>
+// Auto-hide flash messages
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[data-flash]').forEach(el => {
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.5s';
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 500);
+        }, 5000);
+    });
+});
+</script>
 </body>
 </html>

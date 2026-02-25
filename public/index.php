@@ -14,6 +14,12 @@ $router->get('/giris',  [Controllers\AuthController::class, 'loginForm']);
 $router->post('/giris', [Controllers\AuthController::class, 'login']);
 $router->post('/cikis', [Controllers\AuthController::class, 'logout']);
 
+// ── Şifre Sıfırlama ───────────────────────────────────────
+$router->get('/sifremi-unuttum',     [Controllers\PasswordResetController::class, 'forgotPasswordForm']);
+$router->post('/sifremi-unuttum',    [Controllers\PasswordResetController::class, 'sendResetLink']);
+$router->get('/sifre-sifirla',       [Controllers\PasswordResetController::class, 'resetPasswordForm']);
+$router->post('/sifre-sifirla',      [Controllers\PasswordResetController::class, 'resetPassword']);
+
 // ── Admin ─────────────────────────────────────────────────
 $router->get('/admin',                              [Controllers\AdminController::class, 'dashboard']);
 $router->get('/admin/isletmeler',                   [Controllers\AdminController::class, 'venuesList']);
@@ -30,6 +36,8 @@ $router->get('/admin/kullanicilar',                 [Controllers\AdminController
 $router->post('/admin/kullanicilar/ekle',           [Controllers\AdminController::class, 'userStore']);
 $router->post('/admin/kullanicilar/{id}/toggle',    [Controllers\AdminController::class, 'userToggle']);
 $router->get('/admin/rezervasyonlar',               [Controllers\AdminController::class, 'reservationsList']);
+$router->get('/admin/ayarlar',                      [Controllers\AdminController::class, 'settingsForm']);
+$router->post('/admin/ayarlar',                     [Controllers\AdminController::class, 'settingsUpdate']);
 
 // ── Venue Admin ───────────────────────────────────────────
 $router->get('/isletme',                            [Controllers\VenueAdminController::class, 'dashboard']);
@@ -44,6 +52,7 @@ $router->post('/kasa/teslim',                       [Controllers\CashierControll
 
 // ── Öğrenci ───────────────────────────────────────────────
 $router->get('/isletmeler',                         [Controllers\StudentController::class, 'venues']);
+$router->get('/isletmeler/{id}',                    [Controllers\StudentController::class, 'venueDetail']);
 $router->get('/isletmeler/{id}/rezerve',            [Controllers\StudentController::class, 'reserveForm']);
 $router->post('/isletmeler/{id}/rezerve',           [Controllers\StudentController::class, 'reserveStore']);
 $router->get('/rezervasyonlarim',                   [Controllers\StudentController::class, 'reservations']);
@@ -63,6 +72,9 @@ $router->post('/misafir-bagis/{id}',                [Controllers\GuestDonorContr
 // ── Bağışçı Kaydı ─────────────────────────────────────────
 $router->get('/kayit',                              [Controllers\RegisterController::class, 'form']);
 $router->post('/kayit',                             [Controllers\RegisterController::class, 'store']);
+
+// ── Public Sayfalar ───────────────────────────────────────
+$router->get('/isletme/{id}', [Controllers\PublicController::class, 'venueDetail']);
 
 // ── Root redirect ─────────────────────────────────────────
 $router->get('/', [Controllers\AuthController::class, 'root']);
