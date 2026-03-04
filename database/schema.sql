@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     email               VARCHAR(255) NOT NULL UNIQUE,
     password            VARCHAR(255) NOT NULL,
     role                ENUM('super-admin','university-admin','venue-admin',
-                             'cashier','student','donor') NOT NULL,
+                             'student','donor') NOT NULL,
     university_verified TINYINT(1) NOT NULL DEFAULT 0,
     daily_limit         TINYINT UNSIGNED NOT NULL DEFAULT 3,
     student_number      VARCHAR(50) NULL UNIQUE,

@@ -17,20 +17,21 @@ class CashierController
     public function __construct()
     {
         Auth::requireRole('cashier');
-        $userModel     = new UserModel();
+        $userModel = new UserModel();
         $this->venueId = $userModel->getVenueIdForUser(Auth::id()) ?? 0;
         if (!$this->venueId) {
-            flash('error', 'Atandığınız bir işletme bulunamadı.');
-            redirect('/giris');
+            // Oturum açık kullanıcıyı /giris'e göndermek döngüye neden olur
+            // Bunun yerine hata mesajıyla dashboard'a ilet; dashboard venueId=0 ile güvenli çalışır
+            flash('error', 'Atandığınız bir işletme bulunamadı. Lütfen yöneticinizle iletişime geçin.');
         }
     }
 
     public function dashboard(): void
     {
         $venueModel = new VenueModel();
-        $venue      = $venueModel->findById($this->venueId);
-        $errors     = flash('errors') ?? [];
-        $pageTitle  = 'Kasa';
+        $venue = $this->venueId ? $venueModel->findById($this->venueId) : null;
+        $errors = flash('errors') ?? [];
+        $pageTitle = 'Kasa';
         view('cashier/dashboard', compact('pageTitle', 'venue', 'errors'));
     }
 
@@ -45,23 +46,23 @@ class CashierController
             redirect('/kasa');
         }
 
-        $code             = strtoupper(trim($_POST['claim_code']));
+        $code = strtoupper(trim($_POST['claim_code']));
         $reservationModel = new ReservationModel();
-        $reservation      = $reservationModel->findByClaimCode($code);
+        $reservation = $reservationModel->findByClaimCode($code);
 
         if (!$reservation) {
             flash('error', 'Geçersiz teslim kodu.');
             redirect('/kasa');
         }
 
-        if ((int)$reservation['venue_id'] !== $this->venueId) {
+        if ((int) $reservation['venue_id'] !== $this->venueId) {
             flash('error', 'Bu rezervasyon başka bir işletmeye aittir.');
             redirect('/kasa');
         }
 
         $service = new ReservationService();
         try {
-            $service->claim((int)$reservation['id'], Auth::id());
+            $service->claim((int) $reservation['id'], Auth::id());
             flash('success', 'Rezervasyon başarıyla teslim alındı! (' . e($code) . ')');
         } catch (\Throwable $e) {
             flash('error', $e->getMessage());

@@ -22,20 +22,20 @@ class AdminController
 
     public function dashboard(): void
     {
-        $userModel        = new UserModel();
-        $venueModel       = new VenueModel();
-        $donationModel    = new DonationModel();
+        $userModel = new UserModel();
+        $venueModel = new VenueModel();
+        $donationModel = new DonationModel();
         $reservationModel = new ReservationModel();
 
         $stats = [
-            'total_users'        => $userModel->countAll(),
-            'total_venues'       => $venueModel->countAll(),
-            'waiting_donations'  => $donationModel->countWaiting(),
-            'total_paid'         => $donationModel->sumPaid(),
-            'active_reservations'=> $reservationModel->countActive(),
-            'claimed_today'      => $reservationModel->countClaimed(),
-            'students'           => $userModel->countByRole('student'),
-            'donors'             => $userModel->countByRole('donor'),
+            'total_users' => $userModel->countAll(),
+            'total_venues' => $venueModel->countAll(),
+            'waiting_donations' => $donationModel->countWaiting(),
+            'total_paid' => $donationModel->sumPaid(),
+            'active_reservations' => $reservationModel->countActive(),
+            'claimed_today' => $reservationModel->countClaimed(),
+            'students' => $userModel->countByRole('student'),
+            'donors' => $userModel->countByRole('donor'),
         ];
 
         $pageTitle = 'Admin Dashboard';
@@ -47,15 +47,15 @@ class AdminController
     public function venuesList(): void
     {
         $venueModel = new VenueModel();
-        $venues     = $venueModel->getAll();
-        $pageTitle  = 'İşletmeler';
+        $venues = $venueModel->getAll();
+        $pageTitle = 'İşletmeler';
         view('admin/venues/index', compact('pageTitle', 'venues'));
     }
 
     public function venueCreate(): void
     {
         $pageTitle = 'Yeni İşletme';
-        $errors    = flash('errors') ?? [];
+        $errors = flash('errors') ?? [];
         view('admin/venues/create', compact('pageTitle', 'errors'));
     }
 
@@ -64,8 +64,8 @@ class AdminController
         CSRF::verify();
         $v = new Validator($_POST);
         $v->required('name', 'Ad')
-          ->required('campus_name', 'Kampüs')
-          ->required('slug', 'Slug');
+            ->required('campus_name', 'Kampüs')
+            ->required('slug', 'Slug');
 
         if ($v->fails()) {
             flash('errors', $v->errors());
@@ -74,18 +74,18 @@ class AdminController
         }
 
         $venueModel = new VenueModel();
-        $slug       = trim($_POST['slug']) ?: $venueModel->generateSlug($_POST['name']);
+        $slug = trim($_POST['slug']) ?: $venueModel->generateSlug($_POST['name']);
 
         $venueModel->create([
-            'name'        => trim($_POST['name']),
+            'name' => trim($_POST['name']),
             'campus_name' => trim($_POST['campus_name']),
-            'slug'        => $slug,
+            'slug' => $slug,
             'description' => trim($_POST['description'] ?? ''),
-            'location'    => trim($_POST['location'] ?? ''),
-            'phone'       => trim($_POST['phone'] ?? ''),
-            'opens_at'    => $_POST['opens_at'] ?? null,
-            'closes_at'   => $_POST['closes_at'] ?? null,
-            'is_active'   => isset($_POST['is_active']) ? 1 : 0,
+            'location' => trim($_POST['location'] ?? ''),
+            'phone' => trim($_POST['phone'] ?? ''),
+            'opens_at' => $_POST['opens_at'] ?? null,
+            'closes_at' => $_POST['closes_at'] ?? null,
+            'is_active' => isset($_POST['is_active']) ? 1 : 0,
         ]);
 
         flash('success', 'İşletme başarıyla oluşturuldu.');
@@ -94,13 +94,17 @@ class AdminController
 
     public function venueShow(string $id): void
     {
-        $venueModel   = new VenueModel();
+        $venueModel = new VenueModel();
         $productModel = new ProductModel();
-        $venue        = $venueModel->findById((int)$id);
-        if (!$venue) { http_response_code(404); view('errors/404'); return; }
+        $venue = $venueModel->findById((int) $id);
+        if (!$venue) {
+            http_response_code(404);
+            view('errors/404');
+            return;
+        }
 
-        $products  = $productModel->getByVenue((int)$id, false);
-        $errors    = flash('errors') ?? [];
+        $products = $productModel->getByVenue((int) $id, false);
+        $errors = flash('errors') ?? [];
         $pageTitle = e($venue['name']);
         view('admin/venues/show', compact('pageTitle', 'venue', 'products', 'errors'));
     }
@@ -108,10 +112,14 @@ class AdminController
     public function venueEdit(string $id): void
     {
         $venueModel = new VenueModel();
-        $venue      = $venueModel->findById((int)$id);
-        if (!$venue) { http_response_code(404); view('errors/404'); return; }
+        $venue = $venueModel->findById((int) $id);
+        if (!$venue) {
+            http_response_code(404);
+            view('errors/404');
+            return;
+        }
 
-        $errors    = flash('errors') ?? [];
+        $errors = flash('errors') ?? [];
         $pageTitle = 'İşletme Düzenle: ' . e($venue['name']);
         view('admin/venues/edit', compact('pageTitle', 'venue', 'errors'));
     }
@@ -120,8 +128,12 @@ class AdminController
     {
         CSRF::verify();
         $venueModel = new VenueModel();
-        $venue      = $venueModel->findById((int)$id);
-        if (!$venue) { http_response_code(404); view('errors/404'); return; }
+        $venue = $venueModel->findById((int) $id);
+        if (!$venue) {
+            http_response_code(404);
+            view('errors/404');
+            return;
+        }
 
         $v = new Validator($_POST);
         $v->required('name', 'Ad')->required('campus_name', 'Kampüs')->required('slug', 'Slug');
@@ -131,16 +143,16 @@ class AdminController
             redirect("/admin/isletmeler/$id/duzenle");
         }
 
-        $venueModel->update((int)$id, [
-            'name'        => trim($_POST['name']),
+        $venueModel->update((int) $id, [
+            'name' => trim($_POST['name']),
             'campus_name' => trim($_POST['campus_name']),
-            'slug'        => trim($_POST['slug']),
+            'slug' => trim($_POST['slug']),
             'description' => trim($_POST['description'] ?? ''),
-            'location'    => trim($_POST['location'] ?? ''),
-            'phone'       => trim($_POST['phone'] ?? ''),
-            'opens_at'    => $_POST['opens_at'] ?: null,
-            'closes_at'   => $_POST['closes_at'] ?: null,
-            'is_active'   => isset($_POST['is_active']) ? 1 : 0,
+            'location' => trim($_POST['location'] ?? ''),
+            'phone' => trim($_POST['phone'] ?? ''),
+            'opens_at' => $_POST['opens_at'] ?: null,
+            'closes_at' => $_POST['closes_at'] ?: null,
+            'is_active' => isset($_POST['is_active']) ? 1 : 0,
         ]);
 
         flash('success', 'İşletme güncellendi.');
@@ -152,9 +164,48 @@ class AdminController
         CSRF::verify();
         $v = new Validator($_POST);
         $v->required('name', 'Ürün Adı')
-          ->required('price_snapshot', 'Fiyat')
-          ->numeric('price_snapshot', 'Fiyat')
-          ->minVal('price_snapshot', 0.01, 'Fiyat');
+            ->required('price_snapshot', 'Fiyat')
+            ->numeric('price_snapshot', 'Fiyat')
+            ->minVal('price_snapshot', 0.01, 'Fiyat');
+
+        if ($v->fails()) {
+            flash('errors', $v->errors());
+            flash('error', $v->firstError());
+            redirect("/admin/isletmeler/$id");
+        }
+
+        $imageUrl = null;
+        if (!empty($_FILES['image']['name'])) {
+            $imageUrl = $this->uploadProductImage($_FILES['image']);
+            if (!$imageUrl) {
+                flash('error', 'Görsel yüklenirken hata oluştu. Yalnızca JPG, PNG, GIF, WEBP desteklenir (max 2MB).');
+                redirect("/admin/isletmeler/$id");
+            }
+        }
+
+        $productModel = new ProductModel();
+        $productModel->create([
+            'venue_id' => (int) $id,
+            'name' => trim($_POST['name']),
+            'category' => trim($_POST['category'] ?? ''),
+            'price_snapshot' => (float) $_POST['price_snapshot'],
+            'description' => trim($_POST['description'] ?? ''),
+            'image_url' => $imageUrl,
+            'is_active' => isset($_POST['is_active']) ? 1 : 0,
+        ]);
+
+        flash('success', 'Ürün eklendi.');
+        redirect("/admin/isletmeler/$id");
+    }
+
+    public function productUpdate(string $id, string $pid): void
+    {
+        CSRF::verify();
+        $v = new Validator($_POST);
+        $v->required('name', 'Ürün Adı')
+            ->required('price_snapshot', 'Fiyat')
+            ->numeric('price_snapshot', 'Fiyat')
+            ->minVal('price_snapshot', 0.01, 'Fiyat');
 
         if ($v->fails()) {
             flash('errors', $v->errors());
@@ -163,24 +214,94 @@ class AdminController
         }
 
         $productModel = new ProductModel();
-        $productModel->create([
-            'venue_id'       => (int)$id,
-            'name'           => trim($_POST['name']),
-            'category'       => trim($_POST['category'] ?? ''),
-            'price_snapshot' => (float)$_POST['price_snapshot'],
-            'description'    => trim($_POST['description'] ?? ''),
-            'is_active'      => isset($_POST['is_active']) ? 1 : 0,
+        $product = $productModel->findById((int) $pid);
+        if (!$product || (int) $product['venue_id'] !== (int) $id) {
+            flash('error', 'Ürün bulunamadı.');
+            redirect("/admin/isletmeler/$id");
+        }
+
+        $imageUrl = $product['image_url'];
+
+        // Resmi sil isteği
+        if (!empty($_POST['remove_image'])) {
+            $imageUrl = null;
+            if ($product['image_url']) {
+                $oldPath = ROOT . '/public/' . ltrim($product['image_url'], '/');
+                if (file_exists($oldPath))
+                    @unlink($oldPath);
+            }
+        }
+
+        // Yeni resim yüklendi mi?
+        if (!empty($_FILES['image']['name'])) {
+            $newUrl = $this->uploadProductImage($_FILES['image']);
+            if (!$newUrl) {
+                flash('error', 'Görsel yüklenirken hata oluştu.');
+                redirect("/admin/isletmeler/$id");
+            }
+            // Eski dosyayı sil
+            if ($product['image_url']) {
+                $oldPath = ROOT . '/public/' . ltrim($product['image_url'], '/');
+                if (file_exists($oldPath))
+                    @unlink($oldPath);
+            }
+            $imageUrl = $newUrl;
+        }
+
+        $productModel->update((int) $pid, [
+            'name' => trim($_POST['name']),
+            'category' => trim($_POST['category'] ?? ''),
+            'price_snapshot' => (float) $_POST['price_snapshot'],
+            'description' => trim($_POST['description'] ?? ''),
+            'image_url' => $imageUrl,
+            'is_active' => isset($_POST['is_active']) ? 1 : 0,
         ]);
 
-        flash('success', 'Ürün eklendi.');
+        flash('success', 'Ürün güncellendi.');
         redirect("/admin/isletmeler/$id");
+    }
+
+    private function uploadProductImage(array $file): ?string
+    {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+
+        if ($file['error'] !== UPLOAD_ERR_OK)
+            return null;
+        if ($file['size'] > $maxSize)
+            return null;
+
+        $mimeType = mime_content_type($file['tmp_name']);
+        if (!in_array($mimeType, $allowedTypes))
+            return null;
+
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = 'product_' . uniqid() . '.' . strtolower($ext);
+        $uploadDir = ROOT . '/public/assets/images/products/';
+
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $destination = $uploadDir . $filename;
+        if (!move_uploaded_file($file['tmp_name'], $destination))
+            return null;
+
+        return 'assets/images/products/' . $filename;
     }
 
     public function productDelete(string $id, string $pid): void
     {
         CSRF::verify();
         $productModel = new ProductModel();
-        $productModel->delete((int)$pid);
+        $product = $productModel->findById((int) $pid);
+        // Görseli de sil
+        if ($product && $product['image_url']) {
+            $imgPath = ROOT . '/public/' . ltrim($product['image_url'], '/');
+            if (file_exists($imgPath))
+                @unlink($imgPath);
+        }
+        $productModel->delete((int) $pid);
         flash('success', 'Ürün silindi.');
         redirect("/admin/isletmeler/$id");
     }
@@ -190,11 +311,11 @@ class AdminController
     public function donationsList(): void
     {
         $donationModel = new DonationModel();
-        $page          = max(1, (int)($_GET['sayfa'] ?? 1));
-        $status        = $_GET['durum'] ?? null;
-        $donations     = $donationModel->getAll($page, 20, $status ?: null);
-        $total         = $donationModel->countAll($status ?: null);
-        $pageTitle     = 'Bağışlar';
+        $page = max(1, (int) ($_GET['sayfa'] ?? 1));
+        $status = $_GET['durum'] ?? null;
+        $donations = $donationModel->getAll($page, 20, $status ?: null);
+        $total = $donationModel->countAll($status ?: null);
+        $pageTitle = 'Bağışlar';
         view('admin/donations/index', compact('pageTitle', 'donations', 'page', 'total', 'status'));
     }
 
@@ -203,7 +324,7 @@ class AdminController
         CSRF::verify();
         $service = new DonationService();
         try {
-            $service->approve((int)$id, Auth::id());
+            $service->approve((int) $id, Auth::id());
             flash('success', 'Bağış onaylandı ve stok güncellendi.');
         } catch (\Throwable $e) {
             flash('error', $e->getMessage());
@@ -215,15 +336,22 @@ class AdminController
 
     public function usersList(): void
     {
-        $userModel  = new UserModel();
+        $userModel = new UserModel();
         $venueModel = new VenueModel();
-        $page       = max(1, (int)($_GET['sayfa'] ?? 1));
-        $users      = $userModel->getAll($page, 20);
-        $total      = $userModel->countAll();
-        $venues     = $venueModel->getAll();
-        $errors     = flash('errors') ?? [];
-        $pageTitle  = 'Kullanıcılar';
-        view('admin/users/index', compact('pageTitle', 'users', 'page', 'total', 'venues', 'errors'));
+        $page = max(1, (int) ($_GET['sayfa'] ?? 1));
+        $users = $userModel->getAll($page, 20);
+        $total = $userModel->countAll();
+        $venues = $venueModel->getAll();
+        $errors = flash('errors') ?? [];
+        // Her venue-admin için atanmış işletmeyi al
+        $venueAssignments = [];
+        foreach ($users as $u) {
+            if ($u['role'] === 'venue-admin') {
+                $venueAssignments[$u['id']] = $userModel->getVenueIdForUser((int) $u['id']);
+            }
+        }
+        $pageTitle = 'Kullanıcılar';
+        view('admin/users/index', compact('pageTitle', 'users', 'page', 'total', 'venues', 'errors', 'venueAssignments'));
     }
 
     public function userStore(): void
@@ -231,11 +359,11 @@ class AdminController
         CSRF::verify();
         $v = new Validator($_POST);
         $v->required('name', 'Ad Soyad')
-          ->required('email', 'E-posta')
-          ->email('email', 'E-posta')
-          ->required('password', 'Şifre')
-          ->min('password', 6, 'Şifre')
-          ->required('role', 'Rol');
+            ->required('email', 'E-posta')
+            ->email('email', 'E-posta')
+            ->required('password', 'Şifre')
+            ->min('password', 6, 'Şifre')
+            ->required('role', 'Rol');
 
         if ($v->fails()) {
             flash('errors', $v->errors());
@@ -250,18 +378,18 @@ class AdminController
         }
 
         $userId = $userModel->create([
-            'name'           => trim($_POST['name']),
-            'email'          => trim($_POST['email']),
-            'password'       => $_POST['password'],
-            'role'           => $_POST['role'],
+            'name' => trim($_POST['name']),
+            'email' => trim($_POST['email']),
+            'password' => $_POST['password'],
+            'role' => $_POST['role'],
             'student_number' => trim($_POST['student_number'] ?? '') ?: null,
-            'phone'          => trim($_POST['phone'] ?? '') ?: null,
-            'daily_limit'    => (int)($_POST['daily_limit'] ?? 3),
+            'phone' => trim($_POST['phone'] ?? '') ?: null,
+            'daily_limit' => (int) ($_POST['daily_limit'] ?? 3),
         ]);
 
-        // venue-admin veya cashier ise işletmeye ata
-        if (!empty($_POST['venue_id']) && in_array($_POST['role'], ['venue-admin', 'cashier'])) {
-            $userModel->assignVenue($userId, (int)$_POST['venue_id']);
+        // venue-admin ise işletmeye ata
+        if (!empty($_POST['venue_id']) && $_POST['role'] === 'venue-admin') {
+            $userModel->assignVenue($userId, (int) $_POST['venue_id']);
         }
 
         flash('success', 'Kullanıcı oluşturuldu.');
@@ -272,8 +400,29 @@ class AdminController
     {
         CSRF::verify();
         $userModel = new UserModel();
-        $userModel->toggleActive((int)$id);
+        $userModel->toggleActive((int) $id);
         flash('success', 'Kullanıcı durumu güncellendi.');
+        redirect('/admin/kullanicilar');
+    }
+
+    public function userAssignVenue(string $id): void
+    {
+        CSRF::verify();
+        $userModel = new UserModel();
+        $user = $userModel->findById((int) $id);
+        if (!$user || $user['role'] !== 'venue-admin') {
+            flash('error', 'Yalnızca işletme yöneticileri işletmeye atanabilir.');
+            redirect('/admin/kullanicilar');
+        }
+        $venueId = (int) ($_POST['venue_id'] ?? 0);
+        if (!$venueId) {
+            flash('error', 'Geçerli bir işletme seçin.');
+            redirect('/admin/kullanicilar');
+        }
+        // Önce mevcut atamayı kaldır, sonra yenisini ekle
+        $userModel->removeVenueAssignment((int) $id);
+        $userModel->assignVenue((int) $id, $venueId);
+        flash('success', 'İşletme ataması güncellendi.');
         redirect('/admin/kullanicilar');
     }
 
@@ -282,10 +431,10 @@ class AdminController
     public function reservationsList(): void
     {
         $reservationModel = new ReservationModel();
-        $page             = max(1, (int)($_GET['sayfa'] ?? 1));
-        $reservations     = $reservationModel->getAll($page, 20);
-        $total            = $reservationModel->countAll();
-        $pageTitle        = 'Rezervasyonlar';
+        $page = max(1, (int) ($_GET['sayfa'] ?? 1));
+        $reservations = $reservationModel->getAllWithItems($page, 20);
+        $total = $reservationModel->countAll();
+        $pageTitle = 'Rezervasyonlar';
         view('admin/reservations/index', compact('pageTitle', 'reservations', 'page', 'total'));
     }
 
@@ -295,7 +444,7 @@ class AdminController
     {
         $settingsModel = new SettingsModel();
         $mailSettings = $settingsModel->getMailSettings();
-        
+
         // Email template ayarlarını getir
         $emailSettings = [
             'donation_subject' => $settingsModel->get('email_donation_subject'),
@@ -304,7 +453,7 @@ class AdminController
             'donation_footer_text' => $settingsModel->get('email_donation_footer_text'),
             'donation_signature' => $settingsModel->get('email_donation_signature'),
         ];
-        
+
         $pageTitle = 'Sistem Ayarları';
         $errors = flash('errors') ?? [];
         view('admin/settings', compact('pageTitle', 'mailSettings', 'emailSettings', 'errors'));
@@ -327,7 +476,7 @@ class AdminController
             $settingsModel->set('mail_encryption', $_POST['mail_encryption'] ?? 'tls', 'Şifreleme türü');
             $settingsModel->set('mail_from_address', $_POST['mail_from_address'] ?? '', 'Gönderen email adresi');
             $settingsModel->set('mail_from_name', $_POST['mail_from_name'] ?? 'AYBÜ Askıda Kampüs', 'Gönderen adı');
-            
+
             flash('success', 'SMTP ayarları başarıyla güncellendi.');
         } elseif ($tab === 'email') {
             // Email template ayarlarını kaydet
@@ -336,7 +485,7 @@ class AdminController
             $settingsModel->set('email_donation_body', $_POST['email_donation_body'] ?? '', 'Email ana içerik');
             $settingsModel->set('email_donation_footer_text', $_POST['email_donation_footer_text'] ?? '', 'Email alt bilgi');
             $settingsModel->set('email_donation_signature', $_POST['email_donation_signature'] ?? '', 'Email imza');
-            
+
             flash('success', 'Email içerikleri başarıyla güncellendi.');
         }
 

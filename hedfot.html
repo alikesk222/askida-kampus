@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ankara Yıldırım Beyazıt Üniversitesi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    /* RESET */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      color: #1f2933;
+      background-color: #f5f7fa;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    ul {
+      list-style: none;
+    }
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* GENEL YAPI */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* HEADER */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #ffffff;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+    }
+
+    .site-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 12px 0;
+    }
+
+    /* Logo alanı */
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .header-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-logo-wrap img {
+      height: 48px;
+      width: auto;
+    }
+
+    .university-name-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .university-master-name {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 1.1;
+      color: #0b2a66;
+      text-transform: uppercase;
+    }
+
+    .uni-line1,
+    .uni-line2 {
+      display: block;
+    }
+
+    .university-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #334e68;
+      margin-top: 2px;
+    }
+
+    /* Navigasyon */
+    .main-nav {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .mainmenu {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #0b2a66;
+    }
+
+    .mainmenu > li > a {
+      position: relative;
+      padding: 4px 0;
+      transition: color 0.2s ease, transform 0.15s ease;
+    }
+
+    .mainmenu > li > a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      width: 0;
+      height: 2px;
+      background: #0074d9;
+      border-radius: 999px;
+      transition: width 0.2s ease;
+    }
+
+    .mainmenu > li > a:hover {
+      color: #0074d9;
+      transform: translateY(-1px);
+    }
+
+    .mainmenu > li > a:hover::after {
+      width: 100%;
+    }
+
+    .has-dropdown {
+      position: relative;
+    }
+
+    .has-dropdown > a::after {
+      content: "▾";
+      font-size: 10px;
+      margin-left: 4px;
+    }
+
+    .submenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 200px;
+      margin-top: 8px;
+      padding: 8px 0;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+      transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+      z-index: 40;
+    }
+
+    .submenu li a {
+      display: block;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1f2933;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .submenu li a:hover {
+      background: #f0f4ff;
+      color: #0b2a66;
+    }
+
+    .has-dropdown:hover > .submenu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* Sağ alan (dil switch + hamburger) */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .language-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 999px;
+      background: #0b2a66;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .language-item {
+      padding: 2px 6px;
+      border-radius: 999px;
+      opacity: 0.6;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .language-item.active {
+      background: #ffffff;
+      color: #0b2a66;
+      opacity: 1;
+    }
+
+    .language-item:hover {
+      opacity: 1;
+    }
+
+    /* Hamburger (mobil) */
+    .mobile-menu-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid #d0d7e2;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    .mobile-menu-toggle span {
+      height: 2px;
+      width: 18px;
+      border-radius: 999px;
+      background: #0b2a66;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    /* Mobil menü paneli */
+    .mobile-menu {
+      display: none;
+      background: #ffffff;
+      border-top: 1px solid #e5e9f2;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .mobile-menu-inner {
+      padding: 12px 16px 16px;
+    }
+
+    .mobile-menu-list > li + li {
+      margin-top: 4px;
+    }
+
+    .mobile-menu-list a {
+      display: block;
+      padding: 8px 4px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #0b2a66;
+    }
+
+    .mobile-submenu {
+      margin-top: 4px;
+      padding-left: 12px;
+      border-left: 2px solid #e5e9f2;
+    }
+
+    .mobile-submenu a {
+      font-size: 13px;
+      padding: 4px 0;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      margin-top: 64px;
+      background: #0b2a66;
+      color: #e5edf7;
+    }
+
+    .footer-inner {
+      padding: 32px 0 24px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 2fr 2fr;
+      gap: 32px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .footer-logo img {
+      height: 56px;
+      width: auto;
+    }
+
+    .footer-tagline {
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0.9;
+      margin-top: 8px;
+    }
+
+    .footer-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px 16px;
+      font-size: 13px;
+    }
+
+    .footer-links a {
+      color: #e5edf7;
+      opacity: 0.9;
+      transition: opacity 0.15s ease, transform 0.1s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
+    .footer-contact p {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .footer-contact strong {
+      font-weight: 600;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(229, 237, 247, 0.22);
+      padding: 10px 0 14px;
+      font-size: 12px;
+      color: #c8d4eb;
+    }
+
+    .footer-bottom-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 12px;
+      opacity: 0.9;
+      border-radius: 999px;
+      padding: 2px 8px;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .footer-bottom-links a:hover {
+      background: rgba(15, 23, 42, 0.35);
+      opacity: 1;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 992px) {
+      .site-header-inner {
+        gap: 16px;
+      }
+      .main-nav {
+        display: none;
+      }
+      .mobile-menu-toggle {
+        display: inline-flex;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .footer-logo img {
+        height: 48px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .site-header-inner {
+        flex-direction: row;
+        align-items: center;
+      }
+      .university-master-name {
+        font-size: 14px;
+      }
+      .university-name {
+        font-size: 12px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-inner {
+        padding-top: 24px;
+      }
+    }
+
+    /* Mobil menü açıkken kullanılacak sınıf */
+    .mobile-menu-open .mobile-menu {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <div class="site-header-inner">
+        <!-- Logo + isim -->
+        <a href="https://aybu.edu.tr/iktisadi.isletme/tr" class="header-brand" aria-label="Ankara Yıldırım Beyazıt Üniversitesi Ana Sayfa">
+          <div class="header-logo-wrap">
+            <!-- Istersen sadece tek logo kullan -->
+            <img src="logo-light.png" alt="Ankara Yıldırım Beyazıt Üniversitesi Logosu" />
+          </div>
+          <div class="university-name-wrapper">
+            <span class="university-master-name">
+              <span class="uni-line1">Ankara Yıldırım</span>
+              <span class="uni-line2">Beyazıt Üniversitesi</span>
+            </span>
+            <span class="university-name">İktisadi İşletmeler Müdürlüğü</span>
+          </div>
+        </a>
+
+        <!-- Ana menü (desktop) -->
+        <nav class="main-nav" aria-label="Ana menü">
+          <ul class="mainmenu">
+            <li class="has-dropdown">
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8084">HAKKIMIZDA</a>
+              <ul class="submenu">
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8085">Genel Tanıtım</a></li>
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8086">Misyon ve Vizyon</a></li>
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8087">Organizasyon Şeması</a></li>
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8256" target="_blank" rel="noopener">ATS Rehberi</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9544">YÖNETİM</a>
+            </li>
+            <li class="has-dropdown">
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr#">Mevzuat</a>
+              <ul class="submenu">
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8092">Kanunlar</a></li>
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8093">Yönetmelikler</a></li>
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9547">Kararlar</a></li>
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9548">Yönergeler</a></li>
+              </ul>
+            </li>
+            <li class="has-dropdown">
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr#">Personel</a>
+              <ul class="submenu">
+                <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9533">İdari Personel</a></li>
+              </ul>
+            </li>
+            <li class="has-dropdown">
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9531">KYS</a>
+              <ul class="submenu">
+                <li><a href="http://ikos.aybu.edu.tr/app/#/kaliteDocs/p/b2f466bd-4ce4-4516-99ea-2ccf0a61508e">Kalite Yönetim Sistemi</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8094">İletişim</a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Sağ blok -->
+        <div class="header-right">
+          <div class="language-switcher">
+            <a href="https://aybu.edu.tr/iktisadi.isletme/tr" class="language-item active">TR</a>
+            <a href="https://aybu.edu.tr/iktisadi.isletme/en" class="language-item">EN</a>
+          </div>
+
+          <button
+            type="button"
+            class="mobile-menu-toggle"
+            aria-label="Menüyü aç/kapat"
+            onclick="document.body.classList.toggle('mobile-menu-open')"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobil menü -->
+    <div class="mobile-menu" aria-label="Mobil menü">
+      <div class="container mobile-menu-inner">
+        <ul class="mobile-menu-list">
+          <li>
+            <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8084">HAKKIMIZDA</a>
+            <div class="mobile-submenu">
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8085">Genel Tanıtım</a>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8086">Misyon ve Vizyon</a>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8087">Organizasyon Şeması</a>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8256" target="_blank" rel="noopener">ATS Rehberi</a>
+            </div>
+          </li>
+          <li>
+            <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9544">YÖNETİM</a>
+          </li>
+          <li>
+            <a href="https://aybu.edu.tr/iktisadi.isletme/tr#">Mevzuat</a>
+            <div class="mobile-submenu">
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8092">Kanunlar</a>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8093">Yönetmelikler</a>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9547">Kararlar</a>
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9548">Yönergeler</a>
+            </div>
+          </li>
+          <li>
+            <a href="https://aybu.edu.tr/iktisadi.isletme/tr#">Personel</a>
+            <div class="mobile-submenu">
+              <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9533">İdari Personel</a>
+            </div>
+          </li>
+          <li>
+            <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9531">KYS</a>
+            <div class="mobile-submenu">
+              <a href="http://ikos.aybu.edu.tr/app/#/kaliteDocs/p/b2f466bd-4ce4-4516-99ea-2ccf0a61508e">Kalite Yönetim Sistemi</a>
+            </div>
+          </li>
+          <li>
+            <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8094">İletişim</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- İÇERİK ÖRNEK -->
+  <main class="container" style="padding: 40px 0 60px;">
+    <h1 style="font-size: 28px; margin-bottom: 16px; color:#0b2a66;">Sayfa Başlığı</h1>
+    <p style="max-width: 640px; font-size: 15px;">
+      Buraya kendi sayfa içeriğinizi koyabilirsiniz. Header ve footer tamamen bağımsız, başka projelere kopyalanabilir yapıdadır.
+    </p>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-grid">
+        <!-- Sütun 1 -->
+        <div>
+          <div class="footer-logo">
+            <img src="footer.png" alt="AYBÜ Logosu" />
+          </div>
+          <p class="footer-tagline">Geçmişten Geleceğe...</p>
+        </div>
+
+        <!-- Sütun 2: Hızlı Erişim -->
+        <div>
+          <h4 class="footer-title">Hızlı Erişim</h4>
+          <div class="footer-links">
+            <a href="https://aybu.edu.tr">AYBÜ Ana Sayfa</a>
+            <a href="https://aybu.edu.tr/duyurular">Duyurular</a>
+            <a href="https://aybu.edu.tr/etkinlikler">Etkinlikler</a>
+            <a href="https://aybu.edu.tr/ogrenci">Öğrenci</a>
+            <a href="https://aybu.edu.tr/akademik">Akademik</a>
+            <a href="https://aybu.edu.tr/idari">İdari Birimler</a>
+          </div>
+        </div>
+
+        <!-- Sütun 3: İletişim -->
+        <div class="footer-contact">
+          <h4 class="footer-title">İletişim</h4>
+          <p><strong>Adres:</strong> Ankara Yıldırım Beyazıt Üniversitesi Esenboğa Külliyesi, Esenboğa / ANKARA</p>
+          <p><strong>E-posta:</strong> <a href="mailto:basin@aybu.edu.tr">basin@aybu.edu.tr</a></p>
+          <p><strong>Telefon:</strong> <a href="tel:+903129061000">+90 312 906 10 00</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <div>
+          © 2025 Ankara Yıldırım Beyazıt Üniversitesi. Tüm hakları saklıdır.
+        </div>
+        <div class="footer-bottom-links">
+          <a href="https://aybu.edu.tr/engelsiz" target="_blank">Erişilebilirlik</a>
+          <a href="#" target="_blank">Gizlilik Politikası</a>
+          <a href="#" target="_blank">KVKK</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

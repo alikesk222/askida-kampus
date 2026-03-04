@@ -23,10 +23,10 @@ class AuthController
         $venues = $venueModel->getAll(true);
 
         $stats = [
-            'venues'       => (int)$db->query('SELECT COUNT(*) FROM venues WHERE is_active = 1')->fetchColumn(),
-            'donations'    => (int)$db->query('SELECT COUNT(*) FROM donations WHERE status = "paid"')->fetchColumn(),
-            'reservations' => (int)$db->query('SELECT COUNT(*) FROM reservations WHERE status = "claimed"')->fetchColumn(),
-            'stock'        => (int)$db->query('SELECT COALESCE(SUM(available_quantity - reserved_quantity), 0) FROM suspended_stocks')->fetchColumn(),
+            'venues' => (int) $db->query('SELECT COUNT(*) FROM venues WHERE is_active = 1')->fetchColumn(),
+            'donations' => (int) $db->query('SELECT COUNT(*) FROM donations WHERE status = "paid"')->fetchColumn(),
+            'reservations' => (int) $db->query('SELECT COUNT(*) FROM reservations WHERE status = "claimed"')->fetchColumn(),
+            'stock' => (int) $db->query('SELECT COALESCE(SUM(available_quantity - reserved_quantity), 0) FROM suspended_stocks')->fetchColumn(),
         ];
 
         view('home', compact('venues', 'stats'));
@@ -38,7 +38,7 @@ class AuthController
             $this->redirectByRole(Auth::role());
         }
         $pageTitle = 'Giriş Yap';
-        $errors    = flash('errors') ?? [];
+        $errors = flash('errors') ?? [];
         view('auth/login', compact('pageTitle', 'errors'));
     }
 
@@ -48,8 +48,8 @@ class AuthController
 
         $v = new Validator($_POST);
         $v->required('email', 'E-posta')
-          ->email('email', 'E-posta')
-          ->required('password', 'Şifre');
+            ->email('email', 'E-posta')
+            ->required('password', 'Şifre');
 
         if ($v->fails()) {
             flash('errors', $v->errors());
@@ -58,7 +58,7 @@ class AuthController
         }
 
         $userModel = new UserModel();
-        $user      = $userModel->findByEmail(trim($_POST['email']));
+        $user = $userModel->findByEmail(trim($_POST['email']));
 
         if (!$user || !password_verify($_POST['password'], $user['password'])) {
             flash('error', 'E-posta veya şifre hatalı.');
@@ -84,13 +84,20 @@ class AuthController
     private function redirectByRole(string $role): never
     {
         $map = [
-            'super-admin'       => '/admin',
-            'university-admin'  => '/admin',
-            'venue-admin'       => '/isletme',
-            'cashier'           => '/kasa',
-            'student'           => '/isletmeler',
-            'donor'             => '/bagis',
+            'super-admin' => '/admin',
+            'university-admin' => '/admin',
+            'venue-admin' => '/isletme',
+            'student' => '/isletmeler',
+            'donor' => '/bagis',
         ];
-        redirect($map[$role] ?? '/giris');
+        if (isset($map[$role])) {
+            redirect($map[$role]);
+        }
+        // Tanınmayan rol: oturum kapat ve hata göster
+        Auth::logout();
+        http_response_code(403);
+        $pageTitle = 'Erişim Reddedildi';
+        view('errors/403');
+        exit;
     }
 }

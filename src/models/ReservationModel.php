@@ -30,7 +30,14 @@ class ReservationModel
 
     public function countAll(): int
     {
-        return (int)$this->db->query('SELECT COUNT(*) FROM reservations')->fetchColumn();
+        return (int) $this->db->query('SELECT COUNT(*) FROM reservations')->fetchColumn();
+    }
+
+    public function countByVenue(int $venueId): int
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM reservations WHERE venue_id = ?');
+        $stmt->execute([$venueId]);
+        return (int) $stmt->fetchColumn();
     }
 
     public function getByVenue(int $venueId, int $page = 1, int $perPage = 20): array
@@ -102,13 +109,13 @@ class ReservationModel
         );
         $stmt->execute([
             'student_id' => $data['student_id'],
-            'venue_id'   => $data['venue_id'],
-            'status'     => 'reserved',
-            'qr_token'   => $data['qr_token'],
+            'venue_id' => $data['venue_id'],
+            'status' => 'reserved',
+            'qr_token' => $data['qr_token'],
             'claim_code' => $data['claim_code'],
             'expires_at' => $data['expires_at'],
         ]);
-        return (int)$this->db->lastInsertId();
+        return (int) $this->db->lastInsertId();
     }
 
     public function createItem(array $data): void
@@ -119,8 +126,8 @@ class ReservationModel
         );
         $stmt->execute([
             'reservation_id' => $data['reservation_id'],
-            'product_id'     => $data['product_id'],
-            'quantity'       => $data['quantity'],
+            'product_id' => $data['product_id'],
+            'quantity' => $data['quantity'],
             'price_snapshot' => $data['price_snapshot'],
         ]);
     }
@@ -156,7 +163,7 @@ class ReservationModel
              AND DATE(created_at) = CURDATE()"
         );
         $stmt->execute([$studentId]);
-        return (int)$stmt->fetchColumn();
+        return (int) $stmt->fetchColumn();
     }
 
     public function getExpired(): array
@@ -173,11 +180,67 @@ class ReservationModel
 
     public function countActive(): int
     {
-        return (int)$this->db->query("SELECT COUNT(*) FROM reservations WHERE status='reserved'")->fetchColumn();
+        return (int) $this->db->query("SELECT COUNT(*) FROM reservations WHERE status='reserved'")->fetchColumn();
     }
 
     public function countClaimed(): int
     {
-        return (int)$this->db->query("SELECT COUNT(*) FROM reservations WHERE status='claimed'")->fetchColumn();
+        return (int) $this->db->query("SELECT COUNT(*) FROM reservations WHERE status='claimed'")->fetchColumn();
+    }
+
+    /**
+     * Rezervasyon kalemlerini özet string olarak getir
+     * Örnek: "Çay x2, Simit x1"
+     */
+    public function getItemsSummary(int $reservationId): string
+    {
+        $items = $this->getItems($reservationId);
+        $parts = [];
+        foreach ($items as $item) {
+            $parts[] = e($item['product_name']) . ' ×' . $item['quantity'];
+        }
+        return implode(', ', $parts);
+    }
+
+    /**
+     * Tüm rezervasyonları ürünleriyle getir (admin için)
+     */
+    public function getAllWithItems(int $page = 1, int $perPage = 20): array
+    {
+        $offset = ($page - 1) * $perPage;
+        $stmt = $this->db->prepare(
+            'SELECT r.*, u.name AS student_name, u.email AS student_email, v.name AS venue_name,
+                    GROUP_CONCAT(CONCAT(p.name, " ×", ri.quantity) ORDER BY p.name SEPARATOR ", ") AS items_summary
+             FROM reservations r
+             INNER JOIN users u  ON u.id = r.student_id
+             INNER JOIN venues v ON v.id = r.venue_id
+             LEFT JOIN reservation_items ri ON ri.reservation_id = r.id
+             LEFT JOIN products p ON p.id = ri.product_id
+             GROUP BY r.id
+             ORDER BY r.created_at DESC LIMIT ? OFFSET ?'
+        );
+        $stmt->execute([$perPage, $offset]);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * İşletmeye ait rezervasyonları ürünleriyle getir (venue-admin için)
+     */
+    public function getByVenueWithItems(int $venueId, int $page = 1, int $perPage = 20): array
+    {
+        $offset = ($page - 1) * $perPage;
+        $stmt = $this->db->prepare(
+            'SELECT r.*, u.name AS student_name, u.email AS student_email,
+                    GROUP_CONCAT(CONCAT(p.name, " ×", ri.quantity) ORDER BY p.name SEPARATOR ", ") AS items_summary
+             FROM reservations r
+             INNER JOIN users u ON u.id = r.student_id
+             LEFT JOIN reservation_items ri ON ri.reservation_id = r.id
+             LEFT JOIN products p ON p.id = ri.product_id
+             WHERE r.venue_id = ?
+             GROUP BY r.id
+             ORDER BY r.created_at DESC LIMIT ? OFFSET ?'
+        );
+        $stmt->execute([$venueId, $perPage, $offset]);
+        return $stmt->fetchAll();
     }
 }

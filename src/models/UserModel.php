@@ -41,7 +41,7 @@ class UserModel
 
     public function countAll(): int
     {
-        return (int)$this->db->query('SELECT COUNT(*) FROM users')->fetchColumn();
+        return (int) $this->db->query('SELECT COUNT(*) FROM users')->fetchColumn();
     }
 
     public function create(array $data): int
@@ -51,16 +51,16 @@ class UserModel
              VALUES (:name, :email, :password, :role, :university_verified, :daily_limit, :student_number, :phone)'
         );
         $stmt->execute([
-            'name'                => $data['name'],
-            'email'               => $data['email'],
-            'password'            => password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]),
-            'role'                => $data['role'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]),
+            'role' => $data['role'],
             'university_verified' => $data['university_verified'] ?? 0,
-            'daily_limit'         => $data['daily_limit'] ?? 3,
-            'student_number'      => $data['student_number'] ?? null,
-            'phone'               => $data['phone'] ?? null,
+            'daily_limit' => $data['daily_limit'] ?? 3,
+            'student_number' => $data['student_number'] ?? null,
+            'phone' => $data['phone'] ?? null,
         ]);
-        return (int)$this->db->lastInsertId();
+        return (int) $this->db->lastInsertId();
     }
 
     public function toggleActive(int $id): void
@@ -72,7 +72,7 @@ class UserModel
     {
         $stmt = $this->db->prepare('SELECT COUNT(*) FROM users WHERE role = ?');
         $stmt->execute([$role]);
-        return (int)$stmt->fetchColumn();
+        return (int) $stmt->fetchColumn();
     }
 
     public function getVenueUsers(int $venueId): array
@@ -94,11 +94,17 @@ class UserModel
         $stmt->execute([$userId, $venueId]);
     }
 
+    public function removeVenueAssignment(int $userId): void
+    {
+        $stmt = $this->db->prepare('DELETE FROM venue_user WHERE user_id = ?');
+        $stmt->execute([$userId]);
+    }
+
     public function getVenueIdForUser(int $userId): ?int
     {
         $stmt = $this->db->prepare('SELECT venue_id FROM venue_user WHERE user_id = ? LIMIT 1');
         $stmt->execute([$userId]);
         $row = $stmt->fetch();
-        return $row ? (int)$row['venue_id'] : null;
+        return $row ? (int) $row['venue_id'] : null;
     }
 }
