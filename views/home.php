@@ -14,214 +14,488 @@
         rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
         }
 
-        /* ── AYBU-style Header ── */
-        .aybu-topbar {
-            background-color: #003a6e;
-            color: #fff;
-            font-size: 12px;
-            padding: 5px 0;
-        }
-
-        .aybu-header {
-            background: #fff;
-            border-bottom: 3px solid #003a6e;
+        /* ── HEADER ── */
+        header {
+            background: #ffffff;
+            width: 100%;
+            border-bottom: 1px solid #e8e8e8;
             position: sticky;
             top: 0;
             z-index: 999;
         }
 
-        .aybu-header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .header-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 80px;
+            padding: 10px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .aybu-logo-area {
+        .logo-area {
             display: flex;
             align-items: center;
             gap: 14px;
             text-decoration: none;
         }
 
-        .aybu-logo-area img {
+        .logo-area img {
             height: 58px;
             width: auto;
         }
 
-        .aybu-logo-text {
-            border-left: 2px solid #003a6e;
-            padding-left: 14px;
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
-        .aybu-logo-text .uni-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: #003a6e;
-            line-height: 1.3;
-            letter-spacing: -0.2px;
-        }
-
-        .aybu-logo-text .unit-name {
-            font-size: 11.5px;
-            color: #e04010;
+        .logo-text .line1 {
+            font-size: 14.5px;
             font-weight: 600;
-            line-height: 1.3;
-            margin-top: 2px;
+            color: #009999;
+            letter-spacing: 0.1px;
         }
 
-        .aybu-nav {
+        .logo-text .line2 {
+            font-size: 13.5px;
+            font-weight: 400;
+            color: #009999;
+        }
+
+        .nav-area {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 28px;
         }
 
-        .aybu-nav a {
-            font-size: 13px;
-            font-weight: 500;
-            color: #333;
-            padding: 7px 14px;
-            border-radius: 4px;
+        .nav-area a {
             text-decoration: none;
-            transition: all 0.2s;
+            color: #009999;
+            font-size: 13.5px;
+            font-weight: 500;
             white-space: nowrap;
+            transition: opacity 0.2s;
         }
 
-        .aybu-nav a:hover {
-            background: #f0f4f8;
-            color: #003a6e;
+        .nav-area a:hover { opacity: 0.65; }
+
+        .nav-area a.uppercase {
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.3px;
         }
 
-        .aybu-nav .btn-login {
-            background: #003a6e;
+        .nav-area .btn-giris {
+            background: #009999;
             color: #fff !important;
             padding: 8px 18px;
             border-radius: 4px;
             font-weight: 600;
+            font-size: 13px;
         }
 
-        .aybu-nav .btn-login:hover {
-            background: #004d99 !important;
-            color: #fff !important;
+        .nav-area .btn-giris:hover {
+            opacity: 1 !important;
+            background: #007a7a;
         }
+
+        .lang {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 10px;
+        }
+
+        .lang a {
+            color: #009999;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .lang a:hover { opacity: 0.65; }
+
+        .lang span { color: #ccc; font-size: 12px; }
 
         /* Mobile nav */
         @media (max-width: 768px) {
-            .aybu-nav {
-                display: none;
-            }
-
-            .aybu-mobile-btn {
-                display: flex;
-            }
-
-            .aybu-logo-text .uni-name {
-                font-size: 11px;
-            }
-
-            .aybu-logo-text .unit-name {
-                font-size: 10px;
-            }
-
-            .aybu-logo-area img {
-                height: 44px;
-            }
+            .nav-area { display: none; }
+            .mobile-menu-btn { display: flex !important; }
+            .logo-area img { height: 44px; }
+            .logo-text .line1 { font-size: 12px; }
+            .logo-text .line2 { font-size: 11px; }
+            .header-inner { padding: 10px 16px; }
         }
 
-        @media (min-width: 769px) {
-            .aybu-mobile-btn {
-                display: none;
-            }
+        /* ── HERO SLIDER ── */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            overflow: hidden;
+            background: #1a2a3a;
+            border-top: 3px solid #009999;
         }
 
-        /* Sections */
-        .hero-gradient {
-            background: linear-gradient(135deg, #003a6e 0%, #0057a8 50%, #00a3b4 100%);
+        @media (max-width: 768px) {
+            .hero-slider { height: 520px; }
+            .slider-btn { width: 38px; height: 38px; }
+            .slider-btn.prev { left: 10px; }
+            .slider-btn.next { right: 10px; }
+            .slider-progress { display: none; }
+            .slide-desc { font-size: 13px; }
+            .slide-actions a { padding: 9px 18px; font-size: 13px; }
         }
 
-        .stat-card {
-            transition: transform 0.2s, box-shadow 0.2s;
+        .slides {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0, 58, 110, 0.12);
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
         }
 
-        .venue-card {
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,58,110,0.82) 0%, rgba(0,100,140,0.55) 50%, rgba(0,153,153,0.35) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .slide-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 18px;
+            border-radius: 999px;
+            margin-bottom: 20px;
+        }
+
+        .slide-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .slide-title {
+            font-size: clamp(28px, 5vw, 52px);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .slide-title span { color: #7dd8f0; }
+
+        .slide-desc {
+            font-size: 15px;
+            color: rgba(255,255,255,0.80);
+            max-width: 560px;
+            line-height: 1.65;
+            margin-bottom: 28px;
+            font-weight: 300;
+        }
+
+        .slide-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .slide-actions a {
+            padding: 11px 26px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
             transition: all 0.2s;
         }
 
-        .venue-card:hover {
-            transform: translateY(-2px);
-            border-color: #003a6e;
-            box-shadow: 0 8px 25px rgba(0, 58, 110, 0.1);
-        }
-
-        .step-number {
-            background: #003a6e;
-            color: #fff;
-        }
-
-        .section-title {
+        .slide-actions .btn-primary {
+            background: #fff;
             color: #003a6e;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
         }
+
+        .slide-actions .btn-primary:hover { background: #f0f4f8; }
+
+        .slide-actions .btn-secondary {
+            background: #009999;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0,153,153,0.4);
+        }
+
+        .slide-actions .btn-secondary:hover { background: #007a7a; }
+
+        .slide-actions .btn-ghost {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .slide-actions .btn-ghost:hover { background: rgba(255,255,255,0.25); }
+
+        /* Ok butonları */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #009999;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+
+        .slider-btn:hover {
+            background: #007a7a;
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        .slider-btn svg {
+            width: 20px; height: 20px;
+            fill: none; stroke: #fff;
+            stroke-width: 2.5;
+            stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .slider-btn.prev { left: 24px; }
+        .slider-btn.next { right: 24px; }
+
+        .slider-counter {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border-radius: 50% 50% 0 0;
+            width: 80px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #444;
+            font-family: 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+            z-index: 10;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .slider-progress {
+            position: absolute;
+            right: 78px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 80px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 2px;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .slider-progress-fill {
+            width: 100%;
+            background: #fff;
+            border-radius: 2px;
+            transition: height 0.5s ease;
+        }
+
+        /* ── CONTENT SECTIONS ── */
+        .stat-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,58,110,0.12); }
+
+        .venue-card { transition: all 0.2s; }
+        .venue-card:hover { transform: translateY(-2px); border-color: #009999; box-shadow: 0 8px 25px rgba(0,153,153,0.12); }
+
+        .step-number { background: #009999; color: #fff; }
+        .section-title { color: #003a6e; }
 
         /* Mobile menu slide */
-        #mobile-menu {
-            transition: transform 0.3s ease;
+        #mobile-menu { transition: transform 0.3s ease; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: #0d1f3c;
+            color: #cdd8e8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 48px 0 0 0;
+        }
+
+        .footer-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr 1px 1fr;
+            gap: 0;
+        }
+
+        .footer-divider { background: rgba(255,255,255,0.12); width: 1px; }
+
+        .footer-col { padding: 0 40px; }
+        .footer-col:first-child { padding-left: 0; }
+        .footer-col:last-child  { padding-right: 0; }
+
+        .footer-brand { display: flex; flex-direction: column; gap: 18px; }
+
+        .footer-brand .brand-logo { display: flex; align-items: center; gap: 14px; }
+
+        .footer-brand .brand-logo img {
+            height: 52px;
+            filter: brightness(0) invert(1);
+            opacity: 0.92;
+        }
+
+        .footer-brand .brand-name {
+            font-size: 36px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .footer-brand .slogan {
+            font-family: 'Brush Script MT', 'Segoe Script', cursive;
+            font-size: 24px;
+            color: #cdd8e8;
+            opacity: 0.85;
+            margin-top: 6px;
+        }
+
+        .footer-col-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #00bcd4;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+        .footer-links a { color: #a8bcd4; text-decoration: none; font-size: 13.5px; transition: color 0.2s; }
+        .footer-links a:hover { color: #00bcd4; }
+
+        .footer-contact p { font-size: 13.5px; line-height: 1.6; margin-bottom: 12px; color: #cdd8e8; }
+        .footer-contact p strong { color: #ffffff; font-weight: 600; }
+        .footer-contact a { color: #cdd8e8; text-decoration: none; }
+        .footer-contact a:hover { color: #00bcd4; }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .footer-bottom .copy { font-size: 12.5px; color: rgba(255,255,255,0.45); }
+
+        .footer-bottom-links { display: flex; gap: 24px; }
+        .footer-bottom-links a { color: rgba(255,255,255,0.5); font-size: 12.5px; text-decoration: none; transition: color 0.2s; }
+        .footer-bottom-links a:hover { color: #00bcd4; }
+
+        @media (max-width: 900px) {
+            .footer-main { grid-template-columns: 1fr; }
+            .footer-divider { display: none; }
+            .footer-col { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+            .footer-bottom { flex-direction: column; text-align: center; padding: 16px 20px; }
+            .footer-bottom-links { flex-wrap: wrap; justify-content: center; gap: 12px; }
         }
     </style>
 </head>
 
 <body class="bg-gray-50">
 
-    <!-- ── Top Bar (AYBU Stil) ── -->
-    <div class="aybu-topbar hidden md:block">
-        <div class="max-w-[1200px] mx-auto px-5 flex items-center justify-between">
-            <span>Ankara Yıldırım Beyazıt Üniversitesi</span>
-            <div class="flex items-center gap-4">
-                <a href="https://aybu.edu.tr" target="_blank"
-                    class="text-white/70 hover:text-white text-xs transition">aybu.edu.tr</a>
-                <span class="text-white/30">|</span>
-                <a href="<?= url('giris') ?>" class="text-white/70 hover:text-white text-xs transition">Sisteme
-                    Giriş</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Ana Header (AYBU Stil) ── -->
-    <header class="aybu-header">
-        <div class="aybu-header-inner">
-            <!-- Sol: Logo + Üniversite Adı -->
-            <a href="<?= url('/') ?>" class="aybu-logo-area">
-                <img src="<?= asset('aybu.png') ?>" alt="AYBU Logo">
-                <div class="aybu-logo-text">
-                    <p class="uni-name">Ankara Yıldırım Beyazıt Üniversitesi</p>
-                    <p class="unit-name">İktisadi İşletmeler Müdürlüğü</p>
+    <!-- ── HEADER ── -->
+    <header>
+        <div class="header-inner">
+            <!-- Sol: Logo -->
+            <a href="<?= url('/') ?>" class="logo-area">
+                <img src="https://aybu.edu.tr/assets/images/aybu-images/logo-dark.png" alt="AYBU Logo"
+                     onerror="this.src='<?= asset('aybu.png') ?>'">
+                <div class="logo-text">
+                    <span class="line1">Ankara Yıldırım Beyazıt Üniversitesi</span>
+                    <span class="line2">İktisadi İşletmeler Müdürlüğü</span>
                 </div>
             </a>
 
-            <!-- Sağ: Desktop Nav -->
-            <nav class="aybu-nav">
-                <a href="#nasil-calisir">Nasıl Çalışır?</a>
-                <a href="#isletmeler">İşletmeler</a>
+            <!-- Sağ: Nav -->
+            <nav class="nav-area">
+                <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8084" target="_blank" class="uppercase">HAKKIMIZDA</a>
+                <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9544" target="_blank" class="uppercase">YÖNETİM</a>
+                <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8092" target="_blank">Mevzuat</a>
+                <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9533" target="_blank">Personel</a>
+                <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9531" target="_blank">KYS</a>
                 <a href="#iletisim">İletişim</a>
-                <a href="<?= url('giris') ?>" class="btn-login">Giriş Yap</a>
+                <div class="lang">
+                    <a href="https://aybu.edu.tr/iktisadi.isletme/tr">TR</a>
+                    <span>|</span>
+                    <a href="https://aybu.edu.tr/iktisadi.isletme/en">EN</a>
+                </div>
+                <a href="<?= url('giris') ?>" class="btn-giris">Giriş Yap</a>
             </nav>
 
             <!-- Mobil Hamburger -->
             <button id="mobile-menu-btn"
-                class="aybu-mobile-btn items-center justify-center p-2 rounded-md text-gray-600 hover:bg-gray-100 transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                class="mobile-menu-btn hidden items-center justify-center p-2 rounded-md text-gray-600 hover:bg-gray-100 transition">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
         </div>
@@ -231,28 +505,31 @@
 
         <!-- Mobil Menü -->
         <div id="mobile-menu"
-            class="fixed top-0 right-0 bottom-0 w-72 bg-white shadow-2xl z-50 transform translate-x-full md:hidden">
+            class="fixed top-0 right-0 bottom-0 w-72 bg-white shadow-2xl z-50 transform translate-x-full">
             <div class="h-full flex flex-col">
-                <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-[#003a6e]">
+                <div class="flex items-center justify-between p-5 border-b border-gray-100" style="background:#009999">
                     <span class="font-bold text-white text-sm">Menü</span>
                     <button id="mobile-close" class="text-white/80 hover:text-white">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                     </button>
                 </div>
                 <nav class="flex-1 px-4 py-6 space-y-1">
+                    <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8084" target="_blank"
+                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition font-medium">Hakkımızda</a>
+                    <a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9544" target="_blank"
+                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition font-medium">Yönetim</a>
                     <a href="#nasil-calisir"
-                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition font-medium">Nasıl
-                        Çalışır?</a>
+                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition font-medium">Nasıl Çalışır?</a>
                     <a href="#isletmeler"
                         class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition font-medium">İşletmeler</a>
                     <a href="#iletisim"
                         class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition font-medium">İletişim</a>
                     <div class="pt-4 mt-4 border-t border-gray-100">
                         <a href="<?= url('giris') ?>"
-                            class="block w-full text-center px-4 py-3 bg-[#003a6e] hover:bg-[#004d99] text-white font-semibold rounded-lg transition text-sm">
+                            class="block w-full text-center px-4 py-3 text-white font-semibold rounded-lg transition text-sm"
+                            style="background:#009999">
                             Sisteme Giriş Yap
                         </a>
                     </div>
@@ -261,196 +538,233 @@
         </div>
     </header>
 
-    <!-- ── Hero ── -->
-    <section class="hero-gradient text-white py-24 px-4 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+    <!-- ── HERO SLIDER ── -->
+    <section class="hero-slider">
+        <div class="slides" id="slidesTrack">
+
+            <!-- Slayt 1: Askıda Kampüs tanıtım -->
+            <div class="slide">
+                <img src="<?= asset('slide1.jpg') ?>" alt="Askıda Kampüs">
+                <div class="slide-overlay">
+                    <div class="slide-badge">
+                        <span class="dot"></span>
+                        Sistem aktif — Bağışlar devam ediyor
+                    </div>
+                    <h1 class="slide-title">
+                        Paylaşmak Güzeldir,<br>
+                        <span>Dayanışmak Daha Güzel</span>
+                    </h1>
+                    <p class="slide-desc">
+                        Askıda Kampüs ile bir kahve, bir simit ya da bir sandviç bırak —
+                        ihtiyaç sahibi bir öğrenci kodu söyleyerek teslim alsın.
+                    </p>
+                    <div class="slide-actions">
+                        <a href="<?= url('misafir-bagis') ?>" class="btn-primary">Bağış Yap</a>
+                        <a href="<?= url('kayit') ?>" class="btn-secondary">Öğrenci Kaydı</a>
+                        <a href="<?= url('giris') ?>" class="btn-ghost">Giriş Yap</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slayt 2: Nasıl çalışır -->
+            <div class="slide">
+                <img src="<?= asset('slide2.jpg') ?>" alt="Askıda Kampüs">
+                <div class="slide-overlay">
+                    <h1 class="slide-title">
+                        Nasıl<br><span>Çalışır?</span>
+                    </h1>
+                    <p class="slide-desc">
+                        Bağışçılar IBAN ile ödeme yapar, öğrenciler QR kod ile teslim alır.
+                        Üç adımda destek ol, üç adımda yararlan.
+                    </p>
+                    <div class="slide-actions">
+                        <a href="#nasil-calisir" class="btn-primary">Detayları Gör</a>
+                        <a href="#isletmeler" class="btn-ghost">Katılımcı İşletmeler</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div class="max-w-5xl mx-auto text-center relative">
-            <div
-                class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-medium mb-8 border border-white/20">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block"></span>
-                Sistem aktif — Bağışlar devam ediyor
-            </div>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight tracking-tight">
-                Paylaşmak Güzeldir,<br class="hidden sm:block">
-                <span class="text-[#7dd8f0]">Dayanışmak Daha Güzel</span>
-            </h1>
-            <p class="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-                Askıda Kampüs ile bir kahve, bir simit ya da bir sandviç bırak —
-                ihtiyaç sahibi bir öğrenci kodu söyleyerek teslim alsın.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center flex-wrap">
-                <a href="<?= url('misafir-bagis') ?>"
-                    class="px-8 py-3.5 bg-white text-[#003a6e] font-bold rounded-lg hover:bg-gray-100 transition text-base shadow-xl">
-                    🤝 Bağış Yap
-                </a>
-                <a href="<?= url('kayit') ?>"
-                    class="px-8 py-3.5 bg-[#e04010] hover:bg-[#c0350d] text-white font-bold rounded-lg transition text-base shadow-xl">
-                    Öğrenci Kaydı
-                </a>
-                <a href="<?= url('giris') ?>"
-                    class="px-8 py-3.5 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-lg transition text-base backdrop-blur-sm border border-white/30">
-                    Giriş Yap
-                </a>
-            </div>
+
+        <button class="slider-btn prev" onclick="changeSlide(-1)" aria-label="Önceki">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+        <button class="slider-btn next" onclick="changeSlide(1)" aria-label="Sonraki">
+            <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+
+        <div class="slider-counter">
+            <span id="slideCounter">1 / 2</span>
+        </div>
+
+        <div class="slider-progress">
+            <div class="slider-progress-fill" id="progressFill" style="height:50%"></div>
         </div>
     </section>
 
+    <script>
+    (function() {
+        const track   = document.getElementById('slidesTrack');
+        const counter = document.getElementById('slideCounter');
+        const fill    = document.getElementById('progressFill');
+        const slides  = track.querySelectorAll('.slide');
+        const total   = slides.length;
+        let current = 0, timer;
+
+        function goTo(i) {
+            current = (i + total) % total;
+            track.style.transform = 'translateX(-' + (current * 100) + '%)';
+            counter.textContent = (current + 1) + ' / ' + total;
+            fill.style.height = (((current + 1) / total) * 100) + '%';
+        }
+
+        window.changeSlide = function(dir) {
+            clearInterval(timer);
+            goTo(current + dir);
+            startAuto();
+        };
+
+        function startAuto() {
+            timer = setInterval(function() { goTo(current + 1); }, 5000);
+        }
+
+        goTo(0);
+        startAuto();
+    })();
+    </script>
+
     <!-- ── İstatistikler ── -->
-    <section class="bg-white border-b border-gray-100 shadow-sm">
-        <div class="max-w-5xl mx-auto px-4 py-10 grid grid-cols-2 sm:grid-cols-4 gap-6">
-            <div class="stat-card text-center p-4 rounded-xl bg-blue-50 border border-blue-100">
-                <p class="text-3xl font-black text-[#003a6e]"><?= e($stats['venues']) ?>+</p>
-                <p class="text-sm text-gray-600 mt-1 font-medium">Katılımcı İşletme</p>
+    <section class="bg-white border-b border-gray-100">
+        <div class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100">
+            <div class="stat-card text-center p-6 bg-white">
+                <p class="text-3xl font-bold text-[#0d1f3c]"><?= e($stats['venues']) ?>+</p>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Katılımcı İşletme</p>
             </div>
-            <div class="stat-card text-center p-4 rounded-xl bg-green-50 border border-green-100">
-                <p class="text-3xl font-black text-green-700"><?= e($stats['donations']) ?>+</p>
-                <p class="text-sm text-gray-600 mt-1 font-medium">Toplam Bağış</p>
+            <div class="stat-card text-center p-6 bg-white">
+                <p class="text-3xl font-bold" style="color:#009999"><?= e($stats['donations']) ?>+</p>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Toplam Bağış</p>
             </div>
-            <div class="stat-card text-center p-4 rounded-xl bg-purple-50 border border-purple-100">
-                <p class="text-3xl font-black text-purple-700"><?= e($stats['reservations']) ?>+</p>
-                <p class="text-sm text-gray-600 mt-1 font-medium">Teslim Edilen</p>
+            <div class="stat-card text-center p-6 bg-white">
+                <p class="text-3xl font-bold text-[#0d1f3c]"><?= e($stats['reservations']) ?>+</p>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Teslim Edilen</p>
             </div>
-            <div class="stat-card text-center p-4 rounded-xl bg-orange-50 border border-orange-100">
-                <p class="text-3xl font-black text-orange-600"><?= e($stats['stock']) ?>+</p>
-                <p class="text-sm text-gray-600 mt-1 font-medium">Serbest Ürün</p>
+            <div class="stat-card text-center p-6 bg-white">
+                <p class="text-3xl font-bold" style="color:#009999"><?= e($stats['stock']) ?>+</p>
+                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Serbest Ürün</p>
             </div>
         </div>
     </section>
 
     <!-- ── Nasıl Çalışır ── -->
-    <section id="nasil-calisir" class="py-20 px-4 bg-gray-50">
+    <section id="nasil-calisir" class="py-16 px-4 bg-gray-50">
         <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-black section-title mb-3">Nasıl Çalışır?</h2>
-                <p class="text-gray-500 text-base">Üç adımda yardım et, üç adımda yararlan</p>
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-bold section-title mb-2">Nasıl Çalışır?</h2>
+                <div style="width:40px;height:3px;background:#009999;margin:8px auto 12px;border-radius:2px;"></div>
+                <p class="text-gray-500 text-sm">Üç adımda destek ol, üç adımda yararlan</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Bağışçı -->
-                <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-2xl">🤝
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-gray-800 text-lg">Bağışçılar İçin</h3>
-                            <p class="text-xs text-gray-400">Destek olmak isteyenler</p>
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Bağışçılar -->
+                <div class="bg-white border border-gray-200 rounded-lg p-8" style="border-top:3px solid #009999;">
+                    <div class="mb-6 pb-4 border-b border-gray-100">
+                        <h3 class="font-bold text-[#0d1f3c] text-base uppercase tracking-wide">Bağışçılar İçin</h3>
+                        <p class="text-xs text-gray-400 mt-1">Destek olmak isteyenler</p>
                     </div>
-                    <ol class="space-y-4">
+                    <ol class="space-y-5">
                         <li class="flex items-start gap-4">
-                            <span
-                                class="step-number w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
-                            <p class="text-gray-600 text-sm leading-relaxed">Sisteme giriş yapın ve kampüsdeki katılımcı
-                                işletmeleri görün.</p>
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#009999;">1</span>
+                            <p class="text-gray-600 text-sm leading-relaxed">Sisteme giriş yapın ve kampüsdeki katılımcı işletmeleri görün.</p>
                         </li>
                         <li class="flex items-start gap-4">
-                            <span
-                                class="step-number w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
-                            <p class="text-gray-600 text-sm leading-relaxed">Bağışlamak istediğiniz ürünleri ve
-                                miktarları seçin.</p>
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#009999;">2</span>
+                            <p class="text-gray-600 text-sm leading-relaxed">Bağışlamak istediğiniz ürünleri ve miktarları seçin.</p>
                         </li>
                         <li class="flex items-start gap-4">
-                            <span
-                                class="step-number w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
-                            <p class="text-gray-600 text-sm leading-relaxed">IBAN üzerinden ödeme yapın — bağışınız
-                                onaylandıktan sonra stoğa eklenir.</p>
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#009999;">3</span>
+                            <p class="text-gray-600 text-sm leading-relaxed">IBAN üzerinden ödeme yapın — bağışınız onaylandıktan sonra stoğa eklenir.</p>
                         </li>
                     </ol>
-                    <a href="<?= url('giris') ?>"
-                        class="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition">
+                    <a href="<?= url('misafir-bagis') ?>"
+                        class="mt-7 inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-semibold rounded transition"
+                        style="background:#009999;">
                         Bağış Yapmak İstiyorum →
                     </a>
                 </div>
 
-                <!-- Öğrenci -->
-                <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 hover:shadow-md transition">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-2xl">🎓
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-gray-800 text-lg">Öğrenciler İçin</h3>
-                            <p class="text-xs text-gray-400">Yararlanmak isteyenler</p>
-                        </div>
+                <!-- Öğrenciler -->
+                <div class="bg-white border border-gray-200 rounded-lg p-8" style="border-top:3px solid #0d1f3c;">
+                    <div class="mb-6 pb-4 border-b border-gray-100">
+                        <h3 class="font-bold text-[#0d1f3c] text-base uppercase tracking-wide">Öğrenciler İçin</h3>
+                        <p class="text-xs text-gray-400 mt-1">Yararlanmak isteyenler</p>
                     </div>
-                    <ol class="space-y-4">
+                    <ol class="space-y-5">
                         <li class="flex items-start gap-4">
-                            <span
-                                class="step-number w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
-                            <p class="text-gray-600 text-sm leading-relaxed">Öğrenci hesabınızla giriş yapın, açık
-                                işletmeleri ve ürünleri görün.</p>
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#0d1f3c;">1</span>
+                            <p class="text-gray-600 text-sm leading-relaxed">Öğrenci hesabınızla giriş yapın, açık işletmeleri ve ürünleri görün.</p>
                         </li>
                         <li class="flex items-start gap-4">
-                            <span
-                                class="step-number w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
-                            <p class="text-gray-600 text-sm leading-relaxed">İstediğiniz ürünü rezerve edin — size özel
-                                bir teslim kodu oluşturulur.</p>
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#0d1f3c;">2</span>
+                            <p class="text-gray-600 text-sm leading-relaxed">İstediğiniz ürünü rezerve edin — size özel bir teslim kodu oluşturulur.</p>
                         </li>
                         <li class="flex items-start gap-4">
-                            <span
-                                class="step-number w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
-                            <p class="text-gray-600 text-sm leading-relaxed">İşletmeye gidin, kasiyere kodunuzu söyleyin
-                                ve ürününüzü teslim alın.</p>
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#0d1f3c;">3</span>
+                            <p class="text-gray-600 text-sm leading-relaxed">İşletmeye gidin, kasiyere kodunuzu söyleyin ve ürününüzü teslim alın.</p>
                         </li>
                     </ol>
                     <a href="<?= url('giris') ?>"
-                        class="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-[#003a6e] hover:bg-[#004d99] text-white text-sm font-semibold rounded-lg transition">
+                        class="mt-7 inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-semibold rounded transition"
+                        style="background:#0d1f3c;">
                         Rezervasyon Yapmak İstiyorum →
                     </a>
                 </div>
+
             </div>
         </div>
     </section>
 
     <!-- ── İşletmeler ── -->
     <?php if (!empty($venues)): ?>
-        <section id="isletmeler" class="bg-white py-20 px-4 border-t border-gray-100">
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-black section-title mb-3">Katılımcı İşletmeler</h2>
-                    <p class="text-gray-500 text-base">Bu işletmelerde askıda ürün rezervasyonu yapabilirsiniz</p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <?php foreach ($venues as $v): ?>
-                        <a href="<?= url('isletme/' . $v['id']) ?>"
-                            class="venue-card border border-gray-200 rounded-2xl p-5 block bg-white hover:shadow-md">
-                            <div class="flex items-start gap-4">
-                                <div
-                                    class="w-12 h-12 bg-[#003a6e]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <span
-                                        class="text-[#003a6e] font-black text-base"><?= mb_substr(e($v['name']), 0, 1) ?></span>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-bold text-gray-800 text-sm"><?= e($v['name']) ?></p>
-                                    <p class="text-xs text-gray-400 mt-0.5"><?= e($v['campus_name']) ?></p>
-                                    <?php if ($v['location']): ?>
-                                        <p class="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            <?= e($v['location']) ?>
-                                        </p>
-                                    <?php endif; ?>
-                                    <span class="inline-flex items-center gap-1 mt-2 text-xs text-[#003a6e] font-semibold">
-                                        Detayları Gör →
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
+    <section id="isletmeler" class="bg-white py-14 px-4 border-t border-gray-100">
+        <div class="max-w-5xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold section-title mb-2">Katılımcı İşletmeler</h2>
+                <div style="width:40px;height:3px;background:#009999;margin-top:8px;border-radius:2px;"></div>
+                <p class="text-gray-500 text-sm mt-3">Bu işletmelerde askıda ürün rezervasyonu yapabilirsiniz</p>
             </div>
-        </section>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <?php foreach ($venues as $v): ?>
+                    <a href="<?= url('isletme/' . $v['id']) ?>"
+                        class="venue-card border border-gray-200 rounded-lg p-5 block bg-white"
+                        style="border-left:3px solid #009999;">
+                        <div class="flex items-start gap-3">
+                            <div class="w-9 h-9 rounded flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
+                                 style="background:#0d1f3c;">
+                                <?= mb_strtoupper(mb_substr(e($v['name']), 0, 1)) ?>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-semibold text-gray-800 text-sm"><?= e($v['name']) ?></p>
+                                <p class="text-xs text-gray-400 mt-0.5"><?= e($v['campus_name']) ?></p>
+                                <?php if ($v['location']): ?>
+                                    <p class="text-xs text-gray-400 mt-0.5 truncate"><?= e($v['location']) ?></p>
+                                <?php endif; ?>
+                            </div>
+                            <svg class="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
     <?php endif; ?>
 
     <!-- ── İletişim ── -->
-    <section id="iletisim" class="bg-[#003a6e] py-16 px-4">
+    <section id="iletisim" style="background:#0d1f3c;" class="py-14 px-4">
         <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-10">
+            <div class="mb-8">
                 <h2 class="text-2xl font-black text-white mb-2">Bize Ulaşın</h2>
                 <p class="text-white/60 text-sm">Sorularınız için iletişime geçebilirsiniz</p>
             </div>
@@ -492,93 +806,65 @@
         </div>
     </section>
 
-    <!-- ── Footer ── -->
-    <footer class="bg-[#001f3f] text-white">
-        <div class="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
-            <!-- Logo -->
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-3">
-                    <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-12 w-auto">
-                    <span class="text-xl font-black text-white">AYBÜ</span>
+    <!-- ── FOOTER ── -->
+    <footer>
+        <div class="footer-main">
+
+            <!-- Sol: Marka -->
+            <div class="footer-col footer-brand">
+                <div class="brand-logo">
+                    <img src="https://aybu.edu.tr/assets/images/aybu-images/logo-white.png" alt="AYBU"
+                         onerror="this.src='<?= asset('aybu.png') ?>'; this.style.filter='brightness(0) invert(1)'">
+                    <span class="brand-name">AYBÜ</span>
                 </div>
-                <p class="text-[#7dd8f0] text-sm font-light italic leading-snug">Geçmişten Geleceğe...</p>
-                <div class="flex items-center gap-2 mt-1">
-                    <a href="https://instagram.com/aybu_resmi" target="_blank"
-                        class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
-                        <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                    </a>
-                    <a href="https://x.com/aybu_resmi" target="_blank"
-                        class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
-                        <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
-                            <path
-                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.638 5.902-5.638zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                    </a>
-                    <a href="https://youtube.com/@aybu" target="_blank"
-                        class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
-                        <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
-                            <path
-                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                        </svg>
-                    </a>
-                    <a href="https://aybu.edu.tr" target="_blank"
-                        class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
-                        <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-                        </svg>
-                    </a>
-                </div>
+                <div class="slogan">Geçmişten Geleceğe...</div>
             </div>
 
-            <!-- Hızlı Erişim -->
-            <div class="border-l border-white/10 pl-10">
-                <h4 class="text-white/40 text-xs font-bold uppercase tracking-widest mb-4">Hızlı Erişim</h4>
-                <ul class="space-y-2.5 text-sm text-white/60">
-                    <li><a href="<?= url('giris') ?>" class="hover:text-white transition">Sisteme Giriş Yap</a></li>
-                    <li><a href="#nasil-calisir" class="hover:text-white transition">Nasıl Çalışır?</a></li>
-                    <li><a href="#isletmeler" class="hover:text-white transition">Katılımcı İşletmeler</a></li>
-                    <li><a href="<?= url('misafir-bagis') ?>" class="hover:text-white transition">Misafir Bağış</a></li>
+            <div class="footer-divider"></div>
+
+            <!-- Orta: Hızlı Erişim -->
+            <div class="footer-col">
+                <div class="footer-col-title">Hızlı Erişim</div>
+                <ul class="footer-links">
+                    <li><a href="<?= url('giris') ?>">Sisteme Giriş Yap</a></li>
+                    <li><a href="<?= url('misafir-bagis') ?>">Bağış Yap</a></li>
+                    <li><a href="#nasil-calisir">Nasıl Çalışır?</a></li>
+                    <li><a href="#isletmeler">Katılımcı İşletmeler</a></li>
+                    <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8084" target="_blank">Hakkımızda</a></li>
+                    <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/9544" target="_blank">Yönetim</a></li>
+                    <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr/sayfa/8094" target="_blank">İletişim</a></li>
                 </ul>
             </div>
 
-            <!-- AYBU Linkleri -->
-            <div>
-                <h4 class="text-white/40 text-xs font-bold uppercase tracking-widest mb-4">AYBÜ Bağlantıları</h4>
-                <ul class="space-y-2.5 text-sm text-white/60">
-                    <li><a href="https://aybu.edu.tr" target="_blank" class="hover:text-white transition">Ana Web
-                            Sitesi</a></li>
-                    <li><a href="https://aybu.edu.tr/iktisadi.isletme/tr" target="_blank"
-                            class="hover:text-white transition">İktisadi İşletmeler Müdürlüğü</a></li>
-                    <li><a href="https://obs.aybu.edu.tr" target="_blank" class="hover:text-white transition">Öğrenci
-                            Bilgi Sistemi</a></li>
-                </ul>
+            <div class="footer-divider"></div>
+
+            <!-- Sağ: İletişim -->
+            <div class="footer-col footer-contact">
+                <div class="footer-col-title">İletişim</div>
+                <p><strong>Adres:</strong> Ankara Yıldırım Beyazıt Üniversitesi Esenboğa Külliyesi, Esenboğa / ANKARA</p>
+                <p><strong>E-posta:</strong> <a href="mailto:basin@aybu.edu.tr">basin@aybu.edu.tr</a></p>
+                <p><strong>Telefon:</strong> <a href="tel:+903129061000">+90 312 906 10 00</a></p>
+                <p><strong>Web:</strong> <a href="https://aybu.edu.tr/iktisadi.isletme/tr" target="_blank">aybu.edu.tr/iktisadi.isletme</a></p>
             </div>
+
         </div>
 
         <!-- Alt bar -->
-        <div class="border-t border-white/10">
-            <div
-                class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/30">
-                <p>© <?= date('Y') ?> Ankara Yıldırım Beyazıt Üniversitesi. Tüm hakları saklıdır.</p>
-                <div class="flex items-center gap-4">
-                    <a href="#" class="hover:text-white transition">Erişilebilirlik</a>
-                    <a href="#" class="hover:text-white transition">Gizlilik Politikası</a>
-                    <a href="#" class="hover:text-white transition">KVKK</a>
-                </div>
+        <div class="footer-bottom">
+            <span class="copy">© <?= date('Y') ?> Ankara Yıldırım Beyazıt Üniversitesi. Tüm hakları saklıdır.</span>
+            <div class="footer-bottom-links">
+                <a href="https://aybu.edu.tr/engelsiz" target="_blank">Erişilebilirlik</a>
+                <a href="#">Gizlilik Politikası</a>
+                <a href="#">KVKK</a>
             </div>
         </div>
     </footer>
 
     <script>
-        // Mobil menü
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBtn     = document.getElementById('mobile-menu-btn');
+        const mobileMenu    = document.getElementById('mobile-menu');
         const mobileOverlay = document.getElementById('mobile-overlay');
-        const mobileClose = document.getElementById('mobile-close');
+        const mobileClose   = document.getElementById('mobile-close');
 
         function openMenu() {
             mobileMenu.style.transform = 'translateX(0)';
@@ -596,7 +882,6 @@
         mobileOverlay?.addEventListener('click', closeMenu);
         document.querySelectorAll('#mobile-menu nav a').forEach(a => a.addEventListener('click', closeMenu));
 
-        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
                 const target = document.querySelector(a.getAttribute('href'));

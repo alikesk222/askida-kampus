@@ -33,12 +33,14 @@
     </div>
 
     <!-- Hesap avantajı -->
-    <div class="bg-[#E0F7FA] border border-[#00A3B4]/30 rounded-xl p-4 flex items-start gap-3 mb-8">
-        <span class="text-2xl">💡</span>
+    <div class="border border-gray-200 bg-white rounded-lg p-4 flex items-start gap-3 mb-8" style="border-left:3px solid #009999;">
+        <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
         <div>
-            <p class="text-sm font-semibold text-[#007A8A]">Hesap açarak bağışlarınızı takip edin</p>
-            <p class="text-sm text-gray-600 mt-0.5">Tüm geçmiş bağışlarınızı görmek ve kolayca tekrar bağış yapmak için
-                <a href="<?= url('kayit') ?>" class="text-[#00A3B4] font-semibold hover:underline">ücretsiz hesap oluşturun</a>.
+            <p class="text-sm font-semibold text-gray-700">Hesap açarak bağışlarınızı takip edin</p>
+            <p class="text-sm text-gray-500 mt-0.5">Tüm geçmiş bağışlarınızı görmek ve kolayca tekrar bağış yapmak için
+                <a href="<?= url('kayit') ?>" class="font-semibold hover:underline" style="color:#009999;">ücretsiz hesap oluşturun</a>.
             </p>
         </div>
     </div>
@@ -46,23 +48,23 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <?php foreach ($venues as $v): ?>
         <a href="<?= url('misafir-bagis/' . $v['id']) ?>"
-           class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-[#00A3B4]/40 transition group">
+           class="bg-white rounded-lg border border-gray-200 p-5 block transition hover:border-gray-300" style="border-left:3px solid #009999;">
             <div class="flex items-center gap-3 mb-3">
-                <div class="w-11 h-11 bg-[#E0F7FA] rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#00A3B4] transition">
-                    <span class="text-[#00A3B4] group-hover:text-white font-bold text-lg transition"><?= mb_substr(e($v['name']), 0, 1) ?></span>
+                <div class="w-10 h-10 rounded flex items-center justify-center flex-shrink-0 text-white font-bold text-sm" style="background:#0d1f3c;">
+                    <?= mb_strtoupper(mb_substr(e($v['name']), 0, 1)) ?>
                 </div>
-                <div>
-                    <p class="font-semibold text-gray-800"><?= e($v['name']) ?></p>
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold text-gray-800 text-sm"><?= e($v['name']) ?></p>
                     <p class="text-xs text-gray-400"><?= e($v['campus_name']) ?></p>
                 </div>
             </div>
             <?php if ($v['location']): ?>
-            <p class="text-xs text-gray-400">📍 <?= e($v['location']) ?></p>
+            <p class="text-xs text-gray-400 truncate"><?= e($v['location']) ?></p>
             <?php endif; ?>
             <?php if ($v['opens_at'] && $v['closes_at']): ?>
-            <p class="text-xs text-gray-400 mt-1">🕐 <?= e($v['opens_at']) ?> – <?= e($v['closes_at']) ?></p>
+            <p class="text-xs text-gray-400 mt-0.5"><?= e($v['opens_at']) ?> – <?= e($v['closes_at']) ?></p>
             <?php endif; ?>
-            <p class="mt-3 text-sm font-semibold text-[#00A3B4] group-hover:text-[#007A8A]">Bu işletmeye bağış yap →</p>
+            <p class="mt-3 text-xs font-semibold" style="color:#009999;">Bağış yap →</p>
         </a>
         <?php endforeach; ?>
     </div>

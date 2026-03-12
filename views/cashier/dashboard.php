@@ -8,8 +8,8 @@
 <div class="max-w-lg">
     <div class="bg-white rounded-2xl shadow-sm p-8">
         <div class="flex items-center justify-center mb-6">
-            <div class="w-16 h-16 bg-[#E0F7FA] rounded-full flex items-center justify-center">
-                <svg class="w-8 h-8 text-[#00A3B4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-14 h-14 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center">
+                <svg class="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>

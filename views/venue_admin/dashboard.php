@@ -25,9 +25,9 @@
 
 <!-- Hızlı Erişim -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-    <a href="<?= url('isletme/stok') ?>" class="flex items-center gap-4 bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition">
-        <div class="w-10 h-10 bg-[#E0F7FA] rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-[#00A3B4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <a href="<?= url('isletme/stok') ?>" class="flex items-center gap-4 bg-white p-5 rounded-lg border border-gray-200 hover:border-[#009999] transition" style="border-left:3px solid #009999;">
+        <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
             </svg>
         </div>
@@ -36,9 +36,9 @@
             <p class="text-xs text-gray-400">Ürün bazlı stok göster</p>
         </div>
     </a>
-    <a href="<?= url('isletme/bagislar') ?>" class="flex items-center gap-4 bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition">
-        <div class="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <a href="<?= url('isletme/bagislar') ?>" class="flex items-center gap-4 bg-white p-5 rounded-lg border border-gray-200 hover:border-[#009999] transition" style="border-left:3px solid #0d1f3c;">
+        <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
             </svg>
         </div>
@@ -47,9 +47,9 @@
             <p class="text-xs text-gray-400">Onayla, listele</p>
         </div>
     </a>
-    <a href="<?= url('isletme/rezervasyonlar') ?>" class="flex items-center gap-4 bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition">
-        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <a href="<?= url('isletme/rezervasyonlar') ?>" class="flex items-center gap-4 bg-white p-5 rounded-lg border border-gray-200 hover:border-[#009999] transition" style="border-left:3px solid #009999;">
+        <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
         </div>

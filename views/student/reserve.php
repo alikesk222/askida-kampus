@@ -30,16 +30,10 @@
                 <img src="<?= e($p['image_url']) ?>" alt="<?= e($p['name']) ?>"
                      class="w-full h-36 object-cover rounded-lg mb-3">
                 <?php else: ?>
-                <div class="w-full h-36 bg-gradient-to-br from-[#E0F7FA] to-[#B2EBF2] rounded-lg mb-3 flex items-center justify-center">
-                    <span class="text-4xl">
-                        <?php
-                        $cat = strtolower($p['category'] ?? '');
-                        if (str_contains($cat, 'içecek'))       echo '☕';
-                        elseif (str_contains($cat, 'yiyecek'))  echo '🥪';
-                        elseif (str_contains($cat, 'atıştır'))  echo '🍪';
-                        else                                    echo '🍽️';
-                        ?>
-                    </span>
+                <div class="w-full h-36 bg-gray-50 border border-gray-100 rounded-lg mb-3 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
                 </div>
                 <?php endif; ?>
 
@@ -94,8 +88,10 @@
     $appCfg = require ROOT . '/src/config/app.php';
     $expireMin = $appCfg['reservation_expire_min'] ?? 30;
     ?>
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-800 flex items-start gap-2">
-        <span class="text-lg">⏱</span>
+    <div class="border border-yellow-300 bg-yellow-50 rounded-lg p-4 mb-6 text-sm text-yellow-800 flex items-start gap-3">
+        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
         <p>Rezervasyonunuz oluşturulduktan sonra <strong><?= $expireMin ?> dakika</strong> içinde kasiyere QR kodunuzu göstermeniz gerekiyor. Süre dolunca rezervasyon otomatik iptal edilir.</p>
     </div>
 

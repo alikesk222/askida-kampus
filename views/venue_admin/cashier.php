@@ -17,7 +17,7 @@
         <div class="bg-white rounded-2xl shadow-sm p-8">
             <div class="flex items-center justify-center mb-6">
                 <div id="icon-wrap"
-                    class="w-16 h-16 bg-[#E0F7FA] rounded-full flex items-center justify-center transition-all duration-300">
+                    class="w-14 h-14 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center transition-all duration-300">
                     <!-- default icon -->
                     <svg id="icon-default" class="w-8 h-8 text-[#00A3B4]" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">

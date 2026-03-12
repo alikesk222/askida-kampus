@@ -2,8 +2,19 @@
 
 define('ROOT', dirname(__DIR__));
 
-// .env yükle
-$envFile = ROOT . '/.env';
+// Ortam tespiti: canlı host ise production .env yükle
+$currentHost = $_SERVER['HTTP_HOST'] ?? php_uname('n');
+$isProduction = str_contains($currentHost, 'alikesik.com.tr');
+
+$envFile = $isProduction
+    ? ROOT . '/.env.production'
+    : ROOT . '/.env';
+
+// Fallback: production dosyası yoksa standart .env'e dön
+if (!file_exists($envFile)) {
+    $envFile = ROOT . '/.env';
+}
+
 if (file_exists($envFile)) {
     $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
@@ -12,6 +23,18 @@ if (file_exists($envFile)) {
         [$key, $value] = explode('=', $line, 2);
         $_ENV[trim($key)] = trim($value, " \t\n\r\0\x0B\"'");
     }
+}
+
+define('APP_ENV', $_ENV['APP_ENV'] ?? 'development');
+
+// Hata gösterimi: production'da kapat
+if (APP_ENV === 'production') {
+    ini_set('display_errors', '0');
+    ini_set('log_errors', '1');
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+} else {
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL);
 }
 
 // BASE_URL + SCRIPT_BASE
@@ -38,13 +61,14 @@ if (!empty($_ENV['APP_URL'])) {
     define('SCRIPT_BASE', $scriptBase);
 }
 
-// Session
+// Session — cookie path'i subfolder'a göre ayarla
 if (session_status() === PHP_SESSION_NONE) {
+    $cookiePath = defined('SCRIPT_BASE') && SCRIPT_BASE ? SCRIPT_BASE . '/' : '/';
     session_set_cookie_params([
         'lifetime' => 0,
-        'path'     => '/',
+        'path'     => $cookiePath,
         'domain'   => '',
-        'secure'   => false,
+        'secure'   => APP_ENV === 'production',
         'httponly' => true,
         'samesite' => 'Lax',
     ]);

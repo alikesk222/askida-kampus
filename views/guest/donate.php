@@ -78,8 +78,10 @@
                     <img src="<?= e($p['image_url']) ?>" alt="<?= e($p['name']) ?>"
                          class="w-16 h-16 object-cover rounded-lg flex-shrink-0">
                     <?php else: ?>
-                    <div class="w-16 h-16 bg-[#E0F7FA] rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span class="text-2xl">☕</span>
+                    <div class="w-16 h-16 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
                     </div>
                     <?php endif; ?>
                     <div class="flex-1 min-w-0">

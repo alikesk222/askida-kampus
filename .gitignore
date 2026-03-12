@@ -1,5 +1,6 @@
 # Ortam değişkenleri — asla commit edilmez
 .env
+.env.production
 
 # Yüklenen dosyalar
 public/uploads/

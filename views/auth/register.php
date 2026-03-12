@@ -22,15 +22,15 @@
     </div>
 </header>
 
-<div class="flex-1 flex items-center justify-center p-6 bg-gradient-to-br from-[#00A3B4]/10 to-[#007A8A]/10">
+<div class="flex-1 flex items-center justify-center p-6 bg-gray-50">
 <div class="w-full max-w-md">
 
     <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-14 h-14 bg-green-500 rounded-2xl shadow-lg mb-3">
-            <span class="text-white text-2xl">🤝</span>
+        <div class="inline-block mb-3">
+            <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-14 w-auto mx-auto">
         </div>
         <h1 class="text-gray-800 text-xl font-bold">Bağışçı Hesabı Oluştur</h1>
-        <p class="text-gray-500 text-sm mt-0.5">Ücretsiz, 30 saniyede tamamlanır</p>
+        <p class="text-gray-500 text-sm mt-0.5">Askıda Kampüs — AYBU İktisadi İşletmeler</p>
     </div>
 
     <div class="bg-white rounded-2xl shadow-xl p-8">
