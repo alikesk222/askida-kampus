@@ -80,7 +80,10 @@ CREATE TABLE IF NOT EXISTS suspended_stocks (
 -- BAĞIŞLAR
 CREATE TABLE IF NOT EXISTS donations (
     id                INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    donor_id          INT UNSIGNED NOT NULL,
+    donor_id          INT UNSIGNED NULL,
+    donor_name        VARCHAR(100) NULL,
+    donor_email       VARCHAR(150) NULL,
+    is_guest          TINYINT(1) NOT NULL DEFAULT 0,
     venue_id          INT UNSIGNED NOT NULL,
     total_amount      DECIMAL(10,2) NOT NULL,
     payment_method    ENUM('iban','pos') NOT NULL DEFAULT 'iban',
@@ -93,7 +96,7 @@ CREATE TABLE IF NOT EXISTS donations (
     created_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
                         ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (donor_id)    REFERENCES users(id)  ON DELETE CASCADE,
+    FOREIGN KEY (donor_id)    REFERENCES users(id)  ON DELETE SET NULL,
     FOREIGN KEY (venue_id)    REFERENCES venues(id) ON DELETE CASCADE,
     FOREIGN KEY (approved_by) REFERENCES users(id)  ON DELETE SET NULL,
     INDEX idx_status   (status),
