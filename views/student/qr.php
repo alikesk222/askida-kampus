@@ -69,7 +69,7 @@
 
     <?php if ($reservation['status'] === 'reserved'): ?>
         <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-            <p class="text-sm text-blue-700 font-medium">📢 Kasiyere yalnızca yukarıdaki kodu söylemeniz yeterli.</p>
+            <p class="text-sm text-blue-700 font-medium">Kasiyere yalnızca yukarıdaki kodu söylemeniz yeterli.</p>
             <p class="text-xs text-blue-500 mt-1">QR kodu gerekmez.</p>
         </div>
     <?php endif; ?>

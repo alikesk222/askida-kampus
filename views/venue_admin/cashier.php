@@ -215,7 +215,7 @@
 
                 if (data.found) {
                     // Öğrenci adı
-                    document.getElementById('preview-student').textContent = '👤 ' + data.student_name;
+                    document.getElementById('preview-student').textContent = data.student_name;
                     document.getElementById('preview-expires').textContent = 'Son kullanma: ' + formatDate(data.expires_at);
 
                     // Ürünler

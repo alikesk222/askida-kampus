@@ -555,8 +555,8 @@
                         <span>Dayanışmak Daha Güzel</span>
                     </h1>
                     <p class="slide-desc">
-                        Askıda Kampüs ile bir kahve, bir simit ya da bir sandviç bırak —
-                        ihtiyaç sahibi bir öğrenci kodu söyleyerek teslim alsın.
+                        Askıda Kampüs ile kampesteki öğrenciler için destek ol.
+                        Bağışçılar önce sipariş verir, öğrenciler kodu sunarak teslim alır.
                     </p>
                     <div class="slide-actions">
                         <a href="<?= url('misafir-bagis') ?>" class="btn-primary">Bağış Yap</a>
@@ -574,8 +574,8 @@
                         Nasıl<br><span>Çalışır?</span>
                     </h1>
                     <p class="slide-desc">
-                        Bağışçılar IBAN ile ödeme yapar, öğrenciler QR kod ile teslim alır.
-                        Üç adımda destek ol, üç adımda yararlan.
+                        Bağışçılar IBAN ile ödeme yapar, öğrenciler teslim kodu ile alır.
+                        Üç adımda kampüste dayanışmaya katıl.
                     </p>
                     <div class="slide-actions">
                         <a href="#nasil-calisir" class="btn-primary">Detayları Gör</a>

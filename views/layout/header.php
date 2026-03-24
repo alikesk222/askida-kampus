@@ -21,7 +21,7 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="<?= url('assets/css/app.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/app.css') ?>">
 </head>
 
 <body class="min-h-screen bg-gray-50">

@@ -89,7 +89,7 @@
     </div>
 </footer>
 
-<script src="<?= url('assets/js/app.js') ?>"></script>
+<script src="<?= asset('js/app.js') ?>"></script>
 <script>
 // Auto-hide flash messages
 document.addEventListener('DOMContentLoaded', function() {
