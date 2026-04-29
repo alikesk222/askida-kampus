@@ -77,7 +77,7 @@
 
         <!-- Sidebar -->
         <aside id="sidebar"
-            class="fixed top-16 left-0 w-16 bg-white border-r border-gray-200 z-30 transform -translate-x-full lg:translate-x-0 transition-all duration-300 overflow-y-auto"
+            class="fixed top-16 left-0 w-56 bg-white border-r border-gray-200 z-30 transform -translate-x-full lg:translate-x-0 transition-all duration-300 overflow-y-auto"
             style="height: calc(100vh - 4rem);">
             <nav class="py-4 px-3" id="sidebar-nav">
                 <?php if (in_array($role, ['super-admin', 'university-admin'])): ?>
@@ -88,7 +88,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Dashboard</span>
+                        <span class="sidebar-text whitespace-nowrap">Dashboard</span>
                     </a>
                     <a href="<?= url('admin/isletmeler') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/isletmeler') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -96,7 +96,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">İşletmeler</span>
+                        <span class="sidebar-text whitespace-nowrap">İşletmeler</span>
                     </a>
                     <a href="<?= url('admin/kullanicilar') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/kullanicilar') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -104,7 +104,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Kullanıcılar</span>
+                        <span class="sidebar-text whitespace-nowrap">Kullanıcılar</span>
                     </a>
                     <a href="<?= url('admin/bagislar') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/bagislar') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -112,7 +112,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Bağışlar</span>
+                        <span class="sidebar-text whitespace-nowrap">Bağışlar</span>
                     </a>
                     <a href="<?= url('admin/rezervasyonlar') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/rezervasyonlar') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -120,7 +120,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Rezervasyonlar</span>
+                        <span class="sidebar-text whitespace-nowrap">Rezervasyonlar</span>
                     </a>
                     <a href="<?= url('admin/ayarlar') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/ayarlar') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -130,7 +130,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Ayarlar</span>
+                        <span class="sidebar-text whitespace-nowrap">Ayarlar</span>
                     </a>
                 <?php elseif ($role === 'venue-admin'): ?>
                     <a href="<?= url('isletme') ?>"
@@ -139,7 +139,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Dashboard</span>
+                        <span class="sidebar-text whitespace-nowrap">Dashboard</span>
                     </a>
                     <a href="<?= url('isletme/teslim') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/teslim') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -147,7 +147,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Teslim Al</span>
+                        <span class="sidebar-text whitespace-nowrap">Teslim Al</span>
                     </a>
                     <a href="<?= url('isletme/stok') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/stok') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -155,7 +155,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Stok Yönetimi</span>
+                        <span class="sidebar-text whitespace-nowrap">Stok Yönetimi</span>
                     </a>
                     <a href="<?= url('isletme/bagislar') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/bagislar') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -163,7 +163,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Bağışlar</span>
+                        <span class="sidebar-text whitespace-nowrap">Bağışlar</span>
                     </a>
                     <a href="<?= url('isletme/rezervasyonlar') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/rezervasyonlar') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -171,7 +171,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Rezervasyonlar</span>
+                        <span class="sidebar-text whitespace-nowrap">Rezervasyonlar</span>
                     </a>
                 <?php elseif ($role === 'student'): ?>
                     <a href="<?= url('isletmeler') ?>"
@@ -180,7 +180,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">İşletmeler</span>
+                        <span class="sidebar-text whitespace-nowrap">İşletmeler</span>
                     </a>
                     <a href="<?= url('rezervasyonlarim') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/rezervasyonlarim') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -188,7 +188,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Rezervasyonlarım</span>
+                        <span class="sidebar-text whitespace-nowrap">Rezervasyonlarım</span>
                     </a>
                 <?php elseif ($role === 'donor'): ?>
                     <a href="<?= url('bagis') ?>"
@@ -197,7 +197,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Bağış Yap</span>
+                        <span class="sidebar-text whitespace-nowrap">Bağış Yap</span>
                     </a>
                     <a href="<?= url('bagislarim') ?>"
                         class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition <?= str_contains($currentPath, '/bagislarim') ? 'bg-[#00A3B4] text-white' : 'text-gray-700 hover:bg-gray-100' ?>">
@@ -205,7 +205,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <span class="sidebar-text whitespace-nowrap hidden">Bağışlarım</span>
+                        <span class="sidebar-text whitespace-nowrap">Bağışlarım</span>
                     </a>
                 <?php endif; ?>
             </nav>
@@ -220,7 +220,7 @@
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const sidebarOverlay = document.getElementById('sidebar-overlay');
             const mainContent = document.querySelector('main');
-            let sidebarCollapsed = true; // Varsayılan olarak kapalı
+            let sidebarCollapsed = false; // Varsayılan olarak açık
 
             function toggleSidebar() {
                 // Mobile: slide in/out
@@ -234,17 +234,18 @@
 
                     if (sidebarCollapsed) {
                         // Collapse - ikonlara kadar
-                        sidebar.classList.remove('w-64');
+                        sidebar.classList.remove('w-56');
                         sidebar.classList.add('w-16');
                         document.querySelectorAll('.sidebar-text').forEach(el => el.classList.add('hidden'));
-                        mainContent?.classList.remove('lg:pl-64');
+                        mainContent?.classList.remove('lg:pl-56');
                         mainContent?.classList.add('lg:pl-16');
                     } else {
-                        // Expand - body üstüne overlay
+                        // Expand
                         sidebar.classList.remove('w-16');
-                        sidebar.classList.add('w-64');
+                        sidebar.classList.add('w-56');
                         document.querySelectorAll('.sidebar-text').forEach(el => el.classList.remove('hidden'));
-                        // Body padding değişmez, sidebar overlay olarak açılır
+                        mainContent?.classList.remove('lg:pl-16');
+                        mainContent?.classList.add('lg:pl-56');
                     }
                 }
             }
@@ -254,7 +255,7 @@
         </script>
     <?php endif; ?>
 
-    <main class="<?= $user ? 'pt-16 lg:pl-16' : '' ?> min-h-screen transition-all duration-300">
+    <main class="<?= $user ? 'pt-16 lg:pl-56' : '' ?> min-h-screen transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
             <?php

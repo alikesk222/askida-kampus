@@ -22,6 +22,7 @@
                 <img src="<?= asset('aybu.png') ?>" alt="AYBU Logo" class="h-16 w-auto mx-auto mb-4 hover:opacity-80 transition">
             </a>
             <h1 class="text-gray-800 text-lg font-semibold">Ankara Yıldırım Beyazıt Üniversitesi</h1>
+            <p class="text-[#00A3B4] text-sm font-medium mt-1">Askıda Kampüs Sistemi</p>
         </div>
 
         <?php $flashError = flash('error'); ?>
@@ -35,6 +36,7 @@
             <?= csrf_field() ?>
 
             <div>
+                <label for="email" class="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">E-posta</label>
                 <input type="email" id="email" name="email" value="<?= old('email') ?>"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4] text-sm"
                     placeholder="2105081101@aybu.edu.tr" autocomplete="email" required>
@@ -42,6 +44,7 @@
             </div>
 
             <div>
+                <label for="password" class="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Şifre</label>
                 <div class="relative">
                     <input type="password" id="password" name="password"
                         class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4] text-sm"
@@ -65,9 +68,16 @@
 
             <button type="submit"
                 class="w-full py-3 bg-[#00A3B4] hover:bg-[#008899] text-white font-medium rounded-lg transition-colors text-sm">
-                Giriş
+                Giriş Yap
             </button>
         </form>
+
+        <div class="mt-6 pt-5 border-t border-gray-100 text-center">
+            <p class="text-sm text-gray-500">
+                Hesabınız yok mu?
+                <a href="<?= url('kayit') ?>" class="text-[#00A3B4] font-semibold hover:underline ml-1">Kayıt Ol</a>
+            </p>
+        </div>
     </div>
 </div>
 

@@ -638,18 +638,38 @@
     <section class="bg-white border-b border-gray-100">
         <div class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100">
             <div class="stat-card text-center p-6 bg-white">
+                <div class="flex justify-center mb-2">
+                    <svg class="w-7 h-7" style="color:#0d1f3c" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
                 <p class="text-3xl font-bold text-[#0d1f3c]"><?= e($stats['venues']) ?>+</p>
                 <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Katılımcı İşletme</p>
             </div>
             <div class="stat-card text-center p-6 bg-white">
+                <div class="flex justify-center mb-2">
+                    <svg class="w-7 h-7" style="color:#009999" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                </div>
                 <p class="text-3xl font-bold" style="color:#009999"><?= e($stats['donations']) ?>+</p>
                 <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Toplam Bağış</p>
             </div>
             <div class="stat-card text-center p-6 bg-white">
+                <div class="flex justify-center mb-2">
+                    <svg class="w-7 h-7" style="color:#0d1f3c" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
                 <p class="text-3xl font-bold text-[#0d1f3c]"><?= e($stats['reservations']) ?>+</p>
                 <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Teslim Edilen</p>
             </div>
             <div class="stat-card text-center p-6 bg-white">
+                <div class="flex justify-center mb-2">
+                    <svg class="w-7 h-7" style="color:#009999" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                    </svg>
+                </div>
                 <p class="text-3xl font-bold" style="color:#009999"><?= e($stats['stock']) ?>+</p>
                 <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium">Serbest Ürün</p>
             </div>
@@ -736,21 +756,27 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <?php foreach ($venues as $v): ?>
                     <a href="<?= url('isletme/' . $v['id']) ?>"
-                        class="venue-card border border-gray-200 rounded-lg p-5 block bg-white"
+                        class="venue-card border border-gray-200 rounded-lg p-5 block bg-white group"
                         style="border-left:3px solid #009999;">
                         <div class="flex items-start gap-3">
-                            <div class="w-9 h-9 rounded flex items-center justify-center flex-shrink-0 text-white text-sm font-bold"
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-sm font-bold shadow-sm"
                                  style="background:#0d1f3c;">
                                 <?= mb_strtoupper(mb_substr(e($v['name']), 0, 1)) ?>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="font-semibold text-gray-800 text-sm"><?= e($v['name']) ?></p>
+                                <p class="font-semibold text-gray-800 text-sm group-hover:text-[#009999] transition-colors"><?= e($v['name']) ?></p>
                                 <p class="text-xs text-gray-400 mt-0.5"><?= e($v['campus_name']) ?></p>
                                 <?php if ($v['location']): ?>
-                                    <p class="text-xs text-gray-400 mt-0.5 truncate"><?= e($v['location']) ?></p>
+                                    <p class="text-xs text-gray-400 mt-1 truncate flex items-center gap-1">
+                                        <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                        <?= e($v['location']) ?>
+                                    </p>
                                 <?php endif; ?>
                             </div>
-                            <svg class="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-gray-300 group-hover:text-[#009999] flex-shrink-0 mt-0.5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </div>
