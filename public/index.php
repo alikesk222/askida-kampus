@@ -75,7 +75,13 @@ $router->post('/misafir-bagis/{id}', [Controllers\GuestDonorController::class, '
 $router->get('/kayit', [Controllers\RegisterController::class, 'form']);
 $router->post('/kayit', [Controllers\RegisterController::class, 'store']);
 
+// ── Dil Değiştirme ────────────────────────────────────────
+$router->get('/lang/{code}', [Controllers\PublicController::class, 'setLang']);
+
 // ── Public Sayfalar ───────────────────────────────────────
+$router->get('/hakkimizda', [Controllers\PublicController::class, 'about']);
+$router->get('/iletisim',   [Controllers\PublicController::class, 'contact']);
+$router->get('/sss',        [Controllers\PublicController::class, 'faq']);
 $router->get('/isletme/{id}', [Controllers\PublicController::class, 'venueDetail']);
 
 // ── Root redirect ─────────────────────────────────────────

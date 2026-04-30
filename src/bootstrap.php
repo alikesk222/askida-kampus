@@ -97,3 +97,10 @@ spl_autoload_register(function (string $class): void {
 
 // Helpers
 require ROOT . '/src/helpers.php';
+
+// Language
+$__langCode = $_SESSION['lang'] ?? 'tr';
+if (!in_array($__langCode, ['tr', 'en'], true)) {
+    $__langCode = 'tr';
+}
+$GLOBALS['__lang'] = require ROOT . '/lang/' . $__langCode . '.php';

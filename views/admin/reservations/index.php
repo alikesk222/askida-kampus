@@ -1,6 +1,11 @@
 <?php include ROOT . '/views/layout/header.php'; ?>
 
 <div class="mb-6">
+    <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
+        <a href="<?= url('admin') ?>" class="hover:text-[#00A3B4] transition">Dashboard</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-600 font-medium">Rezervasyonlar</span>
+    </nav>
     <h1 class="text-2xl font-bold text-gray-800">Rezervasyonlar</h1>
     <p class="text-gray-500 text-sm mt-1">Toplam <?= $total ?> rezervasyon</p>
 </div>
@@ -21,12 +26,20 @@
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php if (empty($reservations)): ?>
-                <tr>
-                    <td colspan="8" class="px-5 py-10 text-center text-gray-400">Rezervasyon bulunamadı.</td>
-                </tr>
+                <tr><td colspan="8" class="px-5 py-16 text-center">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium text-sm">Rezervasyon bulunamadı</p>
+                        <p class="text-gray-400 text-xs">Henüz sistemde rezervasyon kaydı bulunmamaktadır.</p>
+                    </div>
+                </td></tr>
             <?php else: ?>
                 <?php foreach ($reservations as $r): ?>
-                    <tr class="hover:bg-gray-50">
+                    <tr class="even:bg-gray-50/50 hover:bg-[#E0F7FA]/50 transition-colors">
                         <td class="px-5 py-3 text-gray-400"><?= e($r['id']) ?></td>
                         <td class="px-5 py-3">
                             <p class="font-medium text-gray-800"><?= e($r['student_name']) ?></p>

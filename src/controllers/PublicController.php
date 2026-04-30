@@ -8,6 +8,39 @@ use Models\StockModel;
 
 class PublicController
 {
+    public function about(): void
+    {
+        $pageTitle = 'Hakkımızda';
+        view('about', compact('pageTitle'));
+    }
+
+    public function contact(): void
+    {
+        $pageTitle = 'İletişim';
+        view('contact', compact('pageTitle'));
+    }
+
+    public function faq(): void
+    {
+        $pageTitle = 'Sık Sorulan Sorular';
+        view('faq', compact('pageTitle'));
+    }
+
+    public function setLang(string $code): void
+    {
+        if (in_array($code, ['tr', 'en'], true)) {
+            $_SESSION['lang'] = $code;
+        }
+        $ref = $_SERVER['HTTP_REFERER'] ?? '';
+        $base = BASE_URL;
+        if ($ref && str_starts_with($ref, $base)) {
+            header('Location: ' . $ref);
+        } else {
+            header('Location: ' . $base . '/');
+        }
+        exit;
+    }
+
     public function venueDetail(string $id): void
     {
         $venueModel   = new VenueModel();

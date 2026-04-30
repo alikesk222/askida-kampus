@@ -2,6 +2,11 @@
 
 <div class="flex items-center justify-between mb-6">
     <div>
+        <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
+            <a href="<?= url('admin') ?>" class="hover:text-[#00A3B4] transition">Dashboard</a>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <span class="text-gray-600 font-medium">Kullanıcılar</span>
+        </nav>
         <h1 class="text-2xl font-bold text-gray-800">Kullanıcılar</h1>
         <p class="text-gray-500 text-sm mt-1">Toplam <?= $total ?> kullanıcı</p>
     </div>
@@ -27,12 +32,20 @@
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php if (empty($users)): ?>
-                <tr>
-                    <td colspan="8" class="px-5 py-10 text-center text-gray-400">Kullanıcı bulunamadı.</td>
-                </tr>
+                <tr><td colspan="8" class="px-5 py-16 text-center">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium text-sm">Kullanıcı bulunamadı</p>
+                        <p class="text-gray-400 text-xs">Arama kriterlerinize uygun kullanıcı yok.</p>
+                    </div>
+                </td></tr>
             <?php else: ?>
                 <?php foreach ($users as $u): ?>
-                    <tr class="hover:bg-gray-50">
+                    <tr class="even:bg-gray-50/50 hover:bg-[#E0F7FA]/50 transition-colors">
                         <td class="px-5 py-3 text-gray-400"><?= e($u['id']) ?></td>
                         <td class="px-5 py-3 font-medium text-gray-800"><?= e($u['name']) ?></td>
                         <td class="px-5 py-3 text-gray-500"><?= e($u['email']) ?></td>

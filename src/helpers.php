@@ -109,6 +109,25 @@ if (!function_exists('error_msg')) {
     }
 }
 
+if (!function_exists('t')) {
+    function t(string $key, array $replace = []): string
+    {
+        $lang = $GLOBALS['__lang'] ?? [];
+        $str  = $lang[$key] ?? $key;
+        foreach ($replace as $k => $v) {
+            $str = str_replace(':' . $k, (string)$v, $str);
+        }
+        return $str;
+    }
+}
+
+if (!function_exists('current_lang')) {
+    function current_lang(): string
+    {
+        return $_SESSION['lang'] ?? 'tr';
+    }
+}
+
 if (!function_exists('format_date')) {
     function format_date(?string $date, string $format = 'd.m.Y H:i'): string
     {

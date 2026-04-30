@@ -1,8 +1,12 @@
 <?php include ROOT . '/views/layout/header.php'; ?>
 
 <div class="mb-6">
-    <a href="<?= url('isletme') ?>" class="text-[#00A3B4] text-sm hover:underline">← Dashboard</a>
-    <h1 class="text-2xl font-bold text-gray-800 mt-2">Bağışlar</h1>
+    <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
+        <a href="<?= url('isletme') ?>" class="hover:text-[#00A3B4] transition">Dashboard</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-600 font-medium">Bağışlar</span>
+    </nav>
+    <h1 class="text-2xl font-bold text-gray-800">Bağışlar</h1>
     <p class="text-gray-500 text-sm mt-1">Toplam <?= $total ?> bağış</p>
 </div>
 
@@ -20,10 +24,18 @@
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php if (empty($donations)): ?>
-            <tr><td colspan="6" class="px-5 py-10 text-center text-gray-400">Bağış bulunamadı.</td></tr>
+            <tr><td colspan="6" class="px-5 py-16 text-center">
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <p class="text-gray-500 font-medium text-sm">Henüz bağış yok</p>
+                    <p class="text-gray-400 text-xs">Bu işletmeye ait bağış kaydı bulunmamaktadır.</p>
+                </div>
+            </td></tr>
             <?php else: ?>
             <?php foreach ($donations as $d): ?>
-            <tr class="hover:bg-gray-50">
+            <tr class="even:bg-gray-50/50 hover:bg-[#E0F7FA]/50 transition-colors">
                 <td class="px-5 py-3 text-gray-400"><?= e($d['id']) ?></td>
                 <td class="px-5 py-3">
                     <p class="font-medium text-gray-800"><?= e($d['donor_name']) ?></p>

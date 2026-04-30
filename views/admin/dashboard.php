@@ -1,8 +1,12 @@
 <?php include ROOT . '/views/layout/header.php'; ?>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
-    <p class="text-gray-500 text-sm mt-1">Sistem genel bakış</p>
+    <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="text-gray-600 font-medium">Dashboard</span>
+    </nav>
+    <h1 class="text-2xl font-bold text-gray-800">Genel Bakış</h1>
+    <p class="text-gray-500 text-sm mt-1">Sistem özeti — <?= date('d.m.Y') ?></p>
 </div>
 
 <!-- İstatistik Kartları -->
