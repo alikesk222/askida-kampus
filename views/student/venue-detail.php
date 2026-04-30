@@ -5,11 +5,10 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
         </svg>
-        İşletmelere Dön
+        <?= t('student.back_venues') ?>
     </a>
 </div>
 
-<!-- İşletme Header -->
 <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
     <div class="h-32 bg-gradient-to-br from-[#00A3B4] to-[#007A8A] relative">
         <div class="absolute inset-0 bg-black/10"></div>
@@ -36,9 +35,9 @@
                     }
                     ?>
                     <?php if ($isOpen): ?>
-                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">Açık</span>
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium"><?= t('student.open') ?></span>
                     <?php else: ?>
-                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">Kapalı</span>
+                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium"><?= t('student.closed') ?></span>
                     <?php endif; ?>
                 </div>
             </div>
@@ -46,7 +45,6 @@
     </div>
 </div>
 
-<!-- İşletme Bilgileri -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     <?php if ($venue['location']): ?>
     <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($venue['location']) ?>" target="_blank" class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition block">
@@ -57,9 +55,9 @@
                 </svg>
             </div>
             <div class="flex-1">
-                <p class="text-xs text-gray-500">Konum</p>
+                <p class="text-xs text-gray-500"><?= t('student.location') ?></p>
                 <p class="text-sm font-medium text-gray-800"><?= e($venue['location']) ?></p>
-                <p class="text-xs text-blue-600 mt-1">Haritada Gör →</p>
+                <p class="text-xs text-blue-600 mt-1"><?= t('student.see_map') ?></p>
             </div>
         </div>
     </a>
@@ -74,7 +72,7 @@
                 </svg>
             </div>
             <div>
-                <p class="text-xs text-gray-500">Çalışma Saatleri</p>
+                <p class="text-xs text-gray-500"><?= t('student.hours') ?></p>
                 <p class="text-sm font-medium text-gray-800"><?= e($venue['opens_at']) ?> – <?= e($venue['closes_at']) ?></p>
             </div>
         </div>
@@ -89,23 +87,22 @@
                 </svg>
             </div>
             <div>
-                <p class="text-xs text-gray-500">Mevcut Ürün</p>
-                <p class="text-sm font-medium text-gray-800"><?= count($products) ?> Çeşit</p>
+                <p class="text-xs text-gray-500"><?= t('student.avail_count') ?></p>
+                <p class="text-sm font-medium text-gray-800"><?= count($products) ?> <?= t('common.items') ?></p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Ürünler -->
 <div class="bg-white rounded-2xl shadow-sm p-6">
     <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-bold text-gray-800">Mevcut Ürünler</h2>
-        <a href="<?= url('isletmeler/' . $venue['id'] . '/rezerve') ?>" 
+        <h2 class="text-xl font-bold text-gray-800"><?= t('student.avail_products') ?></h2>
+        <a href="<?= url('isletmeler/' . $venue['id'] . '/rezerve') ?>"
            class="px-6 py-2.5 bg-[#00A3B4] hover:bg-[#008899] text-white rounded-lg text-sm font-medium transition inline-flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
-            Rezervasyon Yap
+            <?= t('student.make_reserve') ?>
         </a>
     </div>
 
@@ -114,7 +111,7 @@
         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
         </svg>
-        <p class="text-sm">Henüz ürün bulunmamaktadır.</p>
+        <p class="text-sm"><?= t('student.no_reservable') ?></p>
     </div>
     <?php else: ?>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -122,24 +119,23 @@
         <div class="border border-gray-200 rounded-xl p-4 hover:border-[#00A3B4] transition">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
-                    <h3 class="font-semibold text-gray-800 text-sm"><?= e($product['name']) ?></h3>
+                    <h3 class="font-semibold text-gray-800 text-sm"><?= e(pname($product)) ?></h3>
                     <?php if ($product['description']): ?>
                     <p class="text-xs text-gray-500 mt-1 line-clamp-2"><?= e($product['description']) ?></p>
                     <?php endif; ?>
                 </div>
             </div>
-
             <div class="flex items-center justify-between pt-3 border-t border-gray-100">
                 <div>
-                    <p class="text-xs text-gray-500">Stok</p>
+                    <p class="text-xs text-gray-500"><?= t('student.stock') ?></p>
                     <p class="text-sm font-semibold <?= ($stocks[$product['id']] ?? 0) > 0 ? 'text-green-600' : 'text-red-600' ?>">
-                        <?= $stocks[$product['id']] ?? 0 ?> Adet
+                        <?= $stocks[$product['id']] ?? 0 ?> <?= t('common.items') ?>
                     </p>
                 </div>
                 <?php if (($stocks[$product['id']] ?? 0) > 0): ?>
-                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">Mevcut</span>
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium"><?= t('student.in_stock') ?></span>
                 <?php else: ?>
-                <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium">Tükendi</span>
+                <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium"><?= t('student.out_of_stock') ?></span>
                 <?php endif; ?>
             </div>
         </div>

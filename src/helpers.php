@@ -109,6 +109,16 @@ if (!function_exists('error_msg')) {
     }
 }
 
+if (!function_exists('pname')) {
+    function pname(array $product): string
+    {
+        if (current_lang() === 'en' && !empty($product['name_en'])) {
+            return $product['name_en'];
+        }
+        return $product['name'];
+    }
+}
+
 if (!function_exists('t')) {
     function t(string $key, array $replace = []): string
     {
@@ -140,15 +150,16 @@ if (!function_exists('status_badge')) {
     function status_badge(string $status): string
     {
         $map = [
-            'waiting_approval' => ['bg-yellow-100 text-yellow-800', 'Onay Bekliyor'],
-            'paid'             => ['bg-green-100 text-green-800',  'Ödendi'],
-            'failed'           => ['bg-red-100 text-red-800',      'Başarısız'],
-            'reserved'         => ['bg-blue-100 text-blue-800',    'Rezerve'],
-            'claimed'          => ['bg-green-100 text-green-800',  'Teslim Alındı'],
-            'expired'          => ['bg-gray-100 text-gray-600',    'Süresi Doldu'],
-            'cancelled'        => ['bg-red-100 text-red-800',      'İptal'],
+            'waiting_approval' => ['bg-yellow-100 text-yellow-800', 'status.waiting_approval'],
+            'paid'             => ['bg-green-100 text-green-800',  'status.paid'],
+            'failed'           => ['bg-red-100 text-red-800',      'status.failed'],
+            'reserved'         => ['bg-blue-100 text-blue-800',    'status.reserved'],
+            'claimed'          => ['bg-green-100 text-green-800',  'status.claimed'],
+            'expired'          => ['bg-gray-100 text-gray-600',    'status.expired'],
+            'cancelled'        => ['bg-red-100 text-red-800',      'status.cancelled'],
         ];
-        [$cls, $label] = $map[$status] ?? ['bg-gray-100 text-gray-600', $status];
+        [$cls, $key] = $map[$status] ?? ['bg-gray-100 text-gray-600', $status];
+        $label = isset($map[$status]) ? t($key) : $status;
         return "<span class=\"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium $cls\">$label</span>";
     }
 }

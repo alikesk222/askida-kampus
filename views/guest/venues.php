@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="<?= current_lang() ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,38 +9,41 @@
 </head>
 <body class="min-h-screen bg-gray-50 flex flex-col">
 
-<!-- Header -->
 <header class="bg-white border-b border-gray-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-[72px]">
         <a href="<?= url() ?>" class="flex items-center gap-3">
             <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-12 w-auto">
             <div class="border-l border-gray-300 pl-3">
-                <p class="text-[13px] font-semibold text-gray-800 leading-tight">Ankara Yıldırım Beyazıt Üniversitesi</p>
-                <p class="text-[12px] text-gray-500 leading-tight">İktisadi İşletmeler Müdürlüğü</p>
+                <p class="text-[13px] font-semibold text-gray-800 leading-tight"><?= t('common.univ') ?></p>
+                <p class="text-[12px] text-gray-500 leading-tight"><?= t('common.dept') ?></p>
             </div>
         </a>
         <div class="flex items-center gap-3 text-sm">
-            <a href="<?= url('giris') ?>" class="text-gray-600 hover:text-[#00A3B4] transition">Giriş Yap</a>
-            <a href="<?= url('kayit') ?>" class="px-4 py-1.5 bg-[#00A3B4] text-white rounded-lg hover:bg-[#007A8A] transition">Hesap Oluştur</a>
+            <?php $cl = current_lang(); ?>
+            <div class="flex items-center border border-gray-200 rounded-md overflow-hidden text-xs font-bold">
+                <a href="<?= url('lang/tr') ?>" class="px-2.5 py-1.5 <?= $cl === 'tr' ? 'bg-[#00A3B4] text-white' : 'text-gray-500 hover:bg-gray-50' ?> transition">TR</a>
+                <a href="<?= url('lang/en') ?>" class="px-2.5 py-1.5 <?= $cl === 'en' ? 'bg-[#00A3B4] text-white' : 'text-gray-500 hover:bg-gray-50' ?> transition">EN</a>
+            </div>
+            <a href="<?= url('giris') ?>" class="text-gray-600 hover:text-[#00A3B4] transition"><?= t('nav.login') ?></a>
+            <a href="<?= url('kayit') ?>" class="px-4 py-1.5 bg-[#00A3B4] text-white rounded-lg hover:bg-[#007A8A] transition"><?= t('nav.register') ?></a>
         </div>
     </div>
 </header>
 
 <div class="flex-1 max-w-5xl mx-auto w-full px-4 py-10">
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-800">Bağış Yapılacak İşletme Seçin</h1>
-        <p class="text-gray-500 text-sm mt-1">Hesap oluşturmadan bağış yapabilirsiniz. Sadece adınızı ve e-postanızı girmeniz yeterli.</p>
+        <h1 class="text-2xl font-bold text-gray-800"><?= t('guest.title') ?></h1>
+        <p class="text-gray-500 text-sm mt-1"><?= t('guest.sub') ?></p>
     </div>
 
-    <!-- Hesap avantajı -->
     <div class="border border-gray-200 bg-white rounded-lg p-4 flex items-start gap-3 mb-8" style="border-left:3px solid #009999;">
         <svg class="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <div>
-            <p class="text-sm font-semibold text-gray-700">Hesap açarak bağışlarınızı takip edin</p>
-            <p class="text-sm text-gray-500 mt-0.5">Tüm geçmiş bağışlarınızı görmek ve kolayca tekrar bağış yapmak için
-                <a href="<?= url('kayit') ?>" class="font-semibold hover:underline" style="color:#009999;">ücretsiz hesap oluşturun</a>.
+            <p class="text-sm font-semibold text-gray-700"><?= t('guest.account_tip') ?></p>
+            <p class="text-sm text-gray-500 mt-0.5"><?= t('guest.account_tip_desc') ?>
+                <a href="<?= url('kayit') ?>" class="font-semibold hover:underline" style="color:#009999;"><?= t('guest.create_free') ?></a>.
             </p>
         </div>
     </div>
@@ -64,14 +67,14 @@
             <?php if ($v['opens_at'] && $v['closes_at']): ?>
             <p class="text-xs text-gray-400 mt-0.5"><?= e($v['opens_at']) ?> – <?= e($v['closes_at']) ?></p>
             <?php endif; ?>
-            <p class="mt-3 text-xs font-semibold" style="color:#009999;">Bağış yap →</p>
+            <p class="mt-3 text-xs font-semibold" style="color:#009999;"><?= t('guest.donate_cta') ?></p>
         </a>
         <?php endforeach; ?>
     </div>
 </div>
 
 <footer class="bg-[#0d1b3e] text-white/50 text-xs text-center py-4 mt-auto">
-    &copy; <?= date('Y') ?> Ankara Yıldırım Beyazıt Üniversitesi — İktisadi İşletmeler Müdürlüğü
+    <?= t('common.copyright', ['year' => date('Y')]) ?>
 </footer>
 </body>
 </html>

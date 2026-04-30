@@ -64,11 +64,18 @@
                             <div class="text-gray-500 text-xs"><?= e($user['role']) ?></div>
                         </div>
                     </div>
+                    <?php if (in_array($role, ['student', 'donor'])): ?>
+                    <?php $cl = current_lang(); ?>
+                    <div class="hidden sm:flex items-center border border-gray-200 rounded-md overflow-hidden text-xs font-bold">
+                        <a href="<?= url('lang/tr') ?>" class="px-2.5 py-1.5 <?= $cl === 'tr' ? 'bg-[#00A3B4] text-white' : 'text-gray-500 hover:bg-gray-50' ?> transition">TR</a>
+                        <a href="<?= url('lang/en') ?>" class="px-2.5 py-1.5 <?= $cl === 'en' ? 'bg-[#00A3B4] text-white' : 'text-gray-500 hover:bg-gray-50' ?> transition">EN</a>
+                    </div>
+                    <?php endif; ?>
                     <form method="POST" action="<?= url('cikis') ?>">
                         <?= csrf_field() ?>
                         <button type="submit"
                             class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition">
-                            Çıkış
+                            <?= t('common.logout') ?>
                         </button>
                     </form>
                 </div>

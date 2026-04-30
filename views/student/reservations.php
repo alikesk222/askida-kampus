@@ -2,12 +2,12 @@
 
 <div class="flex items-center justify-between mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Rezervasyonlarım</h1>
-        <p class="text-gray-500 text-sm mt-1"><?= count($reservations) ?> rezervasyon</p>
+        <h1 class="text-2xl font-bold text-gray-800"><?= t('student.reservations') ?></h1>
+        <p class="text-gray-500 text-sm mt-1"><?= count($reservations) ?> <?= t('common.donations') ?></p>
     </div>
     <a href="<?= url('isletmeler') ?>"
        class="px-4 py-2 bg-[#00A3B4] hover:bg-[#007A8A] text-white rounded-lg text-sm font-medium transition">
-        + Yeni Rezervasyon
+        + <?= t('student.new_reservation') ?>
     </a>
 </div>
 
@@ -19,9 +19,9 @@
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
         </svg>
     </div>
-    <p class="text-gray-500">Henüz rezervasyonunuz bulunmamaktadır.</p>
+    <p class="text-gray-500"><?= t('student.no_res') ?></p>
     <a href="<?= url('isletmeler') ?>" class="mt-3 inline-block text-[#00A3B4] text-sm hover:underline">
-        İşletmelere göz atın →
+        <?= t('student.browse_venues') ?>
     </a>
 </div>
 <?php else: ?>
@@ -35,10 +35,10 @@
             <div>
                 <p class="font-semibold text-gray-800"><?= e($r['venue_name']) ?></p>
                 <p class="text-xs text-gray-400 mt-0.5">
-                    Kod: <span class="font-mono font-bold tracking-widest"><?= e($r['claim_code']) ?></span>
+                    <?= t('student.claim_code') ?>: <span class="font-mono font-bold tracking-widest"><?= e($r['claim_code']) ?></span>
                 </p>
                 <p class="text-xs text-gray-400">
-                    Oluşturulma: <?= format_date($r['created_at']) ?>
+                    <?= t('student.created_at') ?>: <?= format_date($r['created_at']) ?>
                 </p>
             </div>
         </div>
@@ -46,11 +46,11 @@
             <?= status_badge($r['status']) ?>
             <?php if ($r['status'] === 'reserved'): ?>
             <span class="text-xs text-orange-500">
-                Son: <?= format_date($r['expires_at']) ?>
+                <?= t('student.expires') ?>: <?= format_date($r['expires_at']) ?>
             </span>
             <a href="<?= url('rezervasyonlarim/' . $r['id'] . '/qr') ?>"
                class="px-3 py-1.5 bg-[#00A3B4] hover:bg-[#007A8A] text-white rounded-lg text-xs font-medium transition">
-                QR Göster
+                <?= t('student.show_code') ?>
             </a>
             <?php endif; ?>
         </div>

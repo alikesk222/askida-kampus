@@ -1,13 +1,13 @@
 <?php include ROOT . '/views/layout/header.php'; ?>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Bağış Yapılacak İşletmeler</h1>
-    <p class="text-gray-500 text-sm mt-1">Kampüs öğrencilerine destek olmak için bir işletme seçin</p>
+    <h1 class="text-2xl font-bold text-gray-800"><?= t('donor.donate_title') ?></h1>
+    <p class="text-gray-500 text-sm mt-1"><?= t('donor.venues_sub') ?></p>
 </div>
 
 <?php if (empty($venues)): ?>
 <div class="bg-white rounded-xl shadow-sm p-10 text-center text-gray-400">
-    Şu an aktif işletme bulunmamaktadır.
+    <?= t('student.no_venues') ?>
 </div>
 <?php else: ?>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -38,7 +38,7 @@
 
             <a href="<?= url('bagis/' . $venue['id']) ?>"
                class="block w-full text-center py-2 bg-gradient-to-r from-[#00A3B4] to-[#007A8A] hover:from-[#007A8A] hover:to-[#005F6B] text-white rounded-lg text-sm font-medium transition">
-                Bağış Yap
+                <?= t('nav.donate') ?>
             </a>
         </div>
     </div>

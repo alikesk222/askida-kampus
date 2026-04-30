@@ -1,13 +1,13 @@
 <?php include ROOT . '/views/layout/header.php'; ?>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">İşletmeler</h1>
-    <p class="text-gray-500 text-sm mt-1">Askıda ürün rezervasyonu yapabileceğiniz işletmeler</p>
+    <h1 class="text-2xl font-bold text-gray-800"><?= t('student.venues_title') ?></h1>
+    <p class="text-gray-500 text-sm mt-1"><?= t('student.venues_sub') ?></p>
 </div>
 
 <?php if (empty($venues)): ?>
 <div class="bg-white rounded-xl shadow-sm p-10 text-center text-gray-400">
-    Şu an aktif işletme bulunmamaktadır.
+    <?= t('student.no_venues') ?>
 </div>
 <?php else: ?>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -20,7 +20,7 @@
                     <h2 class="font-semibold text-gray-800 text-base"><?= e($venue['name']) ?></h2>
                     <p class="text-xs text-gray-500 mt-0.5"><?= e($venue['campus_name']) ?></p>
                 </div>
-                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Açık</span>
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium"><?= t('student.open') ?></span>
             </div>
 
             <?php if ($venue['location']): ?>
@@ -48,11 +48,11 @@
             <div class="flex gap-2">
                 <a href="<?= url('isletmeler/' . $venue['id']) ?>"
                    class="flex-1 text-center py-2 border border-[#00A3B4] text-[#00A3B4] hover:bg-[#00A3B4] hover:text-white rounded-lg text-sm font-medium transition">
-                    Detay
+                    <?= t('student.detail') ?>
                 </a>
                 <a href="<?= url('isletmeler/' . $venue['id'] . '/rezerve') ?>"
                    class="flex-1 text-center py-2 bg-[#00A3B4] hover:bg-[#007A8A] text-white rounded-lg text-sm font-medium transition">
-                    Rezerve Et
+                    <?= t('student.reserve') ?>
                 </a>
             </div>
         </div>

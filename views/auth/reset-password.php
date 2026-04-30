@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="<?= current_lang() ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeni Şifre Oluştur — Askıda Kampüs</title>
+    <title><?= t('auth.reset_title') ?> — Askıda Kampüs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="<?= url('assets/css/app.css') ?>">
 </head>
 <body class="min-h-screen overflow-hidden relative">
 
-<!-- Arka plan görseli - Tüm sayfa -->
 <div class="fixed inset-0 bg-cover bg-center" style="background-image: url('<?= asset('images/login-bg.jpeg') ?>');"></div>
 <div class="fixed inset-0 bg-black/40"></div>
 
+<?php $cl = current_lang(); ?>
+<div class="fixed top-4 right-4 z-20 flex items-center border border-white/30 rounded-md overflow-hidden text-xs font-bold">
+    <a href="<?= url('lang/tr') ?>" class="px-2.5 py-1.5 <?= $cl === 'tr' ? 'bg-[#00A3B4] text-white' : 'text-white/70 hover:bg-white/10' ?> transition">TR</a>
+    <a href="<?= url('lang/en') ?>" class="px-2.5 py-1.5 <?= $cl === 'en' ? 'bg-[#00A3B4] text-white' : 'text-white/70 hover:bg-white/10' ?> transition">EN</a>
+</div>
+
 <div class="min-h-screen flex items-center justify-center p-4 relative z-10">
-    <!-- Form Panel -->
     <div class="w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 lg:p-10">
-        <!-- Logo -->
         <div class="text-center mb-8">
             <a href="<?= url() ?>" class="inline-block">
                 <img src="<?= asset('aybu.png') ?>" alt="AYBU Logo" class="h-16 w-auto mx-auto mb-4 hover:opacity-80 transition">
             </a>
-            <h1 class="text-gray-800 text-lg font-semibold">Yeni Şifre Oluştur</h1>
-            <p class="text-gray-500 text-sm mt-2">Lütfen yeni şifrenizi belirleyin</p>
+            <h1 class="text-gray-800 text-lg font-semibold"><?= t('auth.reset_title') ?></h1>
+            <p class="text-gray-500 text-sm mt-2"><?= t('auth.reset_sub') ?></p>
         </div>
 
         <?php $flashError = flash('error'); ?>
@@ -38,11 +41,11 @@
             <input type="hidden" name="email" value="<?= e($email) ?>">
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2" for="password">Yeni Şifre</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2" for="password"><?= t('auth.new_pass') ?></label>
                 <div class="relative">
                     <input type="password" id="password" name="password"
                         class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4] text-sm"
-                        placeholder="En az 8 karakter" autocomplete="new-password" required>
+                        placeholder="<?= t('auth.new_pass_ph') ?>" autocomplete="new-password" required>
                     <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
                         <svg id="eye-icon-password" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -57,11 +60,11 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2" for="password_confirmation">Yeni Şifre (Tekrar)</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2" for="password_confirmation"><?= t('auth.new_pass_confirm') ?></label>
                 <div class="relative">
                     <input type="password" id="password_confirmation" name="password_confirmation"
                         class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4] text-sm"
-                        placeholder="Şifrenizi tekrar girin" autocomplete="new-password" required>
+                        placeholder="<?= t('auth.pass_confirm_ph') ?>" autocomplete="new-password" required>
                     <button type="button" onclick="togglePassword('password_confirmation')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
                         <svg id="eye-icon-password_confirmation" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -77,11 +80,11 @@
 
             <button type="submit"
                 class="w-full py-3 bg-[#00A3B4] hover:bg-[#008899] text-white font-medium rounded-lg transition-colors text-sm">
-                Şifremi Güncelle
+                <?= t('auth.update_pass') ?>
             </button>
 
             <div class="text-center">
-                <a href="<?= url('giris') ?>" class="text-sm text-[#00A3B4] hover:underline">← Giriş Sayfasına Dön</a>
+                <a href="<?= url('giris') ?>" class="text-sm text-[#00A3B4] hover:underline"><?= t('auth.back_login') ?></a>
             </div>
         </form>
     </div>
@@ -93,7 +96,7 @@ function togglePassword(fieldId) {
     const passwordInput = document.getElementById(fieldId);
     const eyeIcon = document.getElementById('eye-icon-' + fieldId);
     const eyeSlashIcon = document.getElementById('eye-slash-icon-' + fieldId);
-    
+
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
         eyeIcon.classList.add('hidden');
