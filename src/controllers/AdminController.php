@@ -10,6 +10,7 @@ use Models\VenueModel;
 use Models\ProductModel;
 use Models\DonationModel;
 use Models\ReservationModel;
+use Models\FaqModel;
 use Models\SettingsModel;
 use Services\DonationService;
 
@@ -350,8 +351,11 @@ class AdminController
                 $venueAssignments[$u['id']] = $userModel->getVenueIdForUser((int) $u['id']);
             }
         }
+        $settingsModel = new SettingsModel();
+        $globalWeeklyLimit = (int) $settingsModel->get('student_weekly_limit', 5);
+
         $pageTitle = 'Kullanıcılar';
-        view('admin/users/index', compact('pageTitle', 'users', 'page', 'total', 'venues', 'errors', 'venueAssignments'));
+        view('admin/users/index', compact('pageTitle', 'users', 'page', 'total', 'venues', 'errors', 'venueAssignments', 'globalWeeklyLimit'));
     }
 
     public function userStore(): void
@@ -384,7 +388,6 @@ class AdminController
             'role' => $_POST['role'],
             'student_number' => trim($_POST['student_number'] ?? '') ?: null,
             'phone' => trim($_POST['phone'] ?? '') ?: null,
-            'daily_limit' => (int) ($_POST['daily_limit'] ?? 3),
         ]);
 
         // venue-admin ise işletmeye ata
@@ -393,6 +396,66 @@ class AdminController
         }
 
         flash('success', 'Kullanıcı oluşturuldu.');
+        redirect('/admin/kullanicilar');
+    }
+
+    public function userUpdate(string $id): void
+    {
+        CSRF::verify();
+        $userModel = new UserModel();
+        $user = $userModel->findById((int) $id);
+        if (!$user) {
+            flash('error', 'Kullanıcı bulunamadı.');
+            redirect('/admin/kullanicilar');
+        }
+
+        $v = new Validator($_POST);
+        $v->required('name',  'Ad Soyad')
+          ->required('email', 'E-posta')
+          ->email('email',    'E-posta')
+          ->required('role',  'Rol');
+        if (!empty($_POST['password'])) {
+            $v->min('password', 6, 'Şifre');
+        }
+        if ($v->fails()) {
+            flash('error', $v->firstError());
+            redirect('/admin/kullanicilar');
+        }
+
+        $db = \Core\Database::getInstance();
+
+        // E-posta başkası tarafından kullanılıyor mu?
+        $existing = $userModel->findByEmail(trim($_POST['email']));
+        if ($existing && (int) $existing['id'] !== (int) $id) {
+            flash('error', 'Bu e-posta başka bir kullanıcıya ait.');
+            redirect('/admin/kullanicilar');
+        }
+
+        $weeklyRaw = $_POST['weekly_limit'] ?? '';
+        $weeklyLimit = ($weeklyRaw === '') ? null : max(1, (int) $weeklyRaw);
+
+        $fields = [
+            'name'           => trim($_POST['name']),
+            'email'          => trim($_POST['email']),
+            'role'           => $_POST['role'],
+            'weekly_limit'   => $weeklyLimit,
+            'student_number' => trim($_POST['student_number'] ?? '') ?: null,
+            'is_active'      => isset($_POST['is_active']) ? 1 : 0,
+        ];
+
+        $setParts = array_map(fn($k) => "$k = :$k", array_keys($fields));
+        $params   = $fields;
+        $params['id'] = (int) $id;
+
+        if (!empty($_POST['password'])) {
+            $setParts[]          = 'password = :password';
+            $params['password']  = password_hash($_POST['password'], PASSWORD_BCRYPT, ['cost' => 12]);
+        }
+
+        $db->prepare('UPDATE users SET ' . implode(', ', $setParts) . ' WHERE id = :id')
+           ->execute($params);
+
+        flash('success', e($fields['name']) . ' güncellendi.');
         redirect('/admin/kullanicilar');
     }
 
@@ -426,6 +489,28 @@ class AdminController
         redirect('/admin/kullanicilar');
     }
 
+    public function userSetWeeklyLimit(string $id): void
+    {
+        CSRF::verify();
+        $userModel = new UserModel();
+        $user = $userModel->findById((int) $id);
+        if (!$user || $user['role'] !== 'student') {
+            flash('error', 'Yalnızca öğrencilere haftalık limit atanabilir.');
+            redirect('/admin/kullanicilar');
+        }
+
+        $raw = $_POST['weekly_limit'] ?? '';
+        // Boş veya "varsayılan" ise NULL (global ayar kullanılır)
+        $limit = ($raw === '' || $raw === 'null') ? null : max(1, (int) $raw);
+        $userModel->setWeeklyLimit((int) $id, $limit);
+
+        $msg = $limit === null
+            ? e($user['name']) . ' için haftalık limit kaldırıldı (global ayar kullanılacak).'
+            : e($user['name']) . ' için haftalık limit ' . $limit . ' olarak güncellendi.';
+        flash('success', $msg);
+        redirect('/admin/kullanicilar');
+    }
+
     // ── Rezervasyonlar ────────────────────────────────────
 
     public function reservationsList(): void
@@ -436,6 +521,119 @@ class AdminController
         $total = $reservationModel->countAll();
         $pageTitle = 'Rezervasyonlar';
         view('admin/reservations/index', compact('pageTitle', 'reservations', 'page', 'total'));
+    }
+
+    // ── SSS Yönetimi ──────────────────────────────────────────
+
+    public function faqList(): void
+    {
+        $faqModel = new FaqModel();
+        $items = $faqModel->getAll();
+        $pageTitle = 'SSS Yönetimi';
+        view('admin/faq/index', compact('pageTitle', 'items'));
+    }
+
+    public function faqCreate(): void
+    {
+        $pageTitle = 'Yeni SSS Sorusu';
+        $errors = flash('errors') ?? [];
+        $old    = flash('old') ?? [];
+        view('admin/faq/form', compact('pageTitle', 'errors', 'old'));
+    }
+
+    public function faqStore(): void
+    {
+        CSRF::verify();
+        $v = new Validator($_POST);
+        $v->required('category',    'Kategori')
+          ->required('question_tr', 'Soru (TR)')
+          ->required('answer_tr',   'Cevap (TR)')
+          ->required('question_en', 'Soru (EN)')
+          ->required('answer_en',   'Cevap (EN)');
+
+        if ($v->fails()) {
+            flash('errors', $v->errors());
+            flash('old', $_POST);
+            redirect('/admin/sss/yeni');
+        }
+
+        $faqModel = new FaqModel();
+        $faqModel->create([
+            'category'    => $_POST['category'],
+            'question_tr' => trim($_POST['question_tr']),
+            'answer_tr'   => trim($_POST['answer_tr']),
+            'question_en' => trim($_POST['question_en']),
+            'answer_en'   => trim($_POST['answer_en']),
+            'sort_order'  => (int) ($_POST['sort_order'] ?? 0),
+            'is_active'   => isset($_POST['is_active']) ? 1 : 0,
+        ]);
+
+        flash('success', 'SSS sorusu eklendi.');
+        redirect('/admin/sss');
+    }
+
+    public function faqEdit(string $id): void
+    {
+        $faqModel = new FaqModel();
+        $item = $faqModel->findById((int) $id);
+        if (!$item) { http_response_code(404); view('errors/404'); return; }
+
+        $pageTitle = 'SSS Düzenle';
+        $errors    = flash('errors') ?? [];
+        $old       = flash('old') ?? $item;
+        view('admin/faq/form', compact('pageTitle', 'item', 'errors', 'old'));
+    }
+
+    public function faqUpdate(string $id): void
+    {
+        CSRF::verify();
+        $faqModel = new FaqModel();
+        $item = $faqModel->findById((int) $id);
+        if (!$item) { http_response_code(404); view('errors/404'); return; }
+
+        $v = new Validator($_POST);
+        $v->required('category',    'Kategori')
+          ->required('question_tr', 'Soru (TR)')
+          ->required('answer_tr',   'Cevap (TR)')
+          ->required('question_en', 'Soru (EN)')
+          ->required('answer_en',   'Cevap (EN)');
+
+        if ($v->fails()) {
+            flash('errors', $v->errors());
+            flash('old', $_POST);
+            redirect("/admin/sss/$id/duzenle");
+        }
+
+        $faqModel->update((int) $id, [
+            'category'    => $_POST['category'],
+            'question_tr' => trim($_POST['question_tr']),
+            'answer_tr'   => trim($_POST['answer_tr']),
+            'question_en' => trim($_POST['question_en']),
+            'answer_en'   => trim($_POST['answer_en']),
+            'sort_order'  => (int) ($_POST['sort_order'] ?? 0),
+            'is_active'   => isset($_POST['is_active']) ? 1 : 0,
+        ]);
+
+        flash('success', 'SSS sorusu güncellendi.');
+        redirect('/admin/sss');
+    }
+
+    public function faqDelete(string $id): void
+    {
+        CSRF::verify();
+        $faqModel = new FaqModel();
+        $faqModel->delete((int) $id);
+        flash('success', 'SSS sorusu silindi.');
+        redirect('/admin/sss');
+    }
+
+    public function faqToggle(string $id): void
+    {
+        CSRF::verify();
+        $faqModel = new FaqModel();
+        $faqModel->toggleActive((int) $id);
+        flash('success', 'SSS durumu güncellendi.');
+        redirect('/admin/sss');
     }
 
     // ── Ayarlar ───────────────────────────────────────────────
@@ -454,9 +652,11 @@ class AdminController
             'donation_signature' => $settingsModel->get('email_donation_signature'),
         ];
 
+        $weeklyLimit = (int) $settingsModel->get('student_weekly_limit', 5);
+
         $pageTitle = 'Sistem Ayarları';
         $errors = flash('errors') ?? [];
-        view('admin/settings', compact('pageTitle', 'mailSettings', 'emailSettings', 'errors'));
+        view('admin/settings', compact('pageTitle', 'mailSettings', 'emailSettings', 'weeklyLimit', 'errors'));
     }
 
     public function settingsUpdate(): void
@@ -478,6 +678,10 @@ class AdminController
             $settingsModel->set('mail_from_name', $_POST['mail_from_name'] ?? 'AYBÜ Askıda Kampüs', 'Gönderen adı');
 
             flash('success', 'SMTP ayarları başarıyla güncellendi.');
+        } elseif ($tab === 'limits') {
+            $weekly = max(1, (int) ($_POST['student_weekly_limit'] ?? 5));
+            $settingsModel->set('student_weekly_limit', $weekly, 'Öğrenci haftalık maksimum rezervasyon sayısı');
+            flash('success', 'Rezervasyon limitleri güncellendi.');
         } elseif ($tab === 'email') {
             // Email template ayarlarını kaydet
             $settingsModel->set('email_donation_subject', $_POST['email_donation_subject'] ?? '', 'Bağış teşekkür emaili konusu');

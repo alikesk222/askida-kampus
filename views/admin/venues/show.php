@@ -119,9 +119,9 @@
                         <!-- Görsel -->
                         <td class="px-6 py-3">
                             <?php if (!empty($p['image_url'])): ?>
-                                <img src="<?= asset($p['image_url']) ?>" alt="<?= e($p['name']) ?>"
+                                <img src="<?= url($p['image_url']) ?>" alt="<?= e($p['name']) ?>"
                                     class="w-14 h-14 object-cover rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:opacity-90 transition"
-                                    onclick="openImageModal('<?= asset($p['image_url']) ?>', '<?= e($p['name']) ?>')">
+                                    onclick="openImageModal('<?= url($p['image_url']) ?>', '<?= e($p['name']) ?>')">
                             <?php else: ?>
                                 <div
                                     class="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
@@ -144,7 +144,7 @@
                             <div class="flex items-center justify-end gap-2">
                                 <!-- Görsel Güncelle butonu -->
                                 <button
-                                    onclick="openEditModal(<?= $p['id'] ?>, '<?= e(addslashes($p['name'])) ?>', '<?= e(addslashes($p['category'] ?? '')) ?>', '<?= $p['price_snapshot'] ?>', '<?= e(addslashes($p['description'] ?? '')) ?>', <?= $p['is_active'] ?>, '<?= $p['image_url'] ? asset($p['image_url']) : '' ?>')"
+                                    onclick="openEditModal(<?= $p['id'] ?>, '<?= e(addslashes($p['name'])) ?>', '<?= e(addslashes($p['category'] ?? '')) ?>', '<?= $p['price_snapshot'] ?>', '<?= e(addslashes($p['description'] ?? '')) ?>', <?= $p['is_active'] ?>, '<?= $p['image_url'] ? url($p['image_url']) : '' ?>')"
                                     class="px-2 py-1 text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 rounded transition">
                                     Düzenle
                                 </button>
@@ -253,7 +253,8 @@
 
     function openEditModal(pid, name, category, price, description, isActive, imgSrc) {
         const venueId = <?= $venue['id'] ?>;
-        document.getElementById('edit-form').action = `/admin/isletmeler/${venueId}/urun/${pid}/guncelle`;
+        const baseUrl = <?= json_encode(url('')) ?>;
+        document.getElementById('edit-form').action = `${baseUrl}/admin/isletmeler/${venueId}/urun/${pid}/guncelle`;
         document.getElementById('edit-name').value = name;
         document.getElementById('edit-category').value = category;
         document.getElementById('edit-price').value = price;

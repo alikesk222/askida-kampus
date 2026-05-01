@@ -17,6 +17,15 @@ $router->post('/sifremi-unuttum', [Controllers\PasswordResetController::class, '
 $router->get('/sifre-sifirla', [Controllers\PasswordResetController::class, 'resetPasswordForm']);
 $router->post('/sifre-sifirla', [Controllers\PasswordResetController::class, 'resetPassword']);
 
+// ── Admin SSS ────────────────────────────────────────────
+$router->get('/admin/sss', [Controllers\AdminController::class, 'faqList']);
+$router->get('/admin/sss/yeni', [Controllers\AdminController::class, 'faqCreate']);
+$router->post('/admin/sss/yeni', [Controllers\AdminController::class, 'faqStore']);
+$router->get('/admin/sss/{id}/duzenle', [Controllers\AdminController::class, 'faqEdit']);
+$router->post('/admin/sss/{id}/duzenle', [Controllers\AdminController::class, 'faqUpdate']);
+$router->post('/admin/sss/{id}/sil', [Controllers\AdminController::class, 'faqDelete']);
+$router->post('/admin/sss/{id}/toggle', [Controllers\AdminController::class, 'faqToggle']);
+
 // ── Admin ─────────────────────────────────────────────────
 $router->get('/admin', [Controllers\AdminController::class, 'dashboard']);
 $router->get('/admin/isletmeler', [Controllers\AdminController::class, 'venuesList']);
@@ -33,7 +42,9 @@ $router->post('/admin/bagislar/{id}/onayla', [Controllers\AdminController::class
 $router->get('/admin/kullanicilar', [Controllers\AdminController::class, 'usersList']);
 $router->post('/admin/kullanicilar/ekle', [Controllers\AdminController::class, 'userStore']);
 $router->post('/admin/kullanicilar/{id}/toggle', [Controllers\AdminController::class, 'userToggle']);
+$router->post('/admin/kullanicilar/{id}/duzenle', [Controllers\AdminController::class, 'userUpdate']);
 $router->post('/admin/kullanicilar/{id}/ata', [Controllers\AdminController::class, 'userAssignVenue']);
+$router->post('/admin/kullanicilar/{id}/haftalik-limit', [Controllers\AdminController::class, 'userSetWeeklyLimit']);
 $router->get('/admin/rezervasyonlar', [Controllers\AdminController::class, 'reservationsList']);
 $router->get('/admin/ayarlar', [Controllers\AdminController::class, 'settingsForm']);
 $router->post('/admin/ayarlar', [Controllers\AdminController::class, 'settingsUpdate']);
@@ -44,13 +55,8 @@ $router->get('/isletme/stok', [Controllers\VenueAdminController::class, 'stock']
 $router->get('/isletme/bagislar', [Controllers\VenueAdminController::class, 'donations']);
 $router->post('/isletme/bagislar/{id}/onayla', [Controllers\VenueAdminController::class, 'donationApprove']);
 $router->get('/isletme/rezervasyonlar', [Controllers\VenueAdminController::class, 'reservations']);
-$router->get('/isletme/teslim', [Controllers\VenueAdminController::class, 'cashier']);
 $router->get('/isletme/kod-sorgula', [Controllers\VenueAdminController::class, 'claimLookup']);
 $router->post('/isletme/teslim', [Controllers\VenueAdminController::class, 'claim']);
-
-// ── Eski /kasa rotaları → geriye dönük uyumluluk (308 kalıcı yönlendirme) ──
-$router->get('/kasa', [Controllers\LegacyRedirectController::class, 'kasaTeslim']);
-$router->post('/kasa/teslim', [Controllers\LegacyRedirectController::class, 'kasaTeslimPost']);
 
 // ── Öğrenci ───────────────────────────────────────────────
 $router->get('/isletmeler', [Controllers\StudentController::class, 'venues']);
@@ -79,9 +85,10 @@ $router->post('/kayit', [Controllers\RegisterController::class, 'store']);
 $router->get('/lang/{code}', [Controllers\PublicController::class, 'setLang']);
 
 // ── Public Sayfalar ───────────────────────────────────────
-$router->get('/hakkimizda', [Controllers\PublicController::class, 'about']);
-$router->get('/iletisim',   [Controllers\PublicController::class, 'contact']);
-$router->get('/sss',        [Controllers\PublicController::class, 'faq']);
+$router->get('/hakkimizda',  [Controllers\PublicController::class, 'about']);
+$router->get('/iletisim',    [Controllers\PublicController::class, 'contact']);
+$router->post('/iletisim',   [Controllers\PublicController::class, 'contactStore']);
+$router->get('/sss',         [Controllers\PublicController::class, 'faq']);
 $router->get('/isletme/{id}', [Controllers\PublicController::class, 'venueDetail']);
 
 // ── Root redirect ─────────────────────────────────────────

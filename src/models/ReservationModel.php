@@ -82,8 +82,9 @@ class ReservationModel
     public function findByClaimCode(string $code): ?array
     {
         $stmt = $this->db->prepare(
-            'SELECT r.*, v.name AS venue_name FROM reservations r
+            'SELECT r.*, v.name AS venue_name, u.name AS student_name FROM reservations r
              INNER JOIN venues v ON v.id = r.venue_id
+             LEFT JOIN users u ON u.id = r.student_id
              WHERE r.claim_code = ? LIMIT 1'
         );
         $stmt->execute([$code]);
@@ -166,6 +167,19 @@ class ReservationModel
         return (int) $stmt->fetchColumn();
     }
 
+    public function countWeekItemsByStudent(int $studentId): int
+    {
+        $stmt = $this->db->prepare(
+            "SELECT COALESCE(SUM(ri.quantity), 0)
+             FROM reservation_items ri
+             INNER JOIN reservations r ON r.id = ri.reservation_id
+             WHERE r.student_id = ? AND r.status IN ('reserved','claimed')
+             AND YEARWEEK(r.created_at, 1) = YEARWEEK(CURDATE(), 1)"
+        );
+        $stmt->execute([$studentId]);
+        return (int) $stmt->fetchColumn();
+    }
+
     public function getExpired(): array
     {
         $stmt = $this->db->prepare(
@@ -221,6 +235,44 @@ class ReservationModel
         );
         $stmt->execute([$perPage, $offset]);
         return $stmt->fetchAll();
+    }
+
+    /**
+     * İşletmeye ait AKTİF (teslim bekleyen, süresi dolmamış) rezervasyonları ürünleriyle getir
+     */
+    public function getActiveByVenueWithItems(int $venueId, int $limit = 50): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT r.*, u.name AS student_name, u.email AS student_email,
+                    GROUP_CONCAT(CONCAT(p.name, ' ×', ri.quantity) ORDER BY p.name SEPARATOR ', ') AS items_summary
+             FROM reservations r
+             INNER JOIN users u ON u.id = r.student_id
+             LEFT JOIN reservation_items ri ON ri.reservation_id = r.id
+             LEFT JOIN products p ON p.id = ri.product_id
+             WHERE r.venue_id = ?
+               AND r.status = 'reserved'
+               AND r.expires_at > NOW()
+             GROUP BY r.id
+             ORDER BY r.expires_at ASC
+             LIMIT ?"
+        );
+        $stmt->bindValue(1, $venueId, PDO::PARAM_INT);
+        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * İşletmeye ait aktif rezervasyon sayısı
+     */
+    public function countActiveByVenue(int $venueId): int
+    {
+        $stmt = $this->db->prepare(
+            "SELECT COUNT(*) FROM reservations
+             WHERE venue_id = ? AND status = 'reserved' AND expires_at > NOW()"
+        );
+        $stmt->execute([$venueId]);
+        return (int) $stmt->fetchColumn();
     }
 
     /**

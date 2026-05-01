@@ -35,6 +35,101 @@ class EmailService
         );
     }
 
+    public function sendContactEmail(string $toEmail, string $fromName, string $fromEmail, string $subject, string $message): bool
+    {
+        try {
+            $this->mailer->addAddress($toEmail);
+            $this->mailer->addReplyTo($fromEmail, $fromName);
+            $this->mailer->isHTML(true);
+            $this->mailer->Subject = '[Askıda Kampüs İletişim] ' . $subject;
+            $this->mailer->Body    = $this->getContactTemplate($fromName, $fromEmail, $subject, $message);
+            $this->mailer->AltBody = "Gönderen: $fromName <$fromEmail>\nKonu: $subject\n\n$message";
+            $this->mailer->send();
+            return true;
+        } catch (\Throwable $e) {
+            error_log('İletişim formu email hatası: ' . $this->mailer->ErrorInfo);
+            return false;
+        }
+    }
+
+    private function getContactTemplate(string $fromName, string $fromEmail, string $subject, string $message): string
+    {
+        $safeFromName  = htmlspecialchars($fromName,  ENT_QUOTES, 'UTF-8');
+        $safeFromEmail = htmlspecialchars($fromEmail, ENT_QUOTES, 'UTF-8');
+        $safeSubject   = htmlspecialchars($subject,   ENT_QUOTES, 'UTF-8');
+        $safeMessage   = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
+        $date          = date('d.m.Y H:i');
+
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="tr">
+<head><meta charset="UTF-8"><title>İletişim Formu</title></head>
+<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f3f4f6;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:40px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <tr>
+        <td style="background:linear-gradient(135deg,#003a6e 0%,#00A3B4 100%);padding:36px 32px;text-align:center;">
+          <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">Askıda Kampüs</h1>
+          <p style="color:rgba(255,255,255,0.8);margin:6px 0 0;font-size:13px;">Yeni İletişim Formu Mesajı</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:32px;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:24px;">
+            <tr>
+              <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;">
+                <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Gönderen</span>
+                <p style="margin:4px 0 0;font-size:15px;font-weight:600;color:#1f2937;">$safeFromName</p>
+                <a href="mailto:$safeFromEmail" style="font-size:13px;color:#00A3B4;text-decoration:none;">$safeFromEmail</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;">
+                <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Konu</span>
+                <p style="margin:4px 0 0;font-size:15px;font-weight:600;color:#1f2937;">$safeSubject</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 20px;">
+                <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Gönderim Tarihi</span>
+                <p style="margin:4px 0 0;font-size:14px;color:#374151;">$date</p>
+              </td>
+            </tr>
+          </table>
+
+          <div style="margin-bottom:8px;">
+            <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Mesaj</span>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-left:4px solid #00A3B4;border-radius:0 8px 8px 0;padding:20px 24px;font-size:15px;color:#374151;line-height:1.8;">
+            $safeMessage
+          </div>
+
+          <div style="margin-top:28px;padding:16px 20px;background:#e0f7fa;border-radius:8px;border:1px solid #b2ebf2;">
+            <p style="margin:0;font-size:13px;color:#007a7a;">
+              Bu mesajı yanıtlamak için
+              <a href="mailto:$safeFromEmail" style="color:#005f6b;font-weight:700;">$safeFromEmail</a>
+              adresine e-posta gönderebilirsiniz.
+            </p>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#f9fafb;padding:24px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:12px;margin:0;">
+            © {$date[6]}{$date[7]}{$date[8]}{$date[9]} Ankara Yıldırım Beyazıt Üniversitesi<br>
+            Askıda Kampüs Sistemi — İletişim Formu
+          </p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+HTML;
+    }
+
     public function sendPasswordResetEmail(string $email, string $token): bool
     {
         try {

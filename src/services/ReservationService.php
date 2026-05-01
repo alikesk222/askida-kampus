@@ -4,6 +4,7 @@ namespace Services;
 
 use Core\Database;
 use Models\ReservationModel;
+use Models\SettingsModel;
 use Models\StockModel;
 use Models\UserModel;
 use Models\AuditLogModel;
@@ -38,11 +39,17 @@ class ReservationService
             throw new \RuntimeException('Öğrenci bulunamadı.');
         }
 
-        // Günlük limit kontrolü
-        $todayCount = $this->reservationModel->countTodayByStudent($studentId);
-        if ($todayCount >= $student['daily_limit']) {
+        // Haftalık ürün limiti kontrolü (kişisel yoksa global)
+        $settingsModel  = new SettingsModel();
+        $weeklyLimit    = $student['weekly_limit'] !== null
+            ? (int) $student['weekly_limit']
+            : (int) $settingsModel->get('student_weekly_limit', 5);
+        $weeklyUsed     = $this->reservationModel->countWeekItemsByStudent($studentId);
+        $newItemCount   = array_sum(array_column($items, 'quantity'));
+        if ($weeklyUsed + $newItemCount > $weeklyLimit) {
+            $remaining = max(0, $weeklyLimit - $weeklyUsed);
             throw new \RuntimeException(
-                "Günlük rezervasyon limitinize ({$student['daily_limit']}) ulaştınız."
+                "Haftalık ürün limitinizi aşıyorsunuz. Bu hafta {$remaining} ürün hakkınız kaldı (limit: {$weeklyLimit}). Limit her Pazartesi sıfırlanır."
             );
         }
 
@@ -102,9 +109,9 @@ class ReservationService
     }
 
     /**
-     * Rezervasyonu teslim al (kasiyer)
+     * Rezervasyonu teslim al (işletme görevlisi)
      */
-    public function claim(int $reservationId, int $cashierId): void
+    public function claim(int $reservationId, int $userId): void
     {
         $db          = Database::getInstance();
         $reservation = $this->reservationModel->findById($reservationId);
@@ -123,7 +130,7 @@ class ReservationService
 
         $db->beginTransaction();
         try {
-            $this->reservationModel->updateStatus($reservationId, 'claimed', ['claimed_by' => $cashierId]);
+            $this->reservationModel->updateStatus($reservationId, 'claimed', ['claimed_by' => $userId]);
 
             foreach ($items as $item) {
                 $this->stockModel->decreaseAvailableAndReserved(
@@ -134,7 +141,7 @@ class ReservationService
             }
 
             $this->auditLog->log('reservation.claim', 'reservation', $reservationId,
-                ['status' => 'reserved'], ['status' => 'claimed', 'cashier_id' => $cashierId]
+                ['status' => 'reserved'], ['status' => 'claimed', 'cashier_id' => $userId]
             );
 
             $db->commit();

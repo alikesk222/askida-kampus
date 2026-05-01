@@ -128,7 +128,7 @@ class DonationService
                 'items' => $items
             ];
 
-            $donorName = $donor['full_name'] ?? $donor['email'];
+            $donorName = $donor['name'] ?? $donor['email'];
             
             $emailService = new EmailService();
             $emailService->sendDonationThankYouEmail($donor['email'], $donorName, $donationDetails);

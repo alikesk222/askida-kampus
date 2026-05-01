@@ -29,8 +29,6 @@
                         <li><a href="<?= url('isletme') ?>" class="hover:text-white transition">Dashboard</a></li>
                         <li><a href="<?= url('isletme/stok') ?>" class="hover:text-white transition">Stok Yönetimi</a></li>
                         <li><a href="<?= url('isletme/bagislar') ?>" class="hover:text-white transition">Bağışlar</a></li>
-                    <?php elseif ($role === 'cashier'): ?>
-                        <li><a href="<?= url('kasa') ?>" class="hover:text-white transition">Kasa</a></li>
                     <?php elseif ($role === 'student'): ?>
                         <li><a href="<?= url('isletmeler') ?>" class="hover:text-white transition">İşletmeler</a></li>
                         <li><a href="<?= url('rezervasyonlarim') ?>" class="hover:text-white transition">Rezervasyonlarım</a></li>

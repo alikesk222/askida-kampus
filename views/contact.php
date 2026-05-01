@@ -136,4 +136,132 @@ include ROOT . '/views/layout/public-header.php';
     </div>
 </section>
 
+<!-- İletişim Formu -->
+<section style="background:#fff;padding:64px 24px;border-top:1px solid #e8edf2;">
+    <div style="max-width:680px;margin:0 auto;">
+
+        <!-- Başlık -->
+        <div style="text-align:center;margin-bottom:40px;">
+            <p style="font-size:12px;font-weight:700;color:#009999;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">
+                <?= t('contact.form_tag') ?>
+            </p>
+            <h2 style="font-size:26px;font-weight:800;color:#0d1f3c;margin:0 0 10px;"><?= t('contact.form_title') ?></h2>
+            <p style="font-size:14px;color:#6b7280;line-height:1.7;margin:0;"><?= t('contact.form_desc') ?></p>
+        </div>
+
+        <?php
+            $flashSuccess = flash('success');
+            $flashError   = flash('error');
+            $errors       = $errors ?? [];
+            $old          = $old ?? [];
+        ?>
+
+        <?php if ($flashSuccess): ?>
+        <div style="background:#d1fae5;border:1px solid #6ee7b7;border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;">
+            <svg style="width:20px;height:20px;color:#059669;flex-shrink:0;margin-top:1px;" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <p style="margin:0;font-size:14px;color:#065f46;font-weight:500;"><?= e($flashSuccess) ?></p>
+        </div>
+        <?php endif; ?>
+
+        <?php if ($flashError): ?>
+        <div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;">
+            <svg style="width:20px;height:20px;color:#dc2626;flex-shrink:0;margin-top:1px;" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <p style="margin:0;font-size:14px;color:#991b1b;font-weight:500;"><?= e($flashError) ?></p>
+        </div>
+        <?php endif; ?>
+
+        <form method="POST" action="<?= url('iletisim') ?>" id="contact-form"
+              style="background:#f8f9fb;border:1px solid #e8edf2;border-radius:14px;padding:36px;">
+            <?= csrf_field() ?>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+                <!-- Ad Soyad -->
+                <div>
+                    <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">
+                        <?= t('contact.form_name') ?> <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="text" name="name"
+                           value="<?= e($old['name'] ?? '') ?>"
+                           placeholder="<?= t('contact.form_name_ph') ?>"
+                           style="width:100%;padding:11px 14px;border:1.5px solid <?= isset($errors['name']) ? '#ef4444' : '#d1d5db' ?>;border-radius:8px;font-size:14px;color:#111827;background:#fff;outline:none;box-sizing:border-box;transition:border-color .2s;"
+                           onfocus="this.style.borderColor='#00A3B4'" onblur="this.style.borderColor='<?= isset($errors['name']) ? '#ef4444' : '#d1d5db' ?>'">
+                    <?php if (isset($errors['name'])): ?>
+                    <p style="margin:5px 0 0;font-size:12px;color:#ef4444;"><?= e($errors['name']) ?></p>
+                    <?php endif; ?>
+                </div>
+                <!-- E-posta -->
+                <div>
+                    <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">
+                        <?= t('contact.form_email') ?> <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="email" name="email"
+                           value="<?= e($old['email'] ?? '') ?>"
+                           placeholder="<?= t('contact.form_email_ph') ?>"
+                           style="width:100%;padding:11px 14px;border:1.5px solid <?= isset($errors['email']) ? '#ef4444' : '#d1d5db' ?>;border-radius:8px;font-size:14px;color:#111827;background:#fff;outline:none;box-sizing:border-box;transition:border-color .2s;"
+                           onfocus="this.style.borderColor='#00A3B4'" onblur="this.style.borderColor='<?= isset($errors['email']) ? '#ef4444' : '#d1d5db' ?>'">
+                    <?php if (isset($errors['email'])): ?>
+                    <p style="margin:5px 0 0;font-size:12px;color:#ef4444;"><?= e($errors['email']) ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Konu -->
+            <div style="margin-bottom:20px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">
+                    <?= t('contact.form_subject') ?> <span style="color:#ef4444;">*</span>
+                </label>
+                <input type="text" name="subject"
+                       value="<?= e($old['subject'] ?? '') ?>"
+                       placeholder="<?= t('contact.form_subject_ph') ?>"
+                       style="width:100%;padding:11px 14px;border:1.5px solid <?= isset($errors['subject']) ? '#ef4444' : '#d1d5db' ?>;border-radius:8px;font-size:14px;color:#111827;background:#fff;outline:none;box-sizing:border-box;transition:border-color .2s;"
+                       onfocus="this.style.borderColor='#00A3B4'" onblur="this.style.borderColor='<?= isset($errors['subject']) ? '#ef4444' : '#d1d5db' ?>'">
+                <?php if (isset($errors['subject'])): ?>
+                <p style="margin:5px 0 0;font-size:12px;color:#ef4444;"><?= e($errors['subject']) ?></p>
+                <?php endif; ?>
+            </div>
+
+            <!-- Mesaj -->
+            <div style="margin-bottom:24px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">
+                    <?= t('contact.form_message') ?> <span style="color:#ef4444;">*</span>
+                </label>
+                <textarea name="message" rows="6"
+                          placeholder="<?= t('contact.form_message_ph') ?>"
+                          style="width:100%;padding:11px 14px;border:1.5px solid <?= isset($errors['message']) ? '#ef4444' : '#d1d5db' ?>;border-radius:8px;font-size:14px;color:#111827;background:#fff;outline:none;box-sizing:border-box;resize:vertical;line-height:1.6;transition:border-color .2s;font-family:inherit;"
+                          onfocus="this.style.borderColor='#00A3B4'" onblur="this.style.borderColor='<?= isset($errors['message']) ? '#ef4444' : '#d1d5db' ?>'"><?= e($old['message'] ?? '') ?></textarea>
+                <?php if (isset($errors['message'])): ?>
+                <p style="margin:5px 0 0;font-size:12px;color:#ef4444;"><?= e($errors['message']) ?></p>
+                <?php endif; ?>
+            </div>
+
+            <!-- Gönder -->
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                <p style="margin:0;font-size:12px;color:#9ca3af;display:flex;align-items:center;gap:5px;">
+                    <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    <?= t('contact.form_note') ?>
+                </p>
+                <button type="submit" id="contact-submit"
+                        style="padding:12px 32px;background:linear-gradient(135deg,#00A3B4,#007A8A);color:#fff;font-size:15px;font-weight:700;border:none;border-radius:9px;cursor:pointer;transition:opacity .2s;letter-spacing:0.2px;">
+                    <?= t('contact.form_submit') ?>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function() {
+    const btn = document.getElementById('contact-submit');
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.textContent = '<?= t('contact.form_sending') ?>';
+});
+</script>
+
 <?php include ROOT . '/views/layout/public-footer.php'; ?>

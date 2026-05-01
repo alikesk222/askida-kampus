@@ -2,7 +2,7 @@
 
 <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-800">Sistem Ayarları</h1>
-    <p class="text-gray-500 text-sm mt-1">Email ve SMTP ayarlarını yönetin</p>
+    <p class="text-gray-500 text-sm mt-1">Email, SMTP ve rezervasyon limitlerini yönetin</p>
 </div>
 
 <?php if (flash('success')): ?>
@@ -19,6 +19,9 @@
         </button>
         <button type="button" onclick="showTab('email')" id="tab-email" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
             Email İçerikleri
+        </button>
+        <button type="button" onclick="showTab('limits')" id="tab-limits" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+            Rezervasyon Limitleri
         </button>
     </nav>
 </div>
@@ -194,6 +197,46 @@ Askıda Kampüs Projesi') ?></textarea>
             <button type="submit"
                 class="px-6 py-2.5 bg-[#00A3B4] hover:bg-[#008899] text-white font-medium rounded-lg transition">
                 Email İçeriklerini Kaydet
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Limits Tab -->
+<div id="content-limits" class="tab-content hidden bg-white rounded-xl shadow-sm p-6">
+    <form method="POST" action="<?= url('admin/ayarlar') ?>" class="space-y-6">
+        <?= csrf_field() ?>
+        <input type="hidden" name="tab" value="limits">
+
+        <div class="border-b border-gray-200 pb-4">
+            <h2 class="text-lg font-semibold text-gray-800 mb-1">Rezervasyon Limitleri</h2>
+            <p class="text-sm text-gray-500">Öğrencilerin ne kadar rezervasyon yapabileceğini belirleyin</p>
+        </div>
+
+        <div class="max-w-sm space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Haftalık Rezervasyon Limiti</label>
+                <input type="number" name="student_weekly_limit" min="1" max="50"
+                       value="<?= (int)($weeklyLimit ?? 5) ?>"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4]"
+                       required>
+                <p class="text-xs text-gray-500 mt-1">Bir öğrencinin haftada (Pazartesi–Pazar) yapabileceği maksimum rezervasyon sayısı.</p>
+            </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 class="text-sm font-semibold text-blue-800 mb-1">Nasıl çalışır?</h3>
+            <ul class="text-sm text-blue-700 space-y-1 list-disc list-inside">
+                <li>Her öğrenci için ayrı ayrı günlük limit de uygulanmaya devam eder (kullanıcı profilinden değiştirilebilir).</li>
+                <li>Haftalık limit her Pazartesi günü otomatik olarak sıfırlanır.</li>
+                <li>Sadece "teslim alındı" ve "aktif" rezervasyonlar sayıya dahildir; iptal ve süresi dolanlar sayılmaz.</li>
+            </ul>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+            <button type="submit"
+                class="px-6 py-2.5 bg-[#00A3B4] hover:bg-[#008899] text-white font-medium rounded-lg transition">
+                Limitleri Kaydet
             </button>
         </div>
     </form>

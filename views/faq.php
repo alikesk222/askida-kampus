@@ -3,6 +3,17 @@ $pageTitle  = t('faq.hero_title');
 $activePage = 'faq';
 $metaDesc   = t('faq.hero_desc');
 include ROOT . '/views/layout/public-header.php';
+
+$lang = $_SESSION['lang'] ?? 'tr';
+
+// Kategorilere göre grupla
+$cats = [
+    'donors'   => ['label_tr' => 'Bağışçılar',  'label_en' => 'Donors',   'color' => '#e0f7fa', 'text' => '#007a7a'],
+    'students' => ['label_tr' => 'Öğrenciler',  'label_en' => 'Students', 'color' => '#dbeafe', 'text' => '#1d4ed8'],
+    'general'  => ['label_tr' => 'Genel',        'label_en' => 'General',  'color' => '#f3f4f6', 'text' => '#374151'],
+];
+$grouped = [];
+foreach ($faqItems as $it) { $grouped[$it['category']][] = $it; }
 ?>
 
 <style>
@@ -19,7 +30,7 @@ include ROOT . '/views/layout/public-header.php';
     .faq-question.open { color: #009999; }
     .faq-icon { width: 20px; height: 20px; flex-shrink: 0; transition: transform 0.3s; color: #9ca3af; }
     .faq-question.open .faq-icon { transform: rotate(45deg); color: #009999; }
-    .faq-answer { display: none; padding: 0 20px 18px; font-size: 13.5px; color: #4b5563; line-height: 1.75; border-top: 1px solid #f3f4f6; padding-top: 14px; }
+    .faq-answer { display: none; padding: 14px 20px 18px; font-size: 13.5px; color: #4b5563; line-height: 1.75; border-top: 1px solid #f3f4f6; }
     .faq-answer.open { display: block; }
     .faq-tag { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; margin-bottom: 16px; }
 </style>
@@ -36,127 +47,41 @@ include ROOT . '/views/layout/public-header.php';
 <section style="background:#f8f9fa;padding:64px 24px;">
     <div style="max-width:760px;margin:0 auto;">
 
-        <!-- Bağışçılar -->
+        <?php foreach ($cats as $catKey => $catMeta): ?>
+        <?php if (empty($grouped[$catKey])): continue; endif; ?>
         <div style="margin-bottom:40px;">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
-                <span class="faq-tag" style="background:#e0f7fa;color:#007a7a;"><?= t('faq.cat_donors') ?></span>
+                <span class="faq-tag" style="background:<?= $catMeta['color'] ?>;color:<?= $catMeta['text'] ?>;">
+                    <?= $lang === 'en' ? $catMeta['label_en'] : $catMeta['label_tr'] ?>
+                </span>
             </div>
             <div style="display:flex;flex-direction:column;gap:8px;">
-
+                <?php foreach ($grouped[$catKey] as $item): ?>
                 <div class="faq-item">
                     <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.d_q1') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <?= e($lang === 'en' ? $item['question_en'] : $item['question_tr']) ?>
+                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
                     </button>
-                    <div class="faq-answer"><?= t('faq.d_a1') ?></div>
+                    <div class="faq-answer">
+                        <?= $lang === 'en' ? $item['answer_en'] : $item['answer_tr'] ?>
+                    </div>
                 </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.d_q2') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.d_a2') ?></div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.d_q3') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.d_a3') ?></div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.d_q4') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.d_a4') ?></div>
-                </div>
-
+                <?php endforeach; ?>
             </div>
         </div>
+        <?php endforeach; ?>
 
-        <!-- Öğrenciler -->
-        <div style="margin-bottom:40px;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
-                <span class="faq-tag" style="background:#dbeafe;color:#1d4ed8;"><?= t('faq.cat_students') ?></span>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.s_q1') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.s_a1', ['reg_url' => url('kayit')]) ?></div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.s_q2') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.s_a2') ?></div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.s_q3') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.s_a3') ?></div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.s_q4') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.s_a4') ?></div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Genel -->
-        <div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
-                <span class="faq-tag" style="background:#f3f4f6;color:#374151;"><?= t('faq.cat_general') ?></span>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.g_q1') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.g_a1') ?></div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.g_q2') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.g_a2') ?></div>
-                </div>
-
-                <div class="faq-item">
-                    <button class="faq-question" onclick="toggleFaq(this)">
-                        <?= t('faq.g_q3') ?>
-                        <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
-                    <div class="faq-answer"><?= t('faq.g_a3', ['forgot_url' => url('sifremi-unuttum')]) ?></div>
-                </div>
-
-            </div>
-        </div>
+        <?php if (empty($faqItems)): ?>
+        <p style="text-align:center;color:#9ca3af;font-size:14px;">Henüz içerik eklenmemiş.</p>
+        <?php endif; ?>
 
         <!-- Hâlâ sorunuz var mı? -->
         <div style="margin-top:48px;background:#fff;border:1px solid #e8edf2;border-radius:12px;padding:28px;text-align:center;">
-            <svg style="width:36px;height:36px;color:#009999;margin:0 auto 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <svg style="width:36px;height:36px;color:#009999;margin:0 auto 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
             <h3 style="font-size:16px;font-weight:700;color:#0d1f3c;margin-bottom:6px;"><?= t('faq.still_question') ?></h3>
             <p style="font-size:13px;color:#6b7280;margin-bottom:16px;"><?= t('faq.still_desc') ?></p>
             <a href="<?= url('iletisim') ?>" style="display:inline-block;padding:10px 24px;background:#009999;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;"><?= t('faq.contact_btn') ?></a>

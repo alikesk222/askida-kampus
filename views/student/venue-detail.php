@@ -116,7 +116,18 @@
     <?php else: ?>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <?php foreach ($products as $product): ?>
-        <div class="border border-gray-200 rounded-xl p-4 hover:border-[#00A3B4] transition">
+        <div class="border border-gray-200 rounded-xl overflow-hidden hover:border-[#00A3B4] transition">
+            <?php if (!empty($product['image_url'])): ?>
+            <img src="<?= url($product['image_url']) ?>" alt="<?= e(pname($product)) ?>"
+                 class="w-full h-36 object-cover">
+            <?php else: ?>
+            <div class="w-full h-36 bg-gray-50 flex items-center justify-center border-b border-gray-100">
+                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+            </div>
+            <?php endif; ?>
+            <div class="p-4">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
                     <h3 class="font-semibold text-gray-800 text-sm"><?= e(pname($product)) ?></h3>
@@ -137,6 +148,7 @@
                 <?php else: ?>
                 <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium"><?= t('student.out_of_stock') ?></span>
                 <?php endif; ?>
+            </div>
             </div>
         </div>
         <?php endforeach; ?>

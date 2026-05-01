@@ -20,7 +20,6 @@ INSERT INTO users (name, email, password, role, university_verified, daily_limit
 ('Süper Admin', 'admin@askidakampus.com', '$2y$10$DdE/TfpFC6boWCwdfXAGBOBdBAuIFjd2MAmE0Hvs5HQo6ixuTHtaO', 'super-admin', 1, 3, NULL, 1),
 ('Üniversite Admin', 'universite@askidakampus.com', '$2y$10$kj04Zj1JFDptdFKaXxX6qe4kbI57vE7Sorqy/oC4CxGP5YVuK1uV.', 'university-admin', 1, 3, NULL, 1),
 ('İşletme Yöneticisi', 'admin.merkez@askidakampus.com', '$2y$10$fbmi9LdDKAleUlCwKPeyVuCWjqQRDqgus5Ay2eDTSzJtWrJUvWpYa', 'venue-admin', 1, 3, NULL, 1),
-('Kasa Görevlisi', 'kasiyer.merkez@askidakampus.com', '$2y$10$JEyr45Q5dsdWTaQh1Eh1wuj2F8QFN3GyDP62GarjW0ih6MGiB7sR2', 'cashier', 1, 3, NULL, 1),
 ('Ali Yılmaz', 'ogrenci@askidakampus.com', '$2y$10$WciiorIMIOV3O.mIPxX9aO9.sWxzPw5Ab7PaES1iM3CykSQCy60K6', 'student', 1, 3, '20210001', 1),
 ('Ayşe Kaya', 'bagisci@askidakampus.com', '$2y$10$yvJ.wkPXtgD7D2yjIGM45evNzM.D6qzVtZ5.0e7YtLSEuRR13mHmy', 'donor', 1, 3, NULL, 1);
 
@@ -31,7 +30,7 @@ INSERT INTO venues (name, campus_name, slug, description, location, phone, opens
 ('Kütüphane Büfesi', 'Keçiören Kampüsü', 'kutuphane-bufesi', 'Kütüphane içi büfe', 'Kütüphane Giriş', '0312 000 00 03', '09:00', '18:00', 1);
 
 -- Atamalar
-INSERT INTO venue_user (user_id, venue_id) VALUES (3, 1), (4, 1);
+INSERT INTO venue_user (user_id, venue_id) VALUES (3, 1);
 
 -- Ürünler
 INSERT INTO products (venue_id, name, category, price_snapshot, description, is_active) VALUES

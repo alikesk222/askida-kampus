@@ -17,8 +17,15 @@
                 <p class="text-5xl font-mono font-black tracking-[0.2em] text-white drop-shadow">
                     <?= e($reservation['claim_code']) ?>
                 </p>
-                <p class="text-white/60 text-xs mt-3"><?= t('student.tell_cashier') ?></p>
+                <p class="text-white/60 text-xs mt-3"><?= t('student.tell_staff') ?></p>
             </div>
+            <?php if (!empty($qrImgUrl)): ?>
+            <div class="mb-5">
+                <p class="text-xs text-gray-400 mb-2">QR Kod</p>
+                <img src="<?= e($qrImgUrl) ?>" alt="QR Kod"
+                     class="w-36 h-36 mx-auto rounded-xl border border-gray-200 shadow-sm">
+            </div>
+            <?php endif; ?>
         <?php else: ?>
             <div class="bg-gray-50 rounded-xl p-4 mb-4">
                 <p class="text-xs text-gray-400 mb-1"><?= t('student.claim_code') ?></p>
@@ -64,7 +71,7 @@
 
     <?php if ($reservation['status'] === 'reserved'): ?>
         <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-            <p class="text-sm text-blue-700 font-medium"><?= t('student.cashier_only') ?></p>
+            <p class="text-sm text-blue-700 font-medium"><?= t('student.staff_only') ?></p>
             <p class="text-xs text-blue-500 mt-1"><?= t('student.no_qr') ?></p>
         </div>
     <?php endif; ?>

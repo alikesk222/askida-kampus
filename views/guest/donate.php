@@ -77,7 +77,7 @@
                 <?php foreach ($products as $p): ?>
                 <div class="border border-gray-200 rounded-xl p-4 flex gap-3 items-start hover:border-[#00A3B4]/40 transition">
                     <?php if ($p['image_url']): ?>
-                    <img src="<?= e($p['image_url']) ?>" alt="<?= e(pname($p)) ?>"
+                    <img src="<?= url($p['image_url']) ?>" alt="<?= e(pname($p)) ?>"
                          class="w-16 h-16 object-cover rounded-lg flex-shrink-0">
                     <?php else: ?>
                     <div class="w-16 h-16 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">

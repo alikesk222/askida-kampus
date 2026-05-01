@@ -200,7 +200,6 @@
             <?php $ap = $activePage ?? ''; ?>
             <a href="<?= url('/') ?>"          class="<?= $ap === 'home'    ? 'active' : '' ?>"><?= t('nav.home') ?></a>
             <a href="<?= url('hakkimizda') ?>" class="<?= $ap === 'about'   ? 'active' : '' ?>"><?= t('nav.about') ?></a>
-            <a href="<?= url('sss') ?>"        class="<?= $ap === 'faq'     ? 'active' : '' ?>"><?= t('nav.faq') ?></a>
             <a href="<?= url('iletisim') ?>"   class="<?= $ap === 'contact' ? 'active' : '' ?>"><?= t('nav.contact') ?></a>
         </div>
 
@@ -228,7 +227,6 @@
         <?php $ap = $activePage ?? ''; $cl = current_lang(); ?>
         <a href="<?= url('/') ?>"          class="<?= $ap === 'home'    ? 'active' : '' ?>"><?= t('nav.home') ?></a>
         <a href="<?= url('hakkimizda') ?>" class="<?= $ap === 'about'   ? 'active' : '' ?>"><?= t('nav.about') ?></a>
-        <a href="<?= url('sss') ?>"        class="<?= $ap === 'faq'     ? 'active' : '' ?>"><?= t('nav.faq') ?></a>
         <a href="<?= url('iletisim') ?>"   class="<?= $ap === 'contact' ? 'active' : '' ?>"><?= t('nav.contact') ?></a>
         <div class="pub-mobile-divider"></div>
         <div class="pub-mobile-cta">

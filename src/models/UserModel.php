@@ -32,7 +32,7 @@ class UserModel
     {
         $offset = ($page - 1) * $perPage;
         $stmt = $this->db->prepare(
-            'SELECT id, name, email, role, university_verified, daily_limit, student_number, phone, is_active, created_at
+            'SELECT id, name, email, role, university_verified, weekly_limit, student_number, phone, is_active, created_at
              FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?'
         );
         $stmt->execute([$perPage, $offset]);
@@ -47,8 +47,8 @@ class UserModel
     public function create(array $data): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO users (name, email, password, role, university_verified, daily_limit, student_number, phone)
-             VALUES (:name, :email, :password, :role, :university_verified, :daily_limit, :student_number, :phone)'
+            'INSERT INTO users (name, email, password, role, university_verified, student_number, phone)
+             VALUES (:name, :email, :password, :role, :university_verified, :student_number, :phone)'
         );
         $stmt->execute([
             'name' => $data['name'],
@@ -56,11 +56,15 @@ class UserModel
             'password' => password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]),
             'role' => $data['role'],
             'university_verified' => $data['university_verified'] ?? 0,
-            'daily_limit' => $data['daily_limit'] ?? 3,
             'student_number' => $data['student_number'] ?? null,
             'phone' => $data['phone'] ?? null,
         ]);
         return (int) $this->db->lastInsertId();
+    }
+
+    public function setWeeklyLimit(int $id, ?int $limit): void
+    {
+        $this->db->prepare('UPDATE users SET weekly_limit = ? WHERE id = ?')->execute([$limit, $id]);
     }
 
     public function toggleActive(int $id): void

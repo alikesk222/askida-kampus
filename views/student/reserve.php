@@ -11,6 +11,32 @@
 <div class="mb-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm"><?= e($flashError) ?></div>
 <?php endif; ?>
 
+<!-- Haftalık kota göstergesi -->
+<?php
+$pct = $weeklyLimit > 0 ? round($weeklyUsed / $weeklyLimit * 100) : 100;
+$barColor = $weeklyRemaining > 1 ? 'bg-green-400' : ($weeklyRemaining === 1 ? 'bg-yellow-400' : 'bg-red-400');
+$textColor = $weeklyRemaining > 1 ? 'text-green-700' : ($weeklyRemaining === 1 ? 'text-yellow-700' : 'text-red-700');
+$bgColor   = $weeklyRemaining > 1 ? 'bg-green-50 border-green-200' : ($weeklyRemaining === 1 ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200');
+?>
+<div class="mb-5 p-4 border rounded-xl <?= $bgColor ?>">
+    <div class="flex items-center justify-between mb-2">
+        <span class="text-sm font-semibold <?= $textColor ?>">Haftalık Ürün Hakkı</span>
+        <span class="text-sm font-bold <?= $textColor ?>"><?= $weeklyUsed ?> / <?= $weeklyLimit ?> ürün kullanıldı</span>
+    </div>
+    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full <?= $barColor ?> rounded-full transition-all" style="width:<?= $pct ?>%"></div>
+    </div>
+    <p class="text-xs mt-1.5 <?= $textColor ?>">
+        <?php if ($weeklyRemaining === 0): ?>
+            Bu haftaki ürün limitinize ulaştınız. Limit her Pazartesi sıfırlanır.
+        <?php elseif ($weeklyRemaining === 1): ?>
+            Bu hafta yalnızca 1 ürün hakkınız kaldı.
+        <?php else: ?>
+            Bu hafta <?= $weeklyRemaining ?> ürün hakkınız kaldı.
+        <?php endif; ?>
+    </p>
+</div>
+
 <form method="POST" action="<?= url('isletmeler/' . $venue['id'] . '/rezerve') ?>">
     <?= csrf_field() ?>
 
@@ -26,7 +52,7 @@
             <?php $free = $stocks[$p['id']] ?? 0; ?>
             <div class="border <?= $free > 0 ? 'border-gray-200 hover:border-[#00A3B4]/40' : 'border-gray-100 bg-gray-50 opacity-60' ?> rounded-xl p-4 transition">
                 <?php if (!empty($p['image_url'])): ?>
-                <img src="<?= e($p['image_url']) ?>" alt="<?= e(pname($p)) ?>"
+                <img src="<?= url($p['image_url']) ?>" alt="<?= e(pname($p)) ?>"
                      class="w-full h-36 object-cover rounded-lg mb-3">
                 <?php else: ?>
                 <div class="w-full h-36 bg-gray-50 border border-gray-100 rounded-lg mb-3 flex items-center justify-center">
@@ -53,7 +79,7 @@
                     <div class="flex justify-between text-[11px] text-gray-400 mb-1">
                         <span><?= t('student.stock') ?></span>
                         <span class="<?= $free > 0 ? 'text-green-600' : 'text-red-500' ?> font-medium">
-                            <?= $free > 0 ? $free . ' ' . t('common.items') : t('student.out_of_stock') ?>
+                            <?= $free > 0 ? "{$free} " . t('common.items') : t('student.out_of_stock') ?>
                         </span>
                     </div>
                     <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">

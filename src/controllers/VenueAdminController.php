@@ -35,12 +35,25 @@ class VenueAdminController
         $reservationModel = new ReservationModel();
 
         $venue = $this->venueId ? $venueModel->findById($this->venueId) : null;
-        $freeStock = $this->venueId ? $stockModel->getTotalAvailable($this->venueId) : 0;
-        $waiting = $this->venueId ? $donationModel->countByVenue($this->venueId) : 0;
-        $active = $this->venueId ? $reservationModel->getByVenue($this->venueId, 1, 5) : [];
 
+        // KPI'lar
+        $freeStock = $this->venueId ? $stockModel->getTotalAvailable($this->venueId) : 0;
+        $waitingCount = $this->venueId ? $donationModel->countWaitingByVenue($this->venueId) : 0;
+        $activeCount = $this->venueId ? $reservationModel->countActiveByVenue($this->venueId) : 0;
+
+        // Listeler
+        $waitingDonations = $this->venueId ? $donationModel->getWaitingByVenue($this->venueId, 10) : [];
+        $activeReservations = $this->venueId ? $reservationModel->getActiveByVenueWithItems($this->venueId, 20) : [];
+        $stocks = $this->venueId ? $stockModel->getByVenue($this->venueId) : [];
+
+        $errors = flash('errors') ?? [];
         $pageTitle = 'İşletme Paneli';
-        view('venue_admin/dashboard', compact('pageTitle', 'venue', 'freeStock', 'waiting', 'active'));
+        view('venue_admin/dashboard', compact(
+            'pageTitle', 'venue',
+            'freeStock', 'waitingCount', 'activeCount',
+            'waitingDonations', 'activeReservations', 'stocks',
+            'errors'
+        ));
     }
 
     public function stock(): void
@@ -94,16 +107,7 @@ class VenueAdminController
         view('venue_admin/reservations', compact('pageTitle', 'reservations', 'page', 'total'));
     }
 
-    // ── Kasa / Teslim Al ─────────────────────────────────────
-
-    public function cashier(): void
-    {
-        $venueModel = new VenueModel();
-        $venue = $this->venueId ? $venueModel->findById($this->venueId) : null;
-        $errors = flash('errors') ?? [];
-        $pageTitle = 'Teslim Al';
-        view('venue_admin/cashier', compact('pageTitle', 'venue', 'errors'));
-    }
+    // ── Teslim Al (Dashboard'a entegre) ─────────────────────
 
     /**
      * AJAX: Koda göre rezervasyon + ürün bilgisi döner (JSON)
@@ -176,7 +180,7 @@ class VenueAdminController
         $v->required('claim_code', 'Teslim Kodu');
         if ($v->fails()) {
             flash('error', $v->firstError());
-            redirect('/isletme/teslim');
+            redirect('/isletme');
         }
 
         $code = strtoupper(trim($_POST['claim_code']));
@@ -185,12 +189,12 @@ class VenueAdminController
 
         if (!$reservation) {
             flash('error', 'Geçersiz teslim kodu.');
-            redirect('/isletme/teslim');
+            redirect('/isletme');
         }
 
         if ((int) $reservation['venue_id'] !== $this->venueId) {
             flash('error', 'Bu rezervasyon başka bir işletmeye aittir.');
-            redirect('/isletme/teslim');
+            redirect('/isletme');
         }
 
         $service = new ReservationService();
@@ -200,6 +204,6 @@ class VenueAdminController
         } catch (\Throwable $e) {
             flash('error', $e->getMessage());
         }
-        redirect('/isletme/teslim');
+        redirect('/isletme');
     }
 }

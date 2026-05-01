@@ -4,7 +4,7 @@ namespace Controllers;
 
 use Core\Auth;
 use Core\CSRF;
-use Core\Validator;
+use Models\SettingsModel;
 use Models\VenueModel;
 use Models\ProductModel;
 use Models\StockModel;
@@ -65,9 +65,18 @@ class StudentController
             $stocks[$p['id']] = $stockModel->getFreeQuantity((int)$id, $p['id']);
         }
 
+        $reservationModel = new ReservationModel();
+        $settingsModel    = new SettingsModel();
+        $currentUser      = Auth::user();
+        $weeklyLimit      = $currentUser['weekly_limit'] !== null
+            ? (int) $currentUser['weekly_limit']
+            : (int) $settingsModel->get('student_weekly_limit', 5);
+        $weeklyUsed       = $reservationModel->countWeekItemsByStudent(Auth::id());
+        $weeklyRemaining  = max(0, $weeklyLimit - $weeklyUsed);
+
         $errors    = flash('errors') ?? [];
         $pageTitle = 'Rezervasyon — ' . e($venue['name']);
-        view('student/reserve', compact('pageTitle', 'venue', 'products', 'stocks', 'errors'));
+        view('student/reserve', compact('pageTitle', 'venue', 'products', 'stocks', 'errors', 'weeklyLimit', 'weeklyUsed', 'weeklyRemaining'));
     }
 
     public function reserveStore(string $id): void

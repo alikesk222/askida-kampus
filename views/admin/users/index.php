@@ -25,6 +25,7 @@
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">E-posta</th>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">Rol</th>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">İşletme Ataması</th>
+                <th class="px-5 py-3 text-left font-semibold text-gray-600">Hf. Limit</th>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">Durum</th>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">Kayıt</th>
                 <th class="px-5 py-3 text-right font-semibold text-gray-600">İşlem</th>
@@ -32,7 +33,7 @@
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php if (empty($users)): ?>
-                <tr><td colspan="8" class="px-5 py-16 text-center">
+                <tr><td colspan="9" class="px-5 py-16 text-center">
                     <div class="flex flex-col items-center gap-3">
                         <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
                             <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,20 +101,49 @@
                             <?php endif; ?>
                         </td>
                         <td class="px-5 py-3">
+                            <?php if ($u['role'] === 'student'): ?>
+                                <?php $wl = $u['weekly_limit']; ?>
+                                <button onclick="openWeeklyLimitModal(<?= $u['id'] ?>, '<?= e($u['name']) ?>', <?= $wl !== null ? (int)$wl : 'null' ?>)"
+                                        class="flex items-center gap-1 text-xs hover:underline <?= $wl !== null ? 'text-[#00A3B4] font-semibold' : 'text-gray-400' ?>">
+                                    <?php if ($wl !== null): ?>
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        <?= (int)$wl ?>
+                                    <?php else: ?>
+                                        Genel (<?= $globalWeeklyLimit ?>)
+                                    <?php endif; ?>
+                                </button>
+                            <?php else: ?>
+                                <span class="text-xs text-gray-300">—</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="px-5 py-3">
                             <?= $u['is_active']
                                 ? '<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Aktif</span>'
                                 : '<span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Pasif</span>' ?>
                         </td>
                         <td class="px-5 py-3 text-gray-400 text-xs"><?= format_date($u['created_at'], 'd.m.Y') ?></td>
                         <td class="px-5 py-3 text-right">
-                            <form method="POST" action="<?= url('admin/kullanicilar/' . $u['id'] . '/toggle') ?>"
-                                class="inline">
-                                <?= csrf_field() ?>
-                                <button type="submit" data-confirm="Kullanıcı durumu değiştirilsin mi?"
-                                    class="text-xs <?= $u['is_active'] ? 'text-red-500 hover:underline' : 'text-green-500 hover:underline' ?>">
-                                    <?= $u['is_active'] ? 'Pasif Yap' : 'Aktif Yap' ?>
+                            <div class="flex items-center justify-end gap-3">
+                                <button onclick='openEditModal(<?= htmlspecialchars(json_encode([
+                                    "id"             => (int)$u["id"],
+                                    "name"           => $u["name"],
+                                    "email"          => $u["email"],
+                                    "role"           => $u["role"],
+                                    "weekly_limit"   => $u["weekly_limit"] !== null ? (int)$u["weekly_limit"] : null,
+                                    "student_number" => $u["student_number"] ?? "",
+                                    "is_active"      => (bool)$u["is_active"],
+                                ]), ENT_QUOTES) ?>)'
+                                        class="text-xs text-[#00A3B4] hover:underline font-medium">
+                                    Düzenle
                                 </button>
-                            </form>
+                                <form method="POST" action="<?= url('admin/kullanicilar/' . $u['id'] . '/toggle') ?>" class="inline">
+                                    <?= csrf_field() ?>
+                                    <button type="submit" data-confirm="Kullanıcı durumu değiştirilsin mi?"
+                                        class="text-xs <?= $u['is_active'] ? 'text-red-500 hover:underline' : 'text-green-500 hover:underline' ?>">
+                                        <?= $u['is_active'] ? 'Pasif Yap' : 'Aktif Yap' ?>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -134,6 +164,88 @@
         <?php endfor; ?>
     </div>
 <?php endif; ?>
+
+<!-- Kullanıcı Düzenle Modal -->
+<div id="modal-edit-user" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <h3 class="font-semibold text-gray-800">Kullanıcı Düzenle</h3>
+            <button onclick="document.getElementById('modal-edit-user').classList.add('hidden')"
+                class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+        </div>
+        <form id="edit-user-form" method="POST" action="" class="p-6">
+            <?= csrf_field() ?>
+            <div class="grid grid-cols-2 gap-4">
+
+                <div class="col-span-2">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Ad Soyad *</label>
+                    <input type="text" name="name" id="edit-name" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">E-posta *</label>
+                    <input type="email" name="email" id="edit-email" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Yeni Şifre</label>
+                    <input type="password" name="password" id="edit-password" placeholder="Değiştirmek için doldurun"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Rol *</label>
+                    <select name="role" id="edit-role" required onchange="editToggleStudentFields(this.value)"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
+                        <option value="student">Öğrenci</option>
+                        <option value="donor">Bağışçı</option>
+                        <option value="venue-admin">İşletme Yöneticisi</option>
+                        <option value="university-admin">Üniversite Admin</option>
+                        <?php if (auth()['role'] === 'super-admin'): ?>
+                            <option value="super-admin">Süper Admin</option>
+                        <?php endif; ?>
+                    </select>
+                </div>
+
+                <div id="edit-student-number-field">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Öğrenci No</label>
+                    <input type="text" name="student_number" id="edit-student-number"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
+                </div>
+
+                <div id="edit-weekly-limit-field" class="col-span-2">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">
+                        Haftalık Rezervasyon Limiti
+                        <span class="text-gray-400 font-normal">(boş = genel ayar: <?= $globalWeeklyLimit ?>)</span>
+                    </label>
+                    <input type="number" name="weekly_limit" id="edit-weekly-limit" min="1" max="50"
+                           placeholder="<?= $globalWeeklyLimit ?>"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
+                    <p class="text-xs text-gray-400 mt-1">Boş bırakırsanız tüm öğrencilere uygulanan genel limit geçerli olur.</p>
+                </div>
+
+                <div class="col-span-2 flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_active" id="edit-is-active" value="1"
+                        class="w-4 h-4 rounded border-gray-300 text-[#00A3B4] focus:ring-[#00A3B4]">
+                    <label for="edit-is-active" class="text-sm font-medium text-gray-700">Hesap Aktif</label>
+                </div>
+
+            </div>
+            <div class="mt-5 flex gap-3">
+                <button type="submit"
+                    class="flex-1 py-2 bg-[#00A3B4] hover:bg-[#007A8A] text-white rounded-lg text-sm font-medium transition">
+                    Kaydet
+                </button>
+                <button type="button" onclick="document.getElementById('modal-edit-user').classList.add('hidden')"
+                    class="flex-1 py-2 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded-lg text-sm transition">
+                    İptal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <!-- Kullanıcı Ekle Modal -->
 <div id="modal-add-user" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -193,11 +305,6 @@
                     <input type="text" name="student_number"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Günlük Limit</label>
-                    <input type="number" name="daily_limit" value="3" min="1" max="10"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
-                </div>
             </div>
             <div class="mt-5 flex gap-3">
                 <button type="submit"
@@ -206,6 +313,46 @@
                 </button>
                 <button type="button" onclick="document.getElementById('modal-add-user').classList.add('hidden')"
                     class="flex-1 py-2 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded-lg text-sm transition">
+                    İptal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Haftalık Limit Modal -->
+<div id="modal-weekly-limit" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h3 class="font-semibold text-gray-800">Haftalık Rezervasyon Limiti</h3>
+            <button onclick="document.getElementById('modal-weekly-limit').classList.add('hidden')"
+                class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+        </div>
+        <form id="weekly-limit-form" method="POST" action="" class="p-6 space-y-4">
+            <?= csrf_field() ?>
+            <p class="text-sm text-gray-600">
+                <span class="font-semibold" id="wl-user-name"></span> adlı öğrencinin haftalık rezervasyon limiti.
+            </p>
+            <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">
+                    Haftalık Limit
+                    <span class="text-gray-400 font-normal">(boş bırakırsanız genel ayar uygulanır: <?= $globalWeeklyLimit ?>)</span>
+                </label>
+                <input type="number" name="weekly_limit" id="wl-input" min="1" max="50" placeholder="<?= $globalWeeklyLimit ?>"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
+            </div>
+            <div class="flex gap-3">
+                <button type="submit"
+                    class="flex-1 py-2 bg-[#00A3B4] hover:bg-[#007A8A] text-white rounded-lg text-sm font-medium transition">
+                    Kaydet
+                </button>
+                <button type="button" id="wl-reset-btn"
+                    class="py-2 px-3 border border-gray-300 text-gray-500 hover:bg-gray-50 rounded-lg text-sm transition"
+                    title="Genel ayara döndür">
+                    Genel Ayara Dön
+                </button>
+                <button type="button" onclick="document.getElementById('modal-weekly-limit').classList.add('hidden')"
+                    class="py-2 px-3 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded-lg text-sm transition">
                     İptal
                 </button>
             </div>
@@ -261,6 +408,41 @@
             field.style.display = 'none';
             select.required = false;
         }
+    }
+
+    function editToggleStudentFields(role) {
+        const isStudent = role === 'student';
+        document.getElementById('edit-student-number-field').style.display = isStudent ? 'block' : 'none';
+        document.getElementById('edit-weekly-limit-field').style.display   = isStudent ? 'block' : 'none';
+    }
+
+    function openEditModal(u) {
+        document.getElementById('edit-user-form').action =
+            '<?= url('admin/kullanicilar') ?>/' + u.id + '/duzenle';
+
+        document.getElementById('edit-name').value           = u.name;
+        document.getElementById('edit-email').value          = u.email;
+        document.getElementById('edit-password').value       = '';
+        document.getElementById('edit-role').value           = u.role;
+        document.getElementById('edit-student-number').value = u.student_number || '';
+        document.getElementById('edit-weekly-limit').value   = u.weekly_limit !== null ? u.weekly_limit : '';
+        document.getElementById('edit-is-active').checked    = u.is_active;
+
+        editToggleStudentFields(u.role);
+        document.getElementById('modal-edit-user').classList.remove('hidden');
+    }
+
+    function openWeeklyLimitModal(userId, userName, currentLimit) {
+        document.getElementById('wl-user-name').textContent = userName;
+        document.getElementById('weekly-limit-form').action = '<?= url('admin/kullanicilar') ?>/' + userId + '/haftalik-limit';
+        const input = document.getElementById('wl-input');
+        input.value = (currentLimit !== null && currentLimit !== undefined) ? currentLimit : '';
+
+        document.getElementById('wl-reset-btn').onclick = function() {
+            input.value = '';
+        };
+
+        document.getElementById('modal-weekly-limit').classList.remove('hidden');
     }
 
     function openAssignModal(userId, userName, currentVenueId) {

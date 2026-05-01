@@ -67,6 +67,42 @@ class DonationModel
         return (int)$stmt->fetchColumn();
     }
 
+    /**
+     * İşletmenin onay bekleyen bağışlarını getir (ürün özeti ile)
+     */
+    public function getWaitingByVenue(int $venueId, int $limit = 20): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT d.*,
+                    COALESCE(d.donor_name, u.name, 'Misafir') AS donor_name,
+                    COALESCE(d.donor_email, u.email, '') AS donor_email,
+                    GROUP_CONCAT(CONCAT(p.name, ' ×', di.quantity) ORDER BY p.name SEPARATOR ', ') AS items_summary
+             FROM donations d
+             LEFT JOIN users u ON u.id = d.donor_id
+             LEFT JOIN donation_items di ON di.donation_id = d.id
+             LEFT JOIN products p ON p.id = di.product_id
+             WHERE d.venue_id = ? AND d.status = 'waiting_approval'
+             GROUP BY d.id
+             ORDER BY d.created_at DESC LIMIT ?"
+        );
+        $stmt->bindValue(1, $venueId, PDO::PARAM_INT);
+        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * İşletmenin onay bekleyen bağış sayısı
+     */
+    public function countWaitingByVenue(int $venueId): int
+    {
+        $stmt = $this->db->prepare(
+            "SELECT COUNT(*) FROM donations WHERE venue_id = ? AND status = 'waiting_approval'"
+        );
+        $stmt->execute([$venueId]);
+        return (int)$stmt->fetchColumn();
+    }
+
     public function getByDonor(int $donorId): array
     {
         $stmt = $this->db->prepare(

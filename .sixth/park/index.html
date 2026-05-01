@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Askıda Kampüs — Çok Yakında</title>
+  <meta name="description" content="Askıda Kampüs — AYBU dayanışma platformu çok yakında hizmetinizde." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #0f4c81;
+      --brand-2: #1d6fb8;
+      --accent: #f5b301;
+      --ink: #0b1f33;
+      --muted: #5c6b7a;
+      --bg: #f7f9fc;
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Gradient background */
+    .bg {
+      position: fixed; inset: 0; z-index: -2;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(29,111,184,0.25), transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, rgba(245,179,1,0.15), transparent 60%),
+        radial-gradient(800px 600px at 50% 120%, rgba(15,76,129,0.20), transparent 60%),
+        linear-gradient(180deg, #ffffff 0%, #eef3f9 100%);
+    }
+    .blob {
+      position: fixed; z-index: -1; border-radius: 50%; filter: blur(80px); opacity: .35;
+      animation: float 14s ease-in-out infinite;
+    }
+    .blob.a { width: 420px; height: 420px; background: #1d6fb8; top: -120px; left: -120px; }
+    .blob.b { width: 360px; height: 360px; background: #f5b301; bottom: -100px; right: -100px; animation-delay: -6s; }
+    @keyframes float {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50%      { transform: translate(30px,-20px) scale(1.05); }
+    }
+
+    header {
+      padding: 28px clamp(20px, 5vw, 56px);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px;
+      box-shadow: 0 10px 25px -10px rgba(15,76,129,.5);
+    }
+    .brand-text { font-weight: 700; font-size: 18px; letter-spacing: .2px; }
+    .brand-text span { color: var(--muted); font-weight: 500; }
+
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 20px clamp(20px, 5vw, 56px) 60px;
+    }
+    .card {
+      width: 100%; max-width: 860px;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: 28px;
+      padding: clamp(28px, 5vw, 56px);
+      box-shadow: 0 30px 80px -30px rgba(11,31,51,.25);
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: 999px;
+      background: rgba(29,111,184,0.10);
+      color: var(--brand);
+      font-weight: 600; font-size: 13px;
+      margin-bottom: 22px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(245,179,1,.6);
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(245,179,1,.6); }
+      70%  { box-shadow: 0 0 0 10px rgba(245,179,1,0); }
+      100% { box-shadow: 0 0 0 0 rgba(245,179,1,0); }
+    }
+    h1 {
+      font-size: clamp(32px, 5.5vw, 56px);
+      line-height: 1.05; letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      background: linear-gradient(90deg, #0b1f33 0%, #1d6fb8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    p.lead {
+      font-size: clamp(16px, 1.6vw, 19px);
+      color: var(--muted);
+      max-width: 620px; margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+    .feature {
+      padding: 18px 16px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(15,76,129,0.08);
+      border-radius: 16px;
+      text-align: left;
+    }
+    .feature .ico {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      display: grid; place-items: center; color: #fff;
+      margin-bottom: 10px;
+    }
+    .feature h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .feature p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 22px; border-radius: 14px;
+      font-weight: 600; font-size: 15px;
+      text-decoration: none; transition: all .2s ease;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+      color: #fff;
+      box-shadow: 0 10px 25px -10px rgba(15,76,129,.6);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -10px rgba(15,76,129,.7); }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: rgba(11,31,51,.15); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.8); }
+
+    footer {
+      padding: 20px clamp(20px, 5vw, 56px) 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer strong { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="blob a"></div>
+  <div class="blob b"></div>
+
+  <header>
+    <div class="brand">
+      <div class="logo">AK</div>
+      <div class="brand-text">Askıda Kampüs <span>· AYBU</span></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="badge"><span class="dot"></span> Yakında yayında</div>
+      <h1>Kampüste dayanışma, dijitalleşiyor</h1>
+      <p class="lead">
+        Ankara Yıldırım Beyazıt Üniversitesi İktisadi İşletmeler Müdürlüğü için geliştirilen
+        <strong>Askıda Kampüs</strong> platformu çok yakında hizmetinizde. Bağışla, rezerve et, QR ile teslim al.
+      </p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <h3>Bağışla</h3>
+          <p>Hesap açmadan veya bağışçı olarak kampüse destek ol.</p>
+        </div>
+        <div class="feature">
+          <div class="ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <h3>QR ile Teslim</h3>
+          <p>Öğrenciler rezervasyonlarını saniyeler içinde tamamlar.</p>
+        </div>
+        <div class="feature">
+          <div class="ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+          </div>
+          <h3>Çoklu İşletme</h3>
+          <p>Kampüsteki tüm kafeterya ve büfeler tek platformda.</p>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a href="mailto:info@askidakampus.com" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          İletişime Geç
+        </a>
+        <a href="https://aybu.edu.tr" target="_blank" rel="noopener" class="btn btn-ghost">AYBU Web Sitesi →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © <span id="y"></span> <strong>Askıda Kampüs</strong> · Ankara Yıldırım Beyazıt Üniversitesi İktisadi İşletmeler Müdürlüğü
+  </footer>
+
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
