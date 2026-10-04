@@ -6,7 +6,9 @@
 
             <div class="sm:col-span-2 lg:col-span-1">
                 <div class="flex items-center gap-3">
-                    <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-11 w-auto brightness-0 invert">
+                    <span class="inline-flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-white">
+                        <img src="<?= asset('aybu.png') ?>" alt="AYBU" class="h-9 w-auto">
+                    </span>
                     <span class="wordmark text-lg text-white">Askıda Kampüs</span>
                 </div>
                 <p class="mt-4 text-sm leading-relaxed text-navy-200"><?= t('footer.brand_desc') ?></p>
