@@ -1,75 +1,79 @@
 <?php include ROOT . '/views/layout/header.php'; ?>
 
-<div class="mb-6">
-    <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
-        <a href="<?= url('isletme') ?>" class="hover:text-[#00A3B4] transition">Dashboard</a>
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        <span class="text-gray-600 font-medium">Katkılar</span>
-    </nav>
-    <h1 class="text-2xl font-bold text-gray-800">Katkılar</h1>
-    <p class="text-gray-500 text-sm mt-1">Toplam <?= $total ?> katkı</p>
+<div class="page-header">
+    <div>
+        <nav class="breadcrumb" aria-label="Sayfa yolu">
+            <a href="<?= url('isletme') ?>">Dashboard</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Katkılar</span>
+        </nav>
+        <h1 class="page-title">Katkılar</h1>
+        <p class="page-desc">Toplam <?= $total ?> katkı</p>
+    </div>
 </div>
 
-<div class="bg-white rounded-xl shadow-sm overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200 text-sm">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-5 py-3 text-left font-semibold text-gray-600">#</th>
-                <th class="px-5 py-3 text-left font-semibold text-gray-600">Katkı Sağlayan</th>
-                <th class="px-5 py-3 text-left font-semibold text-gray-600">Tutar</th>
-                <th class="px-5 py-3 text-left font-semibold text-gray-600">Durum</th>
-                <th class="px-5 py-3 text-left font-semibold text-gray-600">Tarih</th>
-                <th class="px-5 py-3 text-right font-semibold text-gray-600">İşlem</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-            <?php if (empty($donations)): ?>
-            <tr><td colspan="6" class="px-5 py-16 text-center">
-                <div class="flex flex-col items-center gap-3">
-                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<div class="card">
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Katkı Sağlayan</th>
+                    <th>Tutar</th>
+                    <th>Durum</th>
+                    <th>Tarih</th>
+                    <th class="text-right">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($donations)): ?>
+                <tr><td colspan="6">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <p class="empty-state-title">Henüz katkı yok</p>
+                        <p>Bu işletmeye ait katkı kaydı bulunmamaktadır.</p>
                     </div>
-                    <p class="text-gray-500 font-medium text-sm">Henüz katkı yok</p>
-                    <p class="text-gray-400 text-xs">Bu işletmeye ait katkı kaydı bulunmamaktadır.</p>
-                </div>
-            </td></tr>
-            <?php else: ?>
-            <?php foreach ($donations as $d): ?>
-            <tr class="even:bg-gray-50/50 hover:bg-[#E0F7FA]/50 transition-colors">
-                <td class="px-5 py-3 text-gray-400"><?= e($d['id']) ?></td>
-                <td class="px-5 py-3">
-                    <p class="font-medium text-gray-800"><?= e($d['donor_name']) ?></p>
-                    <p class="text-xs text-gray-400"><?= e($d['donor_email']) ?></p>
-                </td>
-                <td class="px-5 py-3 font-semibold text-gray-800">₺<?= number_format($d['total_amount'], 2, ',', '.') ?></td>
-                <td class="px-5 py-3"><?= status_badge($d['status']) ?></td>
-                <td class="px-5 py-3 text-xs text-gray-500"><?= format_date($d['created_at']) ?></td>
-                <td class="px-5 py-3 text-right">
-                    <?php if ($d['status'] === 'waiting_approval'): ?>
-                    <form method="POST" action="<?= url('isletme/bagislar/' . $d['id'] . '/onayla') ?>" class="inline">
-                        <?= csrf_field() ?>
-                        <button type="submit" data-confirm="Bu katkıyı onaylamak istiyor musunuz?"
-                            class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-medium transition">
-                            Onayla
-                        </button>
-                    </form>
-                    <?php else: ?>
-                    <span class="text-gray-300 text-xs">—</span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
+                </td></tr>
+                <?php else: ?>
+                <?php foreach ($donations as $d): ?>
+                <tr>
+                    <td class="text-slate-500"><?= e($d['id']) ?></td>
+                    <td>
+                        <p class="cell-strong"><?= e($d['donor_name']) ?></p>
+                        <p class="text-xs text-slate-500"><?= e($d['donor_email']) ?></p>
+                    </td>
+                    <td class="cell-strong">₺<?= number_format($d['total_amount'], 2, ',', '.') ?></td>
+                    <td><?= status_badge($d['status']) ?></td>
+                    <td class="text-xs text-slate-500"><?= format_date($d['created_at']) ?></td>
+                    <td class="text-right">
+                        <?php if ($d['status'] === 'waiting_approval'): ?>
+                        <form method="POST" action="<?= url('isletme/bagislar/' . $d['id'] . '/onayla') ?>" class="inline">
+                            <?= csrf_field() ?>
+                            <button type="submit" data-confirm="Bu katkıyı onaylamak istiyor musunuz?"
+                                class="btn btn-success btn-sm">
+                                Onayla
+                            </button>
+                        </form>
+                        <?php else: ?>
+                        <span class="text-slate-400 text-xs">—</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <?php $totalPages = (int)ceil($total / 20); ?>
 <?php if ($totalPages > 1): ?>
-<div class="flex justify-center gap-2 mt-6">
+<div class="flex flex-wrap justify-center gap-2 mt-6">
     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
     <a href="?sayfa=<?= $i ?>"
-       class="px-3 py-1.5 rounded text-sm <?= $i === $page ? 'bg-[#00A3B4] text-white' : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50' ?>">
+       class="btn btn-sm <?= $i === $page ? 'btn-primary' : 'btn-outline' ?>"<?= $i === $page ? ' aria-current="page"' : '' ?>>
         <?= $i ?>
     </a>
     <?php endfor; ?>
