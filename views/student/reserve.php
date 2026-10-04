@@ -1,32 +1,36 @@
 <?php require ROOT . '/views/layout/header.php'; ?>
 
-<div class="mb-6">
-    <a href="<?= url('isletmeler') ?>" class="text-sm text-[#00A3B4] hover:underline">← <?= t('student.back_venues') ?></a>
-    <h1 class="text-2xl font-bold text-gray-800 mt-2"><?= e($venue['name']) ?></h1>
-    <p class="text-gray-500 text-sm"><?= e($venue['campus_name']) ?><?= $venue['location'] ? ' · ' . e($venue['location']) : '' ?></p>
+<div class="page-header">
+    <div>
+        <nav class="breadcrumb" aria-label="breadcrumb">
+            <a href="<?= url('isletmeler') ?>">← <?= t('student.back_venues') ?></a>
+        </nav>
+        <h1 class="page-title"><?= e($venue['name']) ?></h1>
+        <p class="page-desc"><?= e($venue['campus_name']) ?><?= $venue['location'] ? ' · ' . e($venue['location']) : '' ?></p>
+    </div>
 </div>
 
 <?php $flashError = flash('error'); ?>
 <?php if ($flashError): ?>
-<div class="mb-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm"><?= e($flashError) ?></div>
+<div class="flash flash-error mb-4" role="alert" data-flash>
+    <div class="flash-body"><?= e($flashError) ?></div>
+</div>
 <?php endif; ?>
 
 <!-- Haftalık kota göstergesi -->
 <?php
 $pct = $weeklyLimit > 0 ? round($weeklyUsed / $weeklyLimit * 100) : 100;
-$barColor = $weeklyRemaining > 1 ? 'bg-green-400' : ($weeklyRemaining === 1 ? 'bg-yellow-400' : 'bg-red-400');
-$textColor = $weeklyRemaining > 1 ? 'text-green-700' : ($weeklyRemaining === 1 ? 'text-yellow-700' : 'text-red-700');
-$bgColor   = $weeklyRemaining > 1 ? 'bg-green-50 border-green-200' : ($weeklyRemaining === 1 ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200');
+$quotaCls = $weeklyRemaining > 1 ? 'flash-success' : ($weeklyRemaining === 1 ? 'flash-warning' : 'flash-error');
 ?>
-<div class="mb-5 p-4 border rounded-xl <?= $bgColor ?>">
-    <div class="flex items-center justify-between mb-2">
-        <span class="text-sm font-semibold <?= $textColor ?>">Haftalık Ürün Hakkı</span>
-        <span class="text-sm font-bold <?= $textColor ?>"><?= $weeklyUsed ?> / <?= $weeklyLimit ?> ürün kullanıldı</span>
+<div class="flash <?= $quotaCls ?> mb-5 !block">
+    <div class="flex items-center justify-between gap-3 mb-2">
+        <span class="text-sm font-bold">Haftalık Ürün Hakkı</span>
+        <span class="text-sm font-bold tabular-nums"><?= $weeklyUsed ?> / <?= $weeklyLimit ?> ürün kullanıldı</span>
     </div>
-    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-        <div class="h-full <?= $barColor ?> rounded-full transition-all" style="width:<?= $pct ?>%"></div>
+    <div class="progress">
+        <div class="progress-bar" style="width:<?= min(100, $pct) ?>%"></div>
     </div>
-    <p class="text-xs mt-1.5 <?= $textColor ?>">
+    <p class="text-xs mt-2">
         <?php if ($weeklyRemaining === 0): ?>
             Bu haftaki ürün limitinize ulaştınız. Limit her Pazartesi sıfırlanır.
         <?php elseif ($weeklyRemaining === 1): ?>
@@ -40,65 +44,62 @@ $bgColor   = $weeklyRemaining > 1 ? 'bg-green-50 border-green-200' : ($weeklyRem
 <form method="POST" action="<?= url('isletmeler/' . $venue['id'] . '/rezerve') ?>">
     <?= csrf_field() ?>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-        <h2 class="font-semibold text-gray-800 mb-1"><?= t('student.select_products') ?></h2>
-        <p class="text-sm text-gray-500 mb-5"><?= t('student.only_in_stock') ?></p>
+    <div class="card p-5 sm:p-6 mb-6">
+        <h2 class="card-title mb-1"><?= t('student.select_products') ?></h2>
+        <p class="text-sm text-slate-600 mb-5"><?= t('student.only_in_stock') ?></p>
 
         <?php if (empty($products)): ?>
-        <p class="text-gray-400 text-sm"><?= t('student.no_reservable') ?></p>
+        <p class="text-slate-500 text-sm"><?= t('student.no_reservable') ?></p>
         <?php else: ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <?php foreach ($products as $p): ?>
             <?php $free = $stocks[$p['id']] ?? 0; ?>
-            <div class="border <?= $free > 0 ? 'border-gray-200 hover:border-[#00A3B4]/40' : 'border-gray-100 bg-gray-50 opacity-60' ?> rounded-xl p-4 transition">
+            <div class="border rounded-2xl p-4 transition <?= $free > 0 ? 'border-slate-200 hover:border-navy-400' : 'border-slate-200 bg-slate-50 opacity-70' ?>">
                 <?php if (!empty($p['image_url'])): ?>
                 <img src="<?= url($p['image_url']) ?>" alt="<?= e(pname($p)) ?>"
-                     class="w-full h-36 object-cover rounded-lg mb-3">
+                     class="w-full h-36 object-cover rounded-xl mb-3">
                 <?php else: ?>
-                <div class="w-full h-36 bg-gray-50 border border-gray-100 rounded-lg mb-3 flex items-center justify-center">
-                    <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-full h-36 bg-navy-100 text-navy-400 rounded-xl mb-3 flex items-center justify-center">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                     </svg>
                 </div>
                 <?php endif; ?>
 
-                <p class="font-semibold text-gray-800 text-sm"><?= e(pname($p)) ?></p>
+                <p class="font-bold text-slate-900 text-sm"><?= e(pname($p)) ?></p>
                 <?php if ($p['description']): ?>
-                <p class="text-xs text-gray-400 mt-0.5 line-clamp-1"><?= e($p['description']) ?></p>
+                <p class="text-xs text-slate-500 mt-0.5 line-clamp-1"><?= e($p['description']) ?></p>
                 <?php endif; ?>
                 <?php if ($p['category']): ?>
-                <span class="inline-block mt-1 text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full"><?= e($p['category']) ?></span>
+                <span class="badge badge-plain badge-gold-soft mt-1.5"><?= e($p['category']) ?></span>
                 <?php endif; ?>
 
                 <?php
                 $maxShow = max($free, 1);
                 $pct = min(100, round($free / max($maxShow, 10) * 100));
-                $barColor = $free > 5 ? 'bg-green-400' : ($free > 0 ? 'bg-yellow-400' : 'bg-red-300');
                 ?>
                 <div class="mt-3">
-                    <div class="flex justify-between text-[11px] text-gray-400 mb-1">
+                    <div class="flex justify-between text-[11px] text-slate-500 mb-1">
                         <span><?= t('student.stock') ?></span>
-                        <span class="<?= $free > 0 ? 'text-green-600' : 'text-red-500' ?> font-medium">
+                        <span class="font-semibold <?= $free > 0 ? 'text-navy-800' : 'text-slate-500' ?>">
                             <?= $free > 0 ? "{$free} " . t('common.items') : t('student.out_of_stock') ?>
                         </span>
                     </div>
-                    <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                        <div class="h-full <?= $barColor ?> rounded-full transition-all" style="width:<?= $pct ?>%"></div>
+                    <div class="progress !h-1.5">
+                        <div class="progress-bar" style="width:<?= $pct ?>%"></div>
                     </div>
                 </div>
 
                 <div class="mt-3 flex items-center gap-2">
-                    <label class="text-xs text-gray-500"><?= t('student.qty') ?>:</label>
-                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                        <button type="button" onclick="changeQty(this,-1)"
-                            class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-bold transition">−</button>
+                    <span class="text-xs text-slate-600"><?= t('student.qty') ?>:</span>
+                    <div class="qty">
+                        <button type="button" onclick="changeQty(this,-1)" class="qty-btn" aria-label="<?= e(t('ui.decrease')) ?>">−</button>
                         <input type="number" name="qty[<?= $p['id'] ?>]"
                             value="0" min="0" max="<?= $free ?>"
                             <?= $free <= 0 ? 'disabled' : '' ?>
-                            class="w-12 text-center text-sm border-x border-gray-300 py-1 focus:outline-none qty-input"
+                            class="qty-input"
                             data-price="0">
-                        <button type="button" onclick="changeQty(this,1)"
-                            class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-bold transition">+</button>
+                        <button type="button" onclick="changeQty(this,1)" class="qty-btn" aria-label="<?= e(t('ui.increase')) ?>">+</button>
                     </div>
                 </div>
             </div>
@@ -111,15 +112,14 @@ $bgColor   = $weeklyRemaining > 1 ? 'bg-green-50 border-green-200' : ($weeklyRem
     $appCfg = require ROOT . '/src/config/app.php';
     $expireMin = $appCfg['reservation_expire_min'] ?? 30;
     ?>
-    <div class="border border-yellow-300 bg-yellow-50 rounded-lg p-4 mb-6 text-sm text-yellow-800 flex items-start gap-3">
-        <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="flash flash-info mb-6">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        <p><?= t('student.expire_warn', ['min' => $expireMin]) ?></p>
+        <p class="flash-body text-sm"><?= t('student.expire_warn', ['min' => $expireMin]) ?></p>
     </div>
 
-    <button type="submit"
-        class="w-full py-3 bg-[#00A3B4] hover:bg-[#007A8A] text-white font-bold rounded-xl transition text-base shadow-md">
+    <button type="submit" class="btn btn-primary btn-lg btn-block">
         <?= t('student.create_res') ?>
     </button>
 </form>
