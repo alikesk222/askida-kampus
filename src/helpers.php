@@ -105,7 +105,7 @@ if (!function_exists('error_msg')) {
     {
         if (!isset($errors[$field])) return '';
         $msg = is_array($errors[$field]) ? ($errors[$field][0] ?? '') : $errors[$field];
-        return '<p class="text-red-500 text-sm mt-1">' . e($msg) . '</p>';
+        return '<p class="form-error">' . e($msg) . '</p>';
     }
 }
 
@@ -149,17 +149,18 @@ if (!function_exists('format_date')) {
 if (!function_exists('status_badge')) {
     function status_badge(string $status): string
     {
+        // Rozet sınıfları public/assets/css/app.css içindeki .badge-* tanımlarına karşılık gelir.
         $map = [
-            'waiting_approval' => ['bg-yellow-100 text-yellow-800', 'status.waiting_approval'],
-            'paid'             => ['bg-green-100 text-green-800',  'status.paid'],
-            'failed'           => ['bg-red-100 text-red-800',      'status.failed'],
-            'reserved'         => ['bg-blue-100 text-blue-800',    'status.reserved'],
-            'claimed'          => ['bg-green-100 text-green-800',  'status.claimed'],
-            'expired'          => ['bg-gray-100 text-gray-600',    'status.expired'],
-            'cancelled'        => ['bg-red-100 text-red-800',      'status.cancelled'],
+            'waiting_approval' => ['badge-pending',   'status.waiting_approval'],
+            'paid'             => ['badge-approved',  'status.paid'],
+            'failed'           => ['badge-rejected',  'status.failed'],
+            'reserved'         => ['badge-approved',  'status.reserved'],
+            'claimed'          => ['badge-delivered', 'status.claimed'],
+            'expired'          => ['badge-expired',   'status.expired'],
+            'cancelled'        => ['badge-rejected',  'status.cancelled'],
         ];
-        [$cls, $key] = $map[$status] ?? ['bg-gray-100 text-gray-600', $status];
-        $label = isset($map[$status]) ? t($key) : $status;
-        return "<span class=\"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium $cls\">$label</span>";
+        [$cls, $key] = $map[$status] ?? ['badge-expired', $status];
+        $label = isset($map[$status]) ? t($key) : e($status);
+        return "<span class=\"badge $cls\">$label</span>";
     }
 }
