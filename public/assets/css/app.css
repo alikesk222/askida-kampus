@@ -1015,6 +1015,15 @@ input[type="radio"] { accent-color: var(--navy-800); }
 /* === /AREA: venue_admin === */
 
 /* === AREA: admin === */
+/* admin-a: settings sekmeleri */
+.admin-tabs { display: flex; flex-wrap: wrap; gap: 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.5rem; }
+.admin-tab {
+    padding: .75rem .25rem; min-height: 44px; margin-bottom: -1px;
+    border: 0; border-bottom: 2px solid transparent; background: none;
+    font-size: .875rem; font-weight: 500; color: var(--subtle); cursor: pointer;
+}
+.admin-tab:hover { color: var(--ink); border-bottom-color: var(--line-strong); }
+.admin-tab.is-active { color: var(--navy-800); border-bottom-color: var(--navy-800); font-weight: 600; }
 /* === /AREA: admin === */
 
 /* ── Hareket azaltma ───────────────────────────────────────────────────── */
