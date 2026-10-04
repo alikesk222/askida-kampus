@@ -873,6 +873,17 @@ input[type="radio"] { accent-color: var(--navy-800); }
 /* === /LAYOUT: public === */
 
 /* === LAYOUT: panel (header / footer / sidebar / öğrenci sekme çubuğu) === */
+.tab-link {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; min-height: 56px; padding: 6px 4px; font-size: 11px; font-weight: 500;
+  color: #64748B; background: transparent; border: 0; cursor: pointer; text-decoration: none;
+}
+.tab-link:hover { color: var(--navy-800); }
+.tab-link.is-active { color: var(--navy-800); font-weight: 600; }
+.tab-link.is-active::before {
+  content: ""; position: absolute; top: 0; left: 50%; width: 24px; height: 3px;
+  margin-left: -12px; border-radius: 0 0 4px 4px; background: var(--gold-500);
+}
 /* === /LAYOUT: panel === */
 
 /* === AREA: auth === */
