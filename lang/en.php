@@ -105,7 +105,7 @@
     'contact.link_login'    => 'Log In',
     'contact.link_login_s'  => 'Access your account',
     'contact.support_title' => 'Technical Support',
-    'contact.support_desc'  => 'For technical issues or password reset, please contact us via <a href="mailto:basin@aybu.edu.tr" style="color:#009999;font-weight:600;">email</a>.',
+    'contact.support_desc'  => 'For technical issues or password reset, please contact us via <a href="mailto:basin@aybu.edu.tr" class="link">email</a>.',
     /* Contact Form */
     'contact.form_tag'      => 'Send a Message',
     'contact.form_title'    => 'Write to Us',
@@ -140,7 +140,7 @@
     'faq.d_q4' => 'Which products can I donate?',
     'faq.d_a4' => 'You can donate any product listed in the participating venues\' menus. Basic items like tea, coffee, sandwich, toast, bagel, and water are available.',
     'faq.s_q1' => 'How do I register?',
-    'faq.s_a1' => 'You can create a free account on the <a href=":reg_url" style="color:#009999;font-weight:600;">Sign Up</a> page using your AYBU email address and student number.',
+    'faq.s_a1' => 'You can create a free account on the <a href=":reg_url" class="link">Sign Up</a> page using your AYBU email address and student number.',
     'faq.s_q2' => 'How many items can I reserve per day?',
     'faq.s_a2' => 'The default daily limit is <strong>3 items</strong> per student. This limit ensures all students have equal access.',
     'faq.s_q3' => 'How long is my reservation valid?',
@@ -152,7 +152,7 @@
     'faq.g_q2' => 'Is the system free?',
     'faq.g_a2' => 'Yes. Registering and reserving items is completely free. No commission or hidden fees are charged.',
     'faq.g_q3' => 'I forgot my password, what should I do?',
-    'faq.g_a3' => 'Click the <a href=":forgot_url" style="color:#009999;font-weight:600;">"Forgot Password"</a> link on the login page to receive a reset link to your email.',
+    'faq.g_a3' => 'Click the <a href=":forgot_url" class="link">"Forgot Password"</a> link on the login page to receive a reset link to your email.',
     'faq.still_question'  => 'Still have questions?',
     'faq.still_desc'      => 'Contact us for anything you couldn\'t find here.',
     'faq.contact_btn'     => 'Contact Us',
@@ -466,5 +466,53 @@
     'ui.total'            => 'Total',
     'ui.increase'         => 'Increase quantity',
     'ui.decrease'         => 'Decrease quantity',
+
+    /* ── Tasarım: auth ── */
+    'auth.promo_headline' => 'Campus solidarity, made digital.',
+    'auth.promo_1'        => 'Students receive support without sharing their identity.',
+    'auth.promo_2'        => 'Contributions are put on hold once they are approved.',
+    'auth.promo_3'        => 'Delivery is done with a single-use code and QR.',
+
+    /* ── Tasarım: donate ── */
+    'donate.summary_empty' => 'No products selected yet.',
+    'donate.next_title'    => 'What happens next?',
+    'donate.next_1'        => 'Make a bank transfer to the IBAN shown, including your request number in the description.',
+    'donate.next_2'        => 'Your payment is reviewed and approved by the administration.',
+    'donate.next_3'        => 'Once approved, the items are put on the hanging board and made available to students.',
+
+    /* ── Tasarım: layout-panel ── */
+    'layout.my_documents'    => 'My documents',
+    'layout.student_nav'     => 'Student menu',
+    'layout.security_policy' => 'Security policy',
+
+    /* ── Tasarım: layout-public ── */
+    'layout_public.nav_how'          => 'How It Works',
+    'layout_public.footer_platform'  => 'Platform',
+    'layout_public.footer_corporate' => 'Corporate',
+    'layout_public.footer_legal'     => 'Legal',
+    'layout_public.footer_consumer'  => 'Consumer Rights',
+
+    /* ── Tasarım: public ── */
+    'home.trust_identity' => 'Your identity is never shared with the venue',
+    'home.trust_code'     => 'Delivered with a single-use code',
+    'home.hero_img_alt'   => 'Ankara Yildirim Beyazit University campus',
+    'home.stats_label'    => 'Platform statistics',
+    'home.venue_view'     => 'View',
+    'home.cta_title'      => 'A tea, a simit, a meal…',
+    'home.cta_desc'       => 'A small contribution can change a student\'s day.',
+    'about.active_note'   => 'Active on Ankara Yildirim Beyazit University campuses',
+    'about.join_tag'      => 'Join us',
+    'faq.empty'           => 'No content has been added yet.',
+
+    /* ── Tasarım: student ── */
+    'student.suspended_items'   => ':n suspended items',
+    'student.time_left'         => 'Time left',
+    'student.expired_title'     => 'Expired',
+    'student.expired_note'      => 'This reservation has expired. You can make a new reservation.',
+    'student.how_title'         => 'How do I collect it?',
+    'student.how_1'             => 'Go to the venue before the time runs out.',
+    'student.how_2'             => 'Tell the staff the code or let them scan the QR code.',
+    'student.how_3'             => 'Collect your item.',
+    'student_doc.selected_file' => 'Selected file',
 
 ];

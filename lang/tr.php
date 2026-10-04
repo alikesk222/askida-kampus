@@ -105,7 +105,7 @@
     'contact.link_login'    => 'Giriş Yap',
     'contact.link_login_s'  => 'Hesabınıza girin',
     'contact.support_title' => 'Teknik Destek',
-    'contact.support_desc'  => 'Sistem ile ilgili teknik sorunlar veya şifremi unuttum gibi konularda <a href="mailto:basin@aybu.edu.tr" style="color:#009999;font-weight:600;">e-posta</a> ile iletişime geçebilirsiniz.',
+    'contact.support_desc'  => 'Sistem ile ilgili teknik sorunlar veya şifremi unuttum gibi konularda <a href="mailto:basin@aybu.edu.tr" class="link">e-posta</a> ile iletişime geçebilirsiniz.',
     /* İletişim Formu */
     'contact.form_tag'      => 'Mesaj Gönderin',
     'contact.form_title'    => 'Bize Yazın',
@@ -140,7 +140,7 @@
     'faq.d_q4' => 'Hangi ürünlere katkı sağlayabilirim?',
     'faq.d_a4' => 'Katılımcı işletmelerin menüsünde yer alan tüm ürünlere katkı sağlayabilirsiniz. Çay, kahve, sandviç, tost, simit, su gibi temel ihtiyaç ürünleri sisteme tanımlıdır.',
     'faq.s_q1' => 'Sisteme nasıl kayıt olabilirim?',
-    'faq.s_a1' => '<a href=":reg_url" style="color:#009999;font-weight:600;">Kayıt Ol</a> sayfasından AYBU e-posta adresiniz ve öğrenci numaranızla ücretsiz hesap oluşturabilirsiniz.',
+    'faq.s_a1' => '<a href=":reg_url" class="link">Kayıt Ol</a> sayfasından AYBU e-posta adresiniz ve öğrenci numaranızla ücretsiz hesap oluşturabilirsiniz.',
     'faq.s_q2' => 'Günde kaç ürün rezerve edebilirim?',
     'faq.s_a2' => 'Her öğrenci için varsayılan günlük limit <strong>3 üründür</strong>. Bu limit, tüm öğrencilerin eşit şekilde yararlanmasını sağlamak için belirlenmiştir.',
     'faq.s_q3' => 'Rezervasyonum ne kadar süre geçerli?',
@@ -152,7 +152,7 @@
     'faq.g_q2' => 'Sistem ücretsiz mi?',
     'faq.g_a2' => 'Evet. Sisteme kayıt olmak ve ürün rezerve etmek tamamen ücretsizdir. Herhangi bir komisyon veya gizli ücret alınmamaktadır.',
     'faq.g_q3' => 'Şifremi unuttum, ne yapmalıyım?',
-    'faq.g_a3' => 'Giriş sayfasındaki <a href=":forgot_url" style="color:#009999;font-weight:600;">"Şifremi Unuttum"</a> bağlantısına tıklayarak e-posta adresinize sıfırlama bağlantısı gönderebilirsiniz.',
+    'faq.g_a3' => 'Giriş sayfasındaki <a href=":forgot_url" class="link">"Şifremi Unuttum"</a> bağlantısına tıklayarak e-posta adresinize sıfırlama bağlantısı gönderebilirsiniz.',
     'faq.still_question'  => 'Hâlâ sorunuz mu var?',
     'faq.still_desc'      => 'Burada bulamadıklarınız için bize ulaşın.',
     'faq.contact_btn'     => 'İletişime Geç',
@@ -466,5 +466,53 @@
     'ui.total'            => 'Toplam',
     'ui.increase'         => 'Adedi artır',
     'ui.decrease'         => 'Adedi azalt',
+
+    /* ── Tasarım: auth ── */
+    'auth.promo_headline' => 'Kampüste dayanışmanın dijital hali.',
+    'auth.promo_1'        => 'Öğrenciler kimliklerini paylaşmadan destek alır.',
+    'auth.promo_2'        => 'Katkılar onaylandıktan sonra askıya alınır.',
+    'auth.promo_3'        => 'Teslimat tek kullanımlık kod ve QR ile yapılır.',
+
+    /* ── Tasarım: donate ── */
+    'donate.summary_empty' => 'Henüz ürün seçilmedi.',
+    'donate.next_title'    => 'Sırada ne var?',
+    'donate.next_1'        => 'Belirtilen IBAN\'a, açıklamada talep numaranızla birlikte havale/EFT yapın.',
+    'donate.next_2'        => 'Ödemeniz yönetim tarafından kontrol edilip onaylanır.',
+    'donate.next_3'        => 'Onaydan sonra ürünler askıya alınır ve öğrencilerin kullanımına sunulur.',
+
+    /* ── Tasarım: layout-panel ── */
+    'layout.my_documents'    => 'Belgelerim',
+    'layout.student_nav'     => 'Öğrenci menüsü',
+    'layout.security_policy' => 'Güvenlik Politikası',
+
+    /* ── Tasarım: layout-public ── */
+    'layout_public.nav_how'          => 'Nasıl Çalışır',
+    'layout_public.footer_platform'  => 'Platform',
+    'layout_public.footer_corporate' => 'Kurumsal',
+    'layout_public.footer_legal'     => 'Yasal',
+    'layout_public.footer_consumer'  => 'Tüketici Hakları',
+
+    /* ── Tasarım: public ── */
+    'home.trust_identity' => 'Kimliğiniz işletmeyle paylaşılmaz',
+    'home.trust_code'     => 'Tek kullanımlık kod ile teslim',
+    'home.hero_img_alt'   => 'Ankara Yıldırım Beyazıt Üniversitesi kampüsü',
+    'home.stats_label'    => 'Platform istatistikleri',
+    'home.venue_view'     => 'İncele',
+    'home.cta_title'      => 'Bir çay, bir simit, bir öğün…',
+    'home.cta_desc'       => 'Küçük bir katkı, bir öğrencinin gününü değiştirir.',
+    'about.active_note'   => 'Ankara Yıldırım Beyazıt Üniversitesi kampüslerinde aktif',
+    'about.join_tag'      => 'Katılın',
+    'faq.empty'           => 'Henüz içerik eklenmemiş.',
+
+    /* ── Tasarım: student ── */
+    'student.suspended_items'   => ':n askıda ürün',
+    'student.time_left'         => 'Kalan süre',
+    'student.expired_title'     => 'Süresi doldu',
+    'student.expired_note'      => 'Bu rezervasyonun süresi doldu. Yeni bir rezervasyon oluşturabilirsiniz.',
+    'student.how_title'         => 'Nasıl teslim alırım?',
+    'student.how_1'             => 'Süre dolmadan işletmeye gidin.',
+    'student.how_2'             => 'Kodu görevliye söyleyin ya da QR kodu okutun.',
+    'student.how_3'             => 'Ürününüzü teslim alın.',
+    'student_doc.selected_file' => 'Seçilen dosya',
 
 ];
