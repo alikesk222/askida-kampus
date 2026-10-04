@@ -5,246 +5,125 @@ $metaDesc   = t('home.slide1_desc');
 include ROOT . '/views/layout/public-header.php';
 ?>
 
-<style>
-    .hero-slider {
-        position: relative; width: 100%; height: 420px;
-        overflow: hidden; background: #1a2a3a; border-top: 3px solid #009999;
-    }
-    @media (max-width: 768px) {
-        .hero-slider { height: 520px; }
-        .slider-btn { width: 38px; height: 38px; }
-        .slider-btn.prev { left: 10px; }
-        .slider-btn.next { right: 10px; }
-        .slider-progress { display: none; }
-        .slide-desc { font-size: 13px; }
-        .slide-actions a { padding: 9px 18px; font-size: 13px; }
-    }
-    .slides { display: flex; height: 100%; transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1); }
-    .slide { min-width: 100%; height: 100%; overflow: hidden; position: relative; }
-    .slide img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-    .slide-overlay {
-        position: absolute; inset: 0;
-        background: linear-gradient(135deg, rgba(0,58,110,0.82) 0%, rgba(0,100,140,0.55) 50%, rgba(0,153,153,0.35) 100%);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        padding: 40px 20px; text-align: center;
-    }
-    .slide-badge {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
-        color: #fff; font-size: 13px; font-weight: 500;
-        padding: 6px 18px; border-radius: 999px; margin-bottom: 20px;
-    }
-    .slide-badge .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
-    .slide-title { font-size: clamp(28px, 5vw, 52px); font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 16px; letter-spacing: -0.5px; }
-    .slide-title span { color: #7dd8f0; }
-    .slide-desc { font-size: 15px; color: rgba(255,255,255,0.80); max-width: 560px; line-height: 1.65; margin-bottom: 28px; font-weight: 300; }
-    .slide-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-    .slide-actions a { padding: 11px 26px; border-radius: 6px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all 0.2s; }
-    .slide-actions .btn-primary { background: #fff; color: #003a6e; box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
-    .slide-actions .btn-primary:hover { background: #f0f4f8; }
-    .slide-actions .btn-secondary { background: #009999; color: #fff; box-shadow: 0 4px 20px rgba(0,153,153,0.4); }
-    .slide-actions .btn-secondary:hover { background: #007a7a; }
-    .slide-actions .btn-ghost { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(4px); }
-    .slide-actions .btn-ghost:hover { background: rgba(255,255,255,0.25); }
-    .slider-btn {
-        position: absolute; top: 50%; transform: translateY(-50%);
-        width: 48px; height: 48px; border-radius: 50%;
-        background: #009999; border: none; cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        z-index: 10; transition: background 0.2s, transform 0.2s;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-    }
-    .slider-btn:hover { background: #007a7a; transform: translateY(-50%) scale(1.08); }
-    .slider-btn svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .slider-btn.prev { left: 24px; }
-    .slider-btn.next { right: 24px; }
-    .slider-counter {
-        position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-        background: #fff; border-radius: 50% 50% 0 0; width: 80px; height: 40px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 13px; font-weight: 500; color: #444; letter-spacing: 1px;
-        z-index: 10; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    }
-    .slider-progress {
-        position: absolute; right: 78px; top: 50%; transform: translateY(-50%);
-        width: 3px; height: 80px; background: rgba(255,255,255,0.25);
-        border-radius: 2px; z-index: 10; overflow: hidden;
-    }
-    .slider-progress-fill { width: 100%; background: #fff; border-radius: 2px; transition: height 0.5s ease; }
-    .stat-card { transition: transform 0.2s, box-shadow 0.2s; }
-    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,58,110,0.12); }
-    .venue-card { transition: all 0.2s; }
-    .venue-card:hover { transform: translateY(-2px); border-color: #009999; box-shadow: 0 8px 25px rgba(0,153,153,0.12); }
-    .section-title { color: #003a6e; }
-</style>
-
-<!-- HERO SLIDER -->
-<section class="hero-slider">
-    <div class="slides" id="slidesTrack">
-
-        <div class="slide">
-            <img src="<?= asset('slide1.jpg') ?>" alt="Askıda Kampüs">
-            <div class="slide-overlay">
-                <div class="slide-badge">
-                    <span class="dot"></span>
-                    <?= t('home.badge') ?>
-                </div>
-                <h1 class="slide-title">
-                    <?= t('home.slide1_title') ?>
-                </h1>
-                <p class="slide-desc"><?= t('home.slide1_desc') ?></p>
-                <div class="slide-actions">
-                    <a href="<?= url('misafir-bagis') ?>" class="btn-primary"><?= t('home.btn_donate') ?></a>
-                    <a href="<?= url('ogrenci-kayit') ?>" class="btn-secondary"><?= t('home.btn_student_reg') ?></a>
-                    <a href="<?= url('giris') ?>" class="btn-ghost"><?= t('home.btn_login') ?></a>
-                </div>
+<!-- Hero -->
+<section class="on-dark relative overflow-hidden bg-navy-800 text-white">
+    <div class="mx-auto flex max-w-6xl flex-col items-center gap-14 px-6 pb-36 pt-14 lg:flex-row lg:pt-[72px]">
+        <div class="flex min-w-0 flex-1 flex-col gap-6">
+            <span class="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[13px] font-semibold text-navy-100">
+                <span class="h-2 w-2 rounded-full bg-gold-500" aria-hidden="true"></span>
+                <?= t('home.badge') ?>
+            </span>
+            <h1 class="text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[54px]"><?= t('home.slide1_title') ?></h1>
+            <p class="max-w-xl text-lg leading-relaxed text-navy-200"><?= t('home.slide1_desc') ?></p>
+            <div class="flex flex-wrap gap-3">
+                <a href="<?= url('misafir-bagis') ?>" class="btn btn-gold btn-lg">
+                    <?= t('home.btn_donate') ?>
+                    <svg class="h-[18px] w-[18px]" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                </a>
+                <a href="<?= url('ogrenci-kayit') ?>" class="btn btn-outline-light btn-lg"><?= t('home.btn_student_reg') ?></a>
+            </div>
+            <ul class="flex flex-wrap gap-x-7 gap-y-2.5 text-sm font-medium text-navy-200">
+                <li class="inline-flex items-center gap-2">
+                    <svg class="h-[18px] w-[18px] text-gold-500" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <?= t('home.trust_identity') ?>
+                </li>
+                <li class="inline-flex items-center gap-2">
+                    <svg class="h-[18px] w-[18px] text-gold-500" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M20 20h.01M17 20v.01"/></svg>
+                    <?= t('home.trust_code') ?>
+                </li>
+            </ul>
+        </div>
+        <div class="flex w-full min-w-0 flex-1 justify-center">
+            <div class="arch-frame home-hero-photo">
+                <img src="<?= asset('slide1.jpg') ?>" alt="<?= t('home.hero_img_alt') ?>" fetchpriority="high">
             </div>
         </div>
-
-        <div class="slide">
-            <img src="<?= asset('slide2.jpg') ?>" alt="Askıda Kampüs">
-            <div class="slide-overlay">
-                <h1 class="slide-title">
-                    <?= t('home.slide2_title') ?>
-                </h1>
-                <p class="slide-desc"><?= t('home.slide2_desc') ?></p>
-                <div class="slide-actions">
-                    <a href="#nasil-calisir" class="btn-primary"><?= t('home.slide2_btn_detail') ?></a>
-                    <a href="#isletmeler" class="btn-ghost"><?= t('home.slide2_btn_venues') ?></a>
-                </div>
-            </div>
-        </div>
-
     </div>
-
-    <button class="slider-btn prev" onclick="changeSlide(-1)" aria-label="Önceki">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <button class="slider-btn next" onclick="changeSlide(1)" aria-label="Sonraki">
-        <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
-    </button>
-
-    <div class="slider-counter"><span id="slideCounter">1 / 2</span></div>
-    <div class="slider-progress"><div class="slider-progress-fill" id="progressFill" style="height:50%"></div></div>
 </section>
 
-<script>
-(function() {
-    const track   = document.getElementById('slidesTrack');
-    const counter = document.getElementById('slideCounter');
-    const fill    = document.getElementById('progressFill');
-    const slides  = track.querySelectorAll('.slide');
-    const total   = slides.length;
-    let current = 0, timer;
-    function goTo(i) {
-        current = (i + total) % total;
-        track.style.transform = 'translateX(-' + (current * 100) + '%)';
-        counter.textContent = (current + 1) + ' / ' + total;
-        fill.style.height = (((current + 1) / total) * 100) + '%';
-    }
-    window.changeSlide = function(dir) { clearInterval(timer); goTo(current + dir); startAuto(); };
-    function startAuto() { timer = setInterval(function() { goTo(current + 1); }, 5000); }
-    goTo(0); startAuto();
-})();
-</script>
-
 <!-- İstatistikler -->
-<section class="bg-white border-b border-gray-100">
-    <div class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 sm:grid-cols-4 gap-px bg-gray-100">
-        <div class="stat-card text-center p-6 bg-white">
-            <div class="flex justify-center mb-2">
-                <svg class="w-7 h-7" style="color:#0d1f3c" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                </svg>
+<section class="relative -mt-[72px] px-6" aria-label="<?= t('home.stats_label') ?>">
+    <div class="mx-auto max-w-6xl overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-lift">
+        <dl class="grid grid-cols-2 lg:grid-cols-4">
+            <div class="home-stat">
+                <dd class="stat-value"><?= e($stats['venues']) ?>+</dd>
+                <dt class="stat-label"><?= t('home.stat_venues') ?></dt>
             </div>
-            <p class="text-3xl font-bold text-[#0d1f3c]"><?= e($stats['venues']) ?>+</p>
-            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium"><?= t('home.stat_venues') ?></p>
-        </div>
-        <div class="stat-card text-center p-6 bg-white">
-            <div class="flex justify-center mb-2">
-                <svg class="w-7 h-7" style="color:#009999" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                </svg>
+            <div class="home-stat">
+                <dd class="stat-value"><?= e($stats['donations']) ?>+</dd>
+                <dt class="stat-label"><?= t('home.stat_donations') ?></dt>
             </div>
-            <p class="text-3xl font-bold" style="color:#009999"><?= e($stats['donations']) ?>+</p>
-            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium"><?= t('home.stat_donations') ?></p>
-        </div>
-        <div class="stat-card text-center p-6 bg-white">
-            <div class="flex justify-center mb-2">
-                <svg class="w-7 h-7" style="color:#0d1f3c" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+            <div class="home-stat">
+                <dd class="stat-value"><?= e($stats['reservations']) ?>+</dd>
+                <dt class="stat-label"><?= t('home.stat_deliveries') ?></dt>
             </div>
-            <p class="text-3xl font-bold text-[#0d1f3c]"><?= e($stats['reservations']) ?>+</p>
-            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium"><?= t('home.stat_deliveries') ?></p>
-        </div>
-        <div class="stat-card text-center p-6 bg-white">
-            <div class="flex justify-center mb-2">
-                <svg class="w-7 h-7" style="color:#009999" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
-                </svg>
+            <div class="home-stat">
+                <dd class="stat-value"><?= e($stats['stock']) ?>+</dd>
+                <dt class="stat-label"><?= t('home.stat_stock') ?></dt>
             </div>
-            <p class="text-3xl font-bold" style="color:#009999"><?= e($stats['stock']) ?>+</p>
-            <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-medium"><?= t('home.stat_stock') ?></p>
-        </div>
+        </dl>
     </div>
 </section>
 
 <!-- Nasıl Çalışır -->
-<section id="nasil-calisir" class="py-16 px-4 bg-gray-50">
-    <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-10">
-            <h2 class="text-2xl font-bold section-title mb-2"><?= t('home.how_title') ?></h2>
-            <div style="width:40px;height:3px;background:#009999;margin:8px auto 12px;border-radius:2px;"></div>
-            <p class="text-gray-500 text-sm"><?= t('home.how_subtitle') ?></p>
+<section id="nasil-calisir" class="px-6 pb-20 pt-24">
+    <div class="mx-auto flex max-w-6xl flex-col gap-12">
+        <div class="mx-auto flex max-w-2xl flex-col gap-3 text-center">
+            <span class="eyebrow"><?= t('home.how_title') ?></span>
+            <h2 class="text-3xl font-bold leading-tight tracking-tight text-navy-950 sm:text-4xl"><?= t('home.how_subtitle') ?></h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white border border-gray-200 rounded-lg p-8" style="border-top:3px solid #009999;">
-                <div class="mb-6 pb-4 border-b border-gray-100">
-                    <h3 class="font-bold text-[#0d1f3c] text-base uppercase tracking-wide"><?= t('home.how_donors') ?></h3>
-                    <p class="text-xs text-gray-400 mt-1"><?= t('home.how_donors_sub') ?></p>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="flex flex-col gap-6 rounded-3xl bg-page p-8 sm:p-9">
+                <div class="flex items-center gap-3.5">
+                    <span class="icon-chip" aria-hidden="true">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 12 6a5.5 5.5 0 0 0-10 2.5c0 2.3 1.5 4 3 5.5l7 7z"/></svg>
+                    </span>
+                    <div>
+                        <h3 class="text-xl font-bold text-navy-950"><?= t('home.how_donors') ?></h3>
+                        <p class="text-sm text-slate-600"><?= t('home.how_donors_sub') ?></p>
+                    </div>
                 </div>
-                <ol class="space-y-5">
-                    <li class="flex items-start gap-4">
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#009999;">1</span>
-                        <p class="text-gray-600 text-sm leading-relaxed"><?= t('home.how_donors_step1') ?></p>
+                <ol class="flex flex-col gap-4">
+                    <li class="flex items-start gap-3.5">
+                        <span class="home-step-num">1</span>
+                        <p class="pt-1 text-[15px] leading-relaxed text-slate-700"><?= t('home.how_donors_step1') ?></p>
                     </li>
-                    <li class="flex items-start gap-4">
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#009999;">2</span>
-                        <p class="text-gray-600 text-sm leading-relaxed"><?= t('home.how_donors_step2') ?></p>
+                    <li class="flex items-start gap-3.5">
+                        <span class="home-step-num">2</span>
+                        <p class="pt-1 text-[15px] leading-relaxed text-slate-700"><?= t('home.how_donors_step2') ?></p>
                     </li>
-                    <li class="flex items-start gap-4">
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#009999;">3</span>
-                        <p class="text-gray-600 text-sm leading-relaxed"><?= t('home.how_donors_step3') ?></p>
+                    <li class="flex items-start gap-3.5">
+                        <span class="home-step-num">3</span>
+                        <p class="pt-1 text-[15px] leading-relaxed text-slate-700"><?= t('home.how_donors_step3') ?></p>
                     </li>
                 </ol>
-                <a href="<?= url('misafir-bagis') ?>" class="mt-7 inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-semibold rounded transition" style="background:#009999;">
-                    <?= t('home.how_donors_cta') ?>
-                </a>
+                <a href="<?= url('misafir-bagis') ?>" class="btn btn-primary w-fit"><?= t('home.how_donors_cta') ?></a>
             </div>
-            <div class="bg-white border border-gray-200 rounded-lg p-8" style="border-top:3px solid #0d1f3c;">
-                <div class="mb-6 pb-4 border-b border-gray-100">
-                    <h3 class="font-bold text-[#0d1f3c] text-base uppercase tracking-wide"><?= t('home.how_students') ?></h3>
-                    <p class="text-xs text-gray-400 mt-1"><?= t('home.how_students_sub') ?></p>
+            <div class="flex flex-col gap-6 rounded-3xl bg-page p-8 sm:p-9">
+                <div class="flex items-center gap-3.5">
+                    <span class="icon-chip icon-chip-gold" aria-hidden="true">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+                    </span>
+                    <div>
+                        <h3 class="text-xl font-bold text-navy-950"><?= t('home.how_students') ?></h3>
+                        <p class="text-sm text-slate-600"><?= t('home.how_students_sub') ?></p>
+                    </div>
                 </div>
-                <ol class="space-y-5">
-                    <li class="flex items-start gap-4">
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#0d1f3c;">1</span>
-                        <p class="text-gray-600 text-sm leading-relaxed"><?= t('home.how_students_step1') ?></p>
+                <ol class="flex flex-col gap-4">
+                    <li class="flex items-start gap-3.5">
+                        <span class="home-step-num home-step-num-gold">1</span>
+                        <p class="pt-1 text-[15px] leading-relaxed text-slate-700"><?= t('home.how_students_step1') ?></p>
                     </li>
-                    <li class="flex items-start gap-4">
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#0d1f3c;">2</span>
-                        <p class="text-gray-600 text-sm leading-relaxed"><?= t('home.how_students_step2') ?></p>
+                    <li class="flex items-start gap-3.5">
+                        <span class="home-step-num home-step-num-gold">2</span>
+                        <p class="pt-1 text-[15px] leading-relaxed text-slate-700"><?= t('home.how_students_step2') ?></p>
                     </li>
-                    <li class="flex items-start gap-4">
-                        <span class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white mt-0.5" style="background:#0d1f3c;">3</span>
-                        <p class="text-gray-600 text-sm leading-relaxed"><?= t('home.how_students_step3') ?></p>
+                    <li class="flex items-start gap-3.5">
+                        <span class="home-step-num home-step-num-gold">3</span>
+                        <p class="pt-1 text-[15px] leading-relaxed text-slate-700"><?= t('home.how_students_step3') ?></p>
                     </li>
                 </ol>
-                <a href="<?= url('giris') ?>" class="mt-7 inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-semibold rounded transition" style="background:#0d1f3c;">
-                    <?= t('home.how_students_cta') ?>
-                </a>
+                <a href="<?= url('giris') ?>" class="btn btn-primary w-fit"><?= t('home.how_students_cta') ?></a>
             </div>
         </div>
     </div>
@@ -252,28 +131,25 @@ include ROOT . '/views/layout/public-header.php';
 
 <!-- İşletmeler -->
 <?php if (!empty($venues)): ?>
-<section id="isletmeler" class="bg-white py-14 px-4 border-t border-gray-100">
-    <div class="max-w-5xl mx-auto">
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold section-title mb-2"><?= t('home.venues_title') ?></h2>
-            <div style="width:40px;height:3px;background:#009999;margin-top:8px;border-radius:2px;"></div>
-            <p class="text-gray-500 text-sm mt-3"><?= t('home.venues_subtitle') ?></p>
+<section id="isletmeler" class="bg-page px-6 py-20">
+    <div class="mx-auto flex max-w-6xl flex-col gap-9">
+        <div class="flex flex-col gap-2.5">
+            <span class="eyebrow"><?= t('home.venues_title') ?></span>
+            <h2 class="text-2xl font-bold tracking-tight text-navy-950 sm:text-3xl"><?= t('home.venues_subtitle') ?></h2>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <?php foreach ($venues as $v): ?>
-                <a href="<?= url('isletme/' . $v['id']) ?>"
-                    class="venue-card border border-gray-200 rounded-lg p-5 block bg-white group"
-                    style="border-left:3px solid #009999;">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-white text-sm font-bold shadow-sm" style="background:#0d1f3c;">
+                <a href="<?= url('isletme/' . $v['id']) ?>" class="home-venue-card group">
+                    <div class="flex items-start gap-3.5">
+                        <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-navy-800 text-base font-bold text-white">
                             <?= mb_strtoupper(mb_substr(e($v['name']), 0, 1)) ?>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="font-semibold text-gray-800 text-sm group-hover:text-[#009999] transition-colors"><?= e($v['name']) ?></p>
-                            <p class="text-xs text-gray-400 mt-0.5"><?= e($v['campus_name']) ?></p>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-base font-bold text-slate-900 group-hover:text-navy-800"><?= e($v['name']) ?></p>
+                            <p class="mt-0.5 text-sm text-slate-600"><?= e($v['campus_name']) ?></p>
                             <?php if ($v['location']): ?>
-                                <p class="text-xs text-gray-400 mt-1 truncate flex items-center gap-1">
-                                    <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <p class="mt-1.5 flex items-center gap-1 truncate text-xs text-slate-500">
+                                    <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     </svg>
@@ -281,15 +157,31 @@ include ROOT . '/views/layout/public-header.php';
                                 </p>
                             <?php endif; ?>
                         </div>
-                        <svg class="w-4 h-4 text-gray-300 group-hover:text-[#009999] flex-shrink-0 mt-0.5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
                     </div>
+                    <span class="mt-auto inline-flex items-center gap-1.5 text-sm font-bold text-navy-800">
+                        <?= t('home.venue_view') ?>
+                        <svg class="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                    </span>
                 </a>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
 <?php endif; ?>
+
+<!-- CTA bandı -->
+<section class="px-6 py-20">
+    <div class="on-dark relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-7 overflow-hidden rounded-[28px] bg-navy-800 p-8 sm:p-[52px]">
+        <div class="arch-lines arch-lines-sm" aria-hidden="true"></div>
+        <div class="relative flex min-w-0 flex-1 basis-96 flex-col gap-2.5">
+            <h2 class="text-3xl font-bold leading-tight tracking-tight text-white"><?= t('home.cta_title') ?></h2>
+            <p class="text-[17px] leading-relaxed text-navy-200"><?= t('home.cta_desc') ?></p>
+        </div>
+        <div class="relative flex flex-wrap gap-3">
+            <a href="<?= url('misafir-bagis') ?>" class="btn btn-gold btn-lg"><?= t('home.btn_donate') ?></a>
+            <a href="#nasil-calisir" class="btn btn-outline-light btn-lg"><?= t('home.slide2_title') ?></a>
+        </div>
+    </div>
+</section>
 
 <?php include ROOT . '/views/layout/public-footer.php'; ?>

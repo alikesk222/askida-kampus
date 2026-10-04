@@ -890,6 +890,113 @@ input[type="radio"] { accent-color: var(--navy-800); }
 /* === /AREA: auth === */
 
 /* === AREA: public pages === */
+
+/* Ana sayfa */
+.home-hero-photo { width: 100%; max-width: 420px; aspect-ratio: 4 / 5; }
+.home-hero-photo > img { object-position: 30% 50%; }
+.home-stat { display: flex; flex-direction: column; gap: 6px; padding: 24px 28px; }
+.home-stat .stat-value { font-size: 34px; letter-spacing: -.02em; }
+.home-stat .stat-label { font-weight: 600; color: var(--muted); }
+.home-stat:nth-child(n+2) { border-left: 1px solid var(--line); }
+.home-stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+.home-stat:nth-child(3) { border-left: 0; }
+@media (min-width: 1024px) {
+    .home-stat:nth-child(n+3) { border-top: 0; }
+    .home-stat:nth-child(3) { border-left: 1px solid var(--line); }
+}
+.home-step-num {
+    flex: none; display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 999px;
+    background: var(--navy-800); color: #fff; font-size: 14px; font-weight: 700;
+}
+.home-step-num-gold { background: var(--gold-500); color: var(--gold-ink); }
+.home-venue-card {
+    display: flex; flex-direction: column; gap: 18px; min-height: 150px; padding: 22px;
+    background: #fff; border: 1px solid var(--line); border-radius: 20px;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.home-venue-card:hover { border-color: var(--navy-200); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .home-venue-card:hover { transform: none; } }
+
+/* Hakkımızda */
+.about-value-num { margin-bottom: 14px; font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--navy-400); }
+
+/* İletişim */
+.contact-quick { display: flex; flex-direction: column; gap: 8px; transition: box-shadow .15s, border-color .15s; }
+.contact-quick:hover { border-color: var(--navy-200); box-shadow: var(--shadow-lg); }
+
+/* SSS akordeon */
+.faq-item { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.faq-question {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    width: 100%; min-height: 56px; padding: 16px 20px; text-align: left;
+    font-size: 15px; font-weight: 600; color: var(--ink); background: none; border: 0; cursor: pointer;
+    transition: background-color .15s;
+}
+.faq-question:hover { background: var(--navy-50); }
+.faq-question.open { color: var(--navy-800); }
+.faq-icon { flex: none; width: 20px; height: 20px; color: var(--navy-400); transition: transform .2s; }
+.faq-question.open .faq-icon { transform: rotate(45deg); color: var(--navy-800); }
+.faq-answer { padding: 16px 20px 20px; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.75; color: var(--body); }
+.faq-answer[hidden] { display: none; }
+.faq-answer a { color: var(--navy-800); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
+/* Yasal sayfalar (kvkk, güvenlik, tüketici hakları) */
+.legal-hero .arch-lines-sm { opacity: .25; }
+.legal-body { max-width: 72rem; margin: 0 auto; padding: 56px 24px 72px; }
+.legal-section + .legal-section { margin-top: 2.25em; padding-top: 2em; border-top: 1px solid var(--line); }
+.legal-section h2 { display: flex; align-items: center; gap: 12px; margin-top: 0; margin-bottom: .75em; font-size: 20px; }
+.legal-section > * + * { margin-top: .9em; }
+.legal-section > h2 + * { margin-top: 0; }
+.legal-section code { padding: 1px 6px; border-radius: 6px; background: var(--navy-50); font-size: .9em; }
+.legal-section-accent { padding: 24px 28px; border: 1px solid var(--navy-100) !important; border-radius: 20px; background: var(--navy-50); }
+.legal-section + .legal-section-accent { margin-top: 2.25em; }
+.legal-section-accent + .legal-section { border-top: 0; margin-top: 1.5em; padding-top: 0; }
+.legal-num {
+    flex: none; display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--navy-800); color: #fff; font-size: 13px; font-weight: 700;
+}
+.legal-updated { margin-top: 3em; font-size: 13px; color: var(--muted); }
+.legal-chip { background: var(--navy-50); color: var(--navy-800); }
+.legal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.legal-card { display: flex; flex-direction: column; gap: 8px; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+.legal-card > * + * { margin-top: 0; }
+.legal-card p { font-size: 14px; line-height: 1.6; color: var(--muted); }
+.legal-note { display: flex; align-items: flex-start; gap: 10px; padding: 14px 18px; border: 1px solid var(--gold-300); border-radius: 12px; background: var(--gold-soft); color: var(--ink); }
+.legal-note svg { flex: none; margin-top: 3px; color: var(--gold-700); }
+.legal-note p { margin: 0; font-size: 14px; }
+.legal-steps { display: flex; flex-direction: column; gap: 14px; }
+.legal-step { display: flex; align-items: flex-start; gap: 14px; }
+.legal-step-num {
+    flex: none; display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 999px;
+    background: var(--navy-800); color: #fff; font-size: 13px; font-weight: 700;
+}
+.legal-step-body strong { display: block; margin-bottom: 2px; }
+.legal-step-body p { margin: 0; font-size: 15px; color: var(--muted); }
+.legal-ok { color: var(--approved-fg); font-weight: 600; }
+.legal-warn { color: var(--pending-fg); font-weight: 600; }
+.legal-bad { color: var(--danger-fg); font-weight: 600; }
+.legal-section .table-wrap, .legal-section table { margin-top: 0; }
+@media (max-width: 640px) {
+    .legal-section table { display: block; overflow-x: auto; }
+}
+
+/* İşletme detay (public) */
+.venue-product { overflow: hidden; transition: box-shadow .15s; }
+.venue-product:hover { box-shadow: var(--shadow-lg); }
+
+/* Hata sayfaları */
+.error-page { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 55vh; padding: 32px 16px; text-align: center; }
+.error-arch {
+    display: flex; align-items: flex-end; justify-content: center;
+    width: 190px; height: 230px; margin-bottom: 28px; padding-bottom: 44px;
+    border: 2px solid var(--gold-500); border-bottom: 0; border-radius: 999px 999px 0 0;
+    box-shadow: inset 0 0 0 10px var(--navy-50);
+}
+.error-arch span { font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -.03em; color: var(--navy-800); }
+
 /* === /AREA: public pages === */
 
 /* === AREA: donate (guest + donor) === */
