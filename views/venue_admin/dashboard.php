@@ -13,7 +13,7 @@
         <p class="text-xs text-gray-400 mt-1">Rezerve edilebilir ürün</p>
     </div>
     <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-yellow-400">
-        <p class="text-sm text-gray-500">Bekleyen Bağış</p>
+        <p class="text-sm text-gray-500">Bekleyen Katkı</p>
         <p class="text-3xl font-bold text-gray-800 mt-1"><?= e($waitingCount) ?></p>
         <p class="text-xs text-gray-400 mt-1">Onay bekliyor</p>
     </div>
@@ -38,18 +38,19 @@
             <div>
                 <form method="POST" action="<?= url('isletme/teslim') ?>" id="claim-form">
                     <?= csrf_field() ?>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">8 Haneli Teslim Kodu</label>
-                    <input type="text" name="claim_code" id="claim_code" maxlength="8" minlength="8"
-                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-center text-2xl font-mono font-bold tracking-[0.4em] uppercase
+                    <label class="block text-sm font-medium text-gray-700 mb-2">6 Haneli Teslim Kodu</label>
+                    <input type="text" name="claim_code" id="claim_code" maxlength="6" minlength="6"
+                           inputmode="numeric" pattern="[0-9]*"
+                           class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl text-center text-2xl font-mono font-bold tracking-[0.4em]
                                   focus:outline-none focus:border-[#00A3B4] transition mb-3"
-                           placeholder="XXXXXXXX" autofocus autocomplete="off">
+                           placeholder="000000" autofocus autocomplete="off">
                     <div id="lookup-msg" class="hidden mb-3 text-sm text-center rounded-lg px-4 py-2 font-medium"></div>
                     <button type="submit" id="submit-btn" disabled
                             class="w-full py-3 bg-gray-300 text-gray-500 font-semibold rounded-xl transition text-base cursor-not-allowed">
                         Teslim Al
                     </button>
                 </form>
-                <p class="text-center text-xs text-gray-400 mt-3">Kodu girdikçe sağ tarafta ürünler görünecektir.</p>
+                <p class="text-center text-xs text-gray-400 mt-3">Barkod okuyucu veya manuel giriş desteklenir. Enter ile otomatik teslim alınır.</p>
             </div>
 
             <!-- Sağ: Önizleme -->
@@ -107,25 +108,25 @@
     </div>
 </div>
 
-<!-- Bekleyen Bağışlar -->
+<!-- Bekleyen Katkılar -->
 <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-gray-200">
     <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
         <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
             </svg>
-            <h2 class="font-semibold text-gray-700 text-sm">Bekleyen Bağışlar</h2>
+            <h2 class="font-semibold text-gray-700 text-sm">Bekleyen Katkılar</h2>
         </div>
         <a href="<?= url('isletme/bagislar') ?>" class="text-xs text-[#00A3B4] hover:underline font-medium">Tümünü Gör →</a>
     </div>
     <?php if (empty($waitingDonations)): ?>
-        <div class="px-6 py-8 text-center text-gray-400 text-sm">Bekleyen bağış yok.</div>
+        <div class="px-6 py-8 text-center text-gray-400 text-sm">Bekleyen katkı yok.</div>
     <?php else: ?>
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600">Bağışçı</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600">Katkı Sağlayan</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600">Ürünler</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600">Tarih</th>
                         <th class="px-5 py-3 text-right font-semibold text-gray-600">İşlem</th>
@@ -253,6 +254,7 @@ const panelSuccess = document.getElementById('preview-success');
 
 const LOOKUP_URL = <?= json_encode(url('isletme/kod-sorgula')) ?>;
 let debounceTimer = null;
+let pendingEnterSubmit = false; // barkod okuyucu Enter'ı için bekle
 
 function showPanel(which) {
     panelEmpty.classList.add('hidden');
@@ -264,6 +266,7 @@ function showPanel(which) {
 }
 
 function resetButton() {
+    pendingEnterSubmit = false;
     submitBtn.disabled = true;
     submitBtn.className = 'w-full py-3 bg-gray-300 text-gray-500 font-semibold rounded-xl transition text-base cursor-not-allowed';
     submitBtn.style.pointerEvents = 'none';
@@ -273,6 +276,11 @@ function enableButton() {
     submitBtn.disabled = false;
     submitBtn.className = 'w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition text-base shadow-lg';
     submitBtn.style.pointerEvents = '';
+    // Barkod okuyucu Enter tuşu daha önce basıldıysa hemen gönder
+    if (pendingEnterSubmit) {
+        pendingEnterSubmit = false;
+        document.getElementById('claim-form').submit();
+    }
 }
 
 function formatPrice(num) {
@@ -285,7 +293,7 @@ function formatDate(str) {
 }
 
 async function lookupCode(code) {
-    if (code.length < 4) {
+    if (code.length < 6) {
         showPanel('empty');
         resetButton();
         return;
@@ -335,7 +343,7 @@ async function lookupCode(code) {
 }
 
 input.addEventListener('input', function () {
-    const code = this.value.trim().toUpperCase();
+    const code = this.value.replace(/\D/g, '').slice(0, 6); // sadece rakam, max 6
     this.value = code;
     clearTimeout(debounceTimer);
     resetButton();
@@ -343,8 +351,21 @@ input.addEventListener('input', function () {
         showPanel('empty');
         return;
     }
-    const delay = code.length >= 4 ? 300 : 600;
+    // 6 haneye ulaşınca anında sorgula (barkod okuyucu anında 6 karakter yollar)
+    const delay = code.length === 6 ? 0 : 400;
     debounceTimer = setTimeout(() => lookupCode(code), delay);
+});
+
+// Barkod okuyucu Enter gönderince: lookup bitmişse hemen gönder, yoksa sonuç gelince gönder
+input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!submitBtn.disabled) {
+            document.getElementById('claim-form').submit();
+        } else if (this.value.length === 6) {
+            pendingEnterSubmit = true; // lookup devam ediyor, gelince gönder
+        }
+    }
 });
 </script>
 

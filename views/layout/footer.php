@@ -24,17 +24,17 @@
                         <li><a href="<?= url('admin') ?>" class="hover:text-white transition">Dashboard</a></li>
                         <li><a href="<?= url('admin/isletmeler') ?>" class="hover:text-white transition">İşletmeler</a></li>
                         <li><a href="<?= url('admin/kullanicilar') ?>" class="hover:text-white transition">Kullanıcılar</a></li>
-                        <li><a href="<?= url('admin/bagislar') ?>" class="hover:text-white transition">Bağışlar</a></li>
+                        <li><a href="<?= url('admin/bagislar') ?>" class="hover:text-white transition">Katkılar</a></li>
                     <?php elseif ($role === 'venue-admin'): ?>
                         <li><a href="<?= url('isletme') ?>" class="hover:text-white transition">Dashboard</a></li>
                         <li><a href="<?= url('isletme/stok') ?>" class="hover:text-white transition">Stok Yönetimi</a></li>
-                        <li><a href="<?= url('isletme/bagislar') ?>" class="hover:text-white transition">Bağışlar</a></li>
+                        <li><a href="<?= url('isletme/bagislar') ?>" class="hover:text-white transition">Katkılar</a></li>
                     <?php elseif ($role === 'student'): ?>
                         <li><a href="<?= url('isletmeler') ?>" class="hover:text-white transition">İşletmeler</a></li>
                         <li><a href="<?= url('rezervasyonlarim') ?>" class="hover:text-white transition">Rezervasyonlarım</a></li>
                     <?php elseif ($role === 'donor'): ?>
-                        <li><a href="<?= url('bagis') ?>" class="hover:text-white transition">Bağış Yap</a></li>
-                        <li><a href="<?= url('bagislarim') ?>" class="hover:text-white transition">Bağışlarım</a></li>
+                        <li><a href="<?= url('bagis') ?>" class="hover:text-white transition">Katkı Sağla</a></li>
+                        <li><a href="<?= url('bagislarim') ?>" class="hover:text-white transition">Katkılarım</a></li>
                     <?php else: ?>
                         <li><a href="<?= url('giris') ?>" class="hover:text-white transition">Giriş Yap</a></li>
                     <?php endif; ?>

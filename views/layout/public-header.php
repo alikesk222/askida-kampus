@@ -213,7 +213,13 @@
         <!-- Sağ: Butonlar -->
         <div class="pub-cta">
             <a href="<?= url('misafir-bagis') ?>" class="btn-outline-teal"><?= t('nav.donate') ?></a>
-            <a href="<?= url('giris') ?>"         class="btn-filled-teal"><?= t('nav.login') ?></a>
+            <a href="<?= url('ogrenci-kayit') ?>"
+               style="padding:8px 16px;border-radius:8px;border:1.5px solid #0d1f3c;color:#0d1f3c;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all 0.15s;"
+               onmouseover="this.style.background='#0d1f3c';this.style.color='#fff'"
+               onmouseout="this.style.background='transparent';this.style.color='#0d1f3c'">
+                <?= t('nav.student_reg') ?>
+            </a>
+            <a href="<?= url('giris') ?>" class="btn-filled-teal"><?= t('nav.login') ?></a>
         </div>
 
         <!-- Mobil hamburger -->
@@ -230,8 +236,9 @@
         <a href="<?= url('iletisim') ?>"   class="<?= $ap === 'contact' ? 'active' : '' ?>"><?= t('nav.contact') ?></a>
         <div class="pub-mobile-divider"></div>
         <div class="pub-mobile-cta">
-            <a href="<?= url('misafir-bagis') ?>" style="background:#e0f7fa;color:#007a7a;"><?= t('nav.donate') ?></a>
-            <a href="<?= url('giris') ?>"         style="background:#009999;color:#fff;"><?= t('nav.login') ?></a>
+            <a href="<?= url('misafir-bagis') ?>"  style="background:#e0f7fa;color:#007a7a;"><?= t('nav.donate') ?></a>
+            <a href="<?= url('ogrenci-kayit') ?>" style="background:#f0f4f8;color:#0d1f3c;border:1.5px solid #0d1f3c;"><?= t('nav.student_reg') ?></a>
+            <a href="<?= url('giris') ?>"          style="background:#009999;color:#fff;"><?= t('nav.login') ?></a>
         </div>
         <div class="pub-mobile-lang">
             <a href="<?= url('lang/tr') ?>" class="<?= $cl === 'tr' ? 'lang-active' : '' ?>">TR</a>

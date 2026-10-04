@@ -37,6 +37,9 @@
 
         <form method="POST" action="<?= url('giris') ?>" class="space-y-5">
             <?= csrf_field() ?>
+            <div style="position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden" aria-hidden="true">
+                <input type="text" name="website" value="" tabindex="-1" autocomplete="off">
+            </div>
 
             <div>
                 <label for="email" class="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide"><?= t('auth.email') ?></label>
@@ -78,7 +81,7 @@
         <div class="mt-6 pt-5 border-t border-gray-100 text-center">
             <p class="text-sm text-gray-500">
                 <?= t('auth.no_account') ?>
-                <a href="<?= url('kayit') ?>" class="text-[#00A3B4] font-semibold hover:underline ml-1"><?= t('auth.register_link') ?></a>
+                <a href="<?= url('ogrenci-kayit') ?>" class="text-[#00A3B4] font-semibold hover:underline ml-1"><?= t('auth.register_link') ?></a>
             </p>
         </div>
     </div>

@@ -96,7 +96,7 @@ include ROOT . '/views/layout/public-header.php';
                 <p class="slide-desc"><?= t('home.slide1_desc') ?></p>
                 <div class="slide-actions">
                     <a href="<?= url('misafir-bagis') ?>" class="btn-primary"><?= t('home.btn_donate') ?></a>
-                    <a href="<?= url('kayit') ?>" class="btn-secondary"><?= t('home.btn_student_reg') ?></a>
+                    <a href="<?= url('ogrenci-kayit') ?>" class="btn-secondary"><?= t('home.btn_student_reg') ?></a>
                     <a href="<?= url('giris') ?>" class="btn-ghost"><?= t('home.btn_login') ?></a>
                 </div>
             </div>

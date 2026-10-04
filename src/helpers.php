@@ -103,9 +103,9 @@ if (!function_exists('has_error')) {
 if (!function_exists('error_msg')) {
     function error_msg(array $errors, string $field): string
     {
-        return isset($errors[$field])
-            ? '<p class="text-red-500 text-sm mt-1">' . e($errors[$field]) . '</p>'
-            : '';
+        if (!isset($errors[$field])) return '';
+        $msg = is_array($errors[$field]) ? ($errors[$field][0] ?? '') : $errors[$field];
+        return '<p class="text-red-500 text-sm mt-1">' . e($msg) . '</p>';
     }
 }
 

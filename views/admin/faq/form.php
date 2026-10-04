@@ -31,7 +31,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4] <?= isset($errors['category']) ? 'border-red-400' : '' ?>">
                         <option value="">Seçiniz</option>
                         <?php
-                        $cats = ['donors' => 'Bağışçılar', 'students' => 'Öğrenciler', 'general' => 'Genel'];
+                        $cats = ['donors' => 'Katkı Sağlayanlar', 'students' => 'Öğrenciler', 'general' => 'Genel'];
                         $selCat = $old['category'] ?? '';
                         foreach ($cats as $v => $l): ?>
                         <option value="<?= $v ?>" <?= $selCat === $v ? 'selected' : '' ?>><?= $l ?></option>
@@ -73,7 +73,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Soru <span class="text-red-500">*</span></label>
                     <input type="text" name="question_tr"
                            value="<?= e($old['question_tr'] ?? '') ?>"
-                           placeholder="Örn: Bağış yapmak için üye olmam gerekiyor mu?"
+                           placeholder="Örn: Katkı sağlamak için üye olmam gerekiyor mu?"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4] <?= isset($errors['question_tr']) ? 'border-red-400' : '' ?>">
                     <?php if (isset($errors['question_tr'])): ?>
                     <p class="mt-1 text-xs text-red-500"><?= e($errors['question_tr']) ?></p>

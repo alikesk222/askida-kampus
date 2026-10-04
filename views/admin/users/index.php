@@ -57,7 +57,7 @@
                                 'university-admin' => ['bg-blue-100 text-blue-700', 'Üniversite Admin'],
                                 'venue-admin' => ['bg-teal-100 text-teal-700', 'İşletme Yöneticisi'],
                                 'student' => ['bg-green-100 text-green-700', 'Öğrenci'],
-                                'donor' => ['bg-orange-100 text-orange-700', 'Bağışçı'],
+                                'donor' => ['bg-orange-100 text-orange-700', 'Katkı Sağlayan'],
                             ];
                             [$cls, $label] = $roleLabels[$u['role']] ?? ['bg-gray-100 text-gray-600', $u['role']];
                             ?>
@@ -200,7 +200,7 @@
                     <select name="role" id="edit-role" required onchange="editToggleStudentFields(this.value)"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
                         <option value="student">Öğrenci</option>
-                        <option value="donor">Bağışçı</option>
+                        <option value="donor">Katkı Sağlayan</option>
                         <option value="venue-admin">İşletme Yöneticisi</option>
                         <option value="university-admin">Üniversite Admin</option>
                         <?php if (auth()['role'] === 'super-admin'): ?>
@@ -281,7 +281,7 @@
                     <select name="role" required id="role-select" onchange="toggleVenueField(this.value)"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
                         <option value="student">Öğrenci</option>
-                        <option value="donor">Bağışçı</option>
+                        <option value="donor">Katkı Sağlayan</option>
                         <option value="venue-admin">İşletme Yöneticisi</option>
                         <option value="university-admin">Üniversite Admin</option>
                         <?php if (auth()['role'] === 'super-admin'): ?>

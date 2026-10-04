@@ -26,7 +26,7 @@
             </div>
             <a href="<?= url('misafir-bagis') ?>" class="text-gray-500 hover:text-gray-700 transition"><?= t('guest.back') ?></a>
             <a href="<?= url('giris') ?>" class="text-gray-600 hover:text-[#00A3B4] transition"><?= t('nav.login') ?></a>
-            <a href="<?= url('kayit') ?>" class="px-4 py-1.5 bg-[#00A3B4] text-white rounded-lg hover:bg-[#007A8A] transition"><?= t('nav.register') ?></a>
+            <a href="<?= url('bagisci-kayit') ?>" class="px-4 py-1.5 bg-[#00A3B4] text-white rounded-lg hover:bg-[#007A8A] transition"><?= t('nav.register') ?></a>
         </div>
     </div>
 </header>

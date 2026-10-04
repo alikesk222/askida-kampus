@@ -2,6 +2,10 @@
 
 define('ROOT', dirname(__DIR__));
 
+if (file_exists(ROOT . '/vendor/autoload.php')) {
+    require ROOT . '/vendor/autoload.php';
+}
+
 // Ortam tespiti: canlı host ise production .env yükle
 $currentHost = $_SERVER['HTTP_HOST'] ?? php_uname('n');
 $isProduction = str_contains($currentHost, 'alikesik.com.tr');

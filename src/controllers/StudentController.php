@@ -9,6 +9,8 @@ use Models\VenueModel;
 use Models\ProductModel;
 use Models\StockModel;
 use Models\ReservationModel;
+use Models\StudentDocumentModel;
+use Core\Database;
 use Services\ReservationService;
 use Services\QrService;
 
@@ -68,9 +70,7 @@ class StudentController
         $reservationModel = new ReservationModel();
         $settingsModel    = new SettingsModel();
         $currentUser      = Auth::user();
-        $weeklyLimit      = $currentUser['weekly_limit'] !== null
-            ? (int) $currentUser['weekly_limit']
-            : (int) $settingsModel->get('student_weekly_limit', 5);
+        $weeklyLimit      = $this->effectiveWeeklyLimit($currentUser, $settingsModel);
         $weeklyUsed       = $reservationModel->countWeekItemsByStudent(Auth::id());
         $weeklyRemaining  = max(0, $weeklyLimit - $weeklyUsed);
 
@@ -142,8 +142,97 @@ class StudentController
         }
 
         $items    = $reservationModel->getItems((int)$id);
-        $qrImgUrl = QrService::getQrImageUrl($reservation['qr_token']);
+        $qrImgUrl = QrService::getQrImageUrl($reservation['claim_code']);
         $pageTitle = 'QR Kod — ' . $reservation['claim_code'];
         view('student/qr', compact('pageTitle', 'reservation', 'items', 'qrImgUrl'));
+    }
+
+    public function documents(): void
+    {
+        $docModel      = new StudentDocumentModel();
+        $documents     = $docModel->getByStudent(Auth::id());
+        $settingsModel    = new SettingsModel();
+        $currentUser      = Auth::user();
+        $reservationModel = new ReservationModel();
+
+        $weeklyLimit     = $this->effectiveWeeklyLimit($currentUser, $settingsModel);
+        $weeklyUsed      = $reservationModel->countWeekItemsByStudent(Auth::id());
+        $weeklyRemaining = max(0, $weeklyLimit - $weeklyUsed);
+        $bonusQuota      = (int) $settingsModel->get('document_bonus_quota', 2);
+
+        $pageTitle = t('student_doc.page_title');
+        $success   = flash('success');
+        $error     = flash('error');
+        view('student/documents', compact(
+            'pageTitle', 'documents', 'success', 'error',
+            'weeklyLimit', 'weeklyUsed', 'weeklyRemaining', 'bonusQuota'
+        ));
+    }
+
+    public function documentUpload(): void
+    {
+        CSRF::verify();
+
+        $file = $_FILES['document'] ?? null;
+        if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
+            flash('error', t('student_doc.upload_error'));
+            redirect('/ogrencim/belgeler');
+        }
+
+        $allowed   = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+        $maxSize   = 5 * 1024 * 1024; // 5 MB
+        $mimeType  = mime_content_type($file['tmp_name']);
+
+        if (!in_array($mimeType, $allowed, true)) {
+            flash('error', t('student_doc.invalid_type'));
+            redirect('/ogrencim/belgeler');
+        }
+
+        if ($file['size'] > $maxSize) {
+            flash('error', t('student_doc.too_large'));
+            redirect('/ogrencim/belgeler');
+        }
+
+        $ext      = match($mimeType) {
+            'application/pdf' => 'pdf',
+            'image/jpeg'      => 'jpg',
+            'image/png'       => 'png',
+            'image/webp'      => 'webp',
+        };
+        $fileName = 'doc_' . Auth::id() . '_' . time() . '.' . $ext;
+        $destDir  = ROOT . '/public/assets/documents/';
+        $destPath = $destDir . $fileName;
+
+        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+            flash('error', t('student_doc.upload_error'));
+            redirect('/ogrencim/belgeler');
+        }
+
+        $docModel = new StudentDocumentModel();
+        $docModel->create(Auth::id(), 'documents/' . $fileName, $file['name']);
+
+        flash('success', t('student_doc.upload_success'));
+        redirect('/ogrencim/belgeler');
+    }
+
+    // Efektif haftalık limiti dinamik hesapla:
+    // baz (admin override veya global ayar) + onaylı_belge_sayısı × güncel_bonus
+    private function effectiveWeeklyLimit(array $user, SettingsModel $settings): int
+    {
+        $userModel = new \Models\UserModel();
+        $dbUser    = $userModel->findById((int) $user['id']);
+
+        $base = ($dbUser && $dbUser['weekly_limit'] !== null)
+            ? (int) $dbUser['weekly_limit']
+            : (int) $settings->get('student_weekly_limit', 5);
+
+        $bonus    = (int) $settings->get('document_bonus_quota', 2);
+        $docModel = new StudentDocumentModel();
+        $approved = count(array_filter(
+            $docModel->getByStudent((int) $user['id']),
+            fn($d) => $d['status'] === 'approved'
+        ));
+
+        return $base + ($approved * $bonus);
     }
 }

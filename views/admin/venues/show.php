@@ -75,7 +75,7 @@
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#00A3B4]">
                 </div>
                 <div class="col-span-2">
-                    <label class="block text-xs text-gray-600 mb-1">Ürün Görseli (JPG, PNG, WEBP — max 2MB)</label>
+                    <label class="block text-xs text-gray-600 mb-1">Ürün Görseli (JPG, PNG, WEBP — max 5MB)</label>
                     <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp"
                         class="w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:border-0 file:rounded-md file:bg-[#E0F7FA] file:text-[#006B76] file:text-xs file:font-medium hover:file:bg-[#b2ebf2] cursor-pointer">
                 </div>

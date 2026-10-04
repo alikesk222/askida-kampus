@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
     daily_limit         TINYINT UNSIGNED NOT NULL DEFAULT 3,
     student_number      VARCHAR(50) NULL UNIQUE,
     phone               VARCHAR(20) NULL,
+    email_verify_token  CHAR(6) NULL,
+    email_verify_expires DATETIME NULL,
     is_active           TINYINT(1) NOT NULL DEFAULT 1,
     created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -55,6 +57,7 @@ CREATE TABLE IF NOT EXISTS products (
     category       VARCHAR(100) NULL,
     price_snapshot DECIMAL(10,2) NOT NULL,
     description    TEXT NULL,
+    image_url      VARCHAR(500) NULL,
     is_active      TINYINT(1) NOT NULL DEFAULT 1,
     created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -122,7 +125,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     status     ENUM('reserved','claimed','expired','cancelled')
                  NOT NULL DEFAULT 'reserved',
     qr_token   VARCHAR(512) NOT NULL UNIQUE,
-    claim_code CHAR(8)      NOT NULL UNIQUE,
+    claim_code CHAR(6)      NOT NULL UNIQUE,
     expires_at DATETIME NOT NULL,
     claimed_at DATETIME NULL,
     claimed_by INT UNSIGNED NULL,
@@ -162,4 +165,30 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_action (action),
     INDEX idx_model  (model_type, model_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS student_documents (
+    id               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    student_id       INT UNSIGNED NOT NULL,
+    file_path        VARCHAR(500) NOT NULL,
+    file_name        VARCHAR(255) NOT NULL,
+    status           ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+    bonus_applied    TINYINT(1) NOT NULL DEFAULT 0,
+    rejection_reason VARCHAR(500) NULL,
+    reviewed_by      INT UNSIGNED NULL,
+    reviewed_at      DATETIME NULL,
+    created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL,
+    INDEX idx_student (student_id),
+    INDEX idx_status  (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS password_resets (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    email      VARCHAR(191) NOT NULL,
+    token      CHAR(64) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_email (email),
+    INDEX idx_token (token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

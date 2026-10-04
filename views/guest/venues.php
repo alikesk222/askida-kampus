@@ -25,7 +25,7 @@
                 <a href="<?= url('lang/en') ?>" class="px-2.5 py-1.5 <?= $cl === 'en' ? 'bg-[#00A3B4] text-white' : 'text-gray-500 hover:bg-gray-50' ?> transition">EN</a>
             </div>
             <a href="<?= url('giris') ?>" class="text-gray-600 hover:text-[#00A3B4] transition"><?= t('nav.login') ?></a>
-            <a href="<?= url('kayit') ?>" class="px-4 py-1.5 bg-[#00A3B4] text-white rounded-lg hover:bg-[#007A8A] transition"><?= t('nav.register') ?></a>
+            <a href="<?= url('bagisci-kayit') ?>" class="px-4 py-1.5 bg-[#00A3B4] text-white rounded-lg hover:bg-[#007A8A] transition"><?= t('nav.register') ?></a>
         </div>
     </div>
 </header>
@@ -43,7 +43,7 @@
         <div>
             <p class="text-sm font-semibold text-gray-700"><?= t('guest.account_tip') ?></p>
             <p class="text-sm text-gray-500 mt-0.5"><?= t('guest.account_tip_desc') ?>
-                <a href="<?= url('kayit') ?>" class="font-semibold hover:underline" style="color:#009999;"><?= t('guest.create_free') ?></a>.
+                <a href="<?= url('bagisci-kayit') ?>" class="font-semibold hover:underline" style="color:#009999;"><?= t('guest.create_free') ?></a>.
             </p>
         </div>
     </div>

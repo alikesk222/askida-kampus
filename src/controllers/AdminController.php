@@ -12,6 +12,7 @@ use Models\DonationModel;
 use Models\ReservationModel;
 use Models\FaqModel;
 use Models\SettingsModel;
+use Models\StudentDocumentModel;
 use Services\DonationService;
 
 class AdminController
@@ -179,7 +180,7 @@ class AdminController
         if (!empty($_FILES['image']['name'])) {
             $imageUrl = $this->uploadProductImage($_FILES['image']);
             if (!$imageUrl) {
-                flash('error', 'Görsel yüklenirken hata oluştu. Yalnızca JPG, PNG, GIF, WEBP desteklenir (max 2MB).');
+                flash('error', 'Görsel yüklenirken hata oluştu. Yalnızca JPG, PNG, GIF, WEBP desteklenir (max 5MB).');
                 redirect("/admin/isletmeler/$id");
             }
         }
@@ -265,7 +266,7 @@ class AdminController
     private function uploadProductImage(array $file): ?string
     {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        $maxSize = 2 * 1024 * 1024; // 2MB
+        $maxSize = 5 * 1024 * 1024; // 5MB
 
         if ($file['error'] !== UPLOAD_ERR_OK)
             return null;
@@ -382,12 +383,13 @@ class AdminController
         }
 
         $userId = $userModel->create([
-            'name' => trim($_POST['name']),
-            'email' => trim($_POST['email']),
-            'password' => $_POST['password'],
-            'role' => $_POST['role'],
-            'student_number' => trim($_POST['student_number'] ?? '') ?: null,
-            'phone' => trim($_POST['phone'] ?? '') ?: null,
+            'name'                => trim($_POST['name']),
+            'email'               => trim($_POST['email']),
+            'password'            => $_POST['password'],
+            'role'                => $_POST['role'],
+            'student_number'      => trim($_POST['student_number'] ?? '') ?: null,
+            'phone'               => trim($_POST['phone'] ?? '') ?: null,
+            'university_verified' => 1,  // admin tarafından oluşturulanlar otomatik doğrulanmış
         ]);
 
         // venue-admin ise işletmeye ata
@@ -681,6 +683,8 @@ class AdminController
         } elseif ($tab === 'limits') {
             $weekly = max(1, (int) ($_POST['student_weekly_limit'] ?? 5));
             $settingsModel->set('student_weekly_limit', $weekly, 'Öğrenci haftalık maksimum rezervasyon sayısı');
+            $bonus = max(0, (int) ($_POST['document_bonus_quota'] ?? 2));
+            $settingsModel->set('document_bonus_quota', $bonus, 'Belge onayı başına ek haftalık hak');
             flash('success', 'Rezervasyon limitleri güncellendi.');
         } elseif ($tab === 'email') {
             // Email template ayarlarını kaydet
@@ -694,5 +698,47 @@ class AdminController
         }
 
         redirect('/admin/ayarlar');
+    }
+
+    // ── Belge Yönetimi ─────────────────────────────────────────────────────
+
+    public function documents(): void
+    {
+        $docModel  = new StudentDocumentModel();
+        $documents = $docModel->getAll();
+        $pending   = $docModel->countPending();
+        $pageTitle = 'Belge Doğrulama';
+        view('admin/documents/index', compact('pageTitle', 'documents', 'pending'));
+    }
+
+    public function documentReview(string $id): void
+    {
+        CSRF::verify();
+
+        $docModel = new StudentDocumentModel();
+        $doc      = $docModel->findById((int) $id);
+
+        if (!$doc || $doc['status'] !== 'pending') {
+            flash('error', 'Belge bulunamadı veya zaten incelendi.');
+            redirect('/admin/belgeler');
+        }
+
+        $action = $_POST['action'] ?? '';
+
+        if ($action === 'approve') {
+            $docModel->approve((int) $id, Auth::id());
+            flash('success', 'Belge onaylandı. Öğrencinin haftalık hakkı otomatik olarak güncellendi.');
+
+        } elseif ($action === 'reject') {
+            $reason = trim($_POST['rejection_reason'] ?? '');
+            if (!$reason) {
+                flash('error', 'Red sebebi boş olamaz.');
+                redirect('/admin/belgeler');
+            }
+            $docModel->reject((int) $id, Auth::id(), $reason);
+            flash('success', 'Belge reddedildi.');
+        }
+
+        redirect('/admin/belgeler');
     }
 }

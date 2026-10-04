@@ -8,7 +8,7 @@ $lang = $_SESSION['lang'] ?? 'tr';
 
 // Kategorilere göre grupla
 $cats = [
-    'donors'   => ['label_tr' => 'Bağışçılar',  'label_en' => 'Donors',   'color' => '#e0f7fa', 'text' => '#007a7a'],
+    'donors'   => ['label_tr' => 'Katkı Sağlayanlar', 'label_en' => 'Donors', 'color' => '#e0f7fa', 'text' => '#007a7a'],
     'students' => ['label_tr' => 'Öğrenciler',  'label_en' => 'Students', 'color' => '#dbeafe', 'text' => '#1d4ed8'],
     'general'  => ['label_tr' => 'Genel',        'label_en' => 'General',  'color' => '#f3f4f6', 'text' => '#374151'],
 ];

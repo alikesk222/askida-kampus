@@ -99,7 +99,7 @@ include ROOT . '/views/layout/public-header.php';
                     <span style="font-size:13px;font-weight:600;color:#0d1f3c;"><?= t('contact.link_donate') ?></span>
                     <span style="font-size:12px;color:#6b7280;"><?= t('contact.link_donate_s') ?></span>
                 </a>
-                <a href="<?= url('kayit') ?>" style="padding:20px;background:#fff;border:1px solid #e8edf2;border-radius:12px;text-decoration:none;display:flex;flex-direction:column;gap:8px;" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,153,153,0.12)'" onmouseout="this.style.boxShadow='none'">
+                <a href="<?= url('ogrenci-kayit') ?>" style="padding:20px;background:#fff;border:1px solid #e8edf2;border-radius:12px;text-decoration:none;display:flex;flex-direction:column;gap:8px;" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,153,153,0.12)'" onmouseout="this.style.boxShadow='none'">
                     <div style="width:36px;height:36px;background:#e0f7fa;border-radius:8px;display:flex;align-items:center;justify-content:center;">
                         <svg style="width:18px;height:18px;color:#009999;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                     </div>

@@ -116,8 +116,8 @@ class VenueAdminController
     {
         header('Content-Type: application/json');
 
-        $code = strtoupper(trim($_GET['kod'] ?? ''));
-        if (strlen($code) < 4) {
+        $code = trim($_GET['kod'] ?? '');
+        if (strlen($code) < 6) {
             echo json_encode(['found' => false]);
             exit;
         }
@@ -183,7 +183,7 @@ class VenueAdminController
             redirect('/isletme');
         }
 
-        $code = strtoupper(trim($_POST['claim_code']));
+        $code = trim($_POST['claim_code']);
         $reservationModel = new ReservationModel();
         $reservation = $reservationModel->findByClaimCode($code);
 

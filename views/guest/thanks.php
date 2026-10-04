@@ -52,7 +52,7 @@
                class="block w-full py-2.5 bg-[#00A3B4] hover:bg-[#007A8A] text-white font-semibold rounded-xl transition text-sm">
                 <?= t('guest.donate_again') ?>
             </a>
-            <a href="<?= url('kayit') ?>"
+            <a href="<?= url('bagisci-kayit') ?>"
                class="block w-full py-2.5 border border-[#00A3B4] text-[#00A3B4] hover:bg-[#E0F7FA] font-semibold rounded-xl transition text-sm">
                 <?= t('guest.track') ?>
             </a>

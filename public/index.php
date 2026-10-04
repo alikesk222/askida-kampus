@@ -46,6 +46,8 @@ $router->post('/admin/kullanicilar/{id}/duzenle', [Controllers\AdminController::
 $router->post('/admin/kullanicilar/{id}/ata', [Controllers\AdminController::class, 'userAssignVenue']);
 $router->post('/admin/kullanicilar/{id}/haftalik-limit', [Controllers\AdminController::class, 'userSetWeeklyLimit']);
 $router->get('/admin/rezervasyonlar', [Controllers\AdminController::class, 'reservationsList']);
+$router->get('/admin/belgeler', [Controllers\AdminController::class, 'documents']);
+$router->post('/admin/belgeler/{id}/incele', [Controllers\AdminController::class, 'documentReview']);
 $router->get('/admin/ayarlar', [Controllers\AdminController::class, 'settingsForm']);
 $router->post('/admin/ayarlar', [Controllers\AdminController::class, 'settingsUpdate']);
 
@@ -65,6 +67,8 @@ $router->get('/isletmeler/{id}/rezerve', [Controllers\StudentController::class, 
 $router->post('/isletmeler/{id}/rezerve', [Controllers\StudentController::class, 'reserveStore']);
 $router->get('/rezervasyonlarim', [Controllers\StudentController::class, 'reservations']);
 $router->get('/rezervasyonlarim/{id}/qr', [Controllers\StudentController::class, 'showQr']);
+$router->get('/ogrencim/belgeler', [Controllers\StudentController::class, 'documents']);
+$router->post('/ogrencim/belgeler/yukle', [Controllers\StudentController::class, 'documentUpload']);
 
 // ── Bağışçı ───────────────────────────────────────────────
 $router->get('/bagis', [Controllers\DonorController::class, 'venues']);
@@ -78,18 +82,32 @@ $router->get('/misafir-bagis/{id}', [Controllers\GuestDonorController::class, 'd
 $router->post('/misafir-bagis/{id}', [Controllers\GuestDonorController::class, 'donateStore']);
 
 // ── Bağışçı Kaydı ─────────────────────────────────────────
-$router->get('/kayit', [Controllers\RegisterController::class, 'form']);
-$router->post('/kayit', [Controllers\RegisterController::class, 'store']);
+$router->get('/bagisci-kayit', [Controllers\RegisterController::class, 'form']);
+$router->post('/bagisci-kayit', [Controllers\RegisterController::class, 'store']);
+$router->get('/bagisci-kayit/dogrula', [Controllers\RegisterController::class, 'verifyForm']);
+$router->post('/bagisci-kayit/dogrula', [Controllers\RegisterController::class, 'verify']);
+$router->post('/bagisci-kayit/tekrar-gonder', [Controllers\RegisterController::class, 'resend']);
+
+// ── Öğrenci Kaydı (self-service) ──────────────────────────
+$router->get('/ogrenci-kayit', [Controllers\StudentRegisterController::class, 'form']);
+$router->post('/ogrenci-kayit', [Controllers\StudentRegisterController::class, 'store']);
+$router->get('/ogrenci-kayit/dogrula', [Controllers\StudentRegisterController::class, 'verifyForm']);
+$router->post('/ogrenci-kayit/dogrula', [Controllers\StudentRegisterController::class, 'verify']);
+$router->post('/ogrenci-kayit/tekrar-gonder', [Controllers\StudentRegisterController::class, 'resend']);
 
 // ── Dil Değiştirme ────────────────────────────────────────
 $router->get('/lang/{code}', [Controllers\PublicController::class, 'setLang']);
 
 // ── Public Sayfalar ───────────────────────────────────────
-$router->get('/hakkimizda',  [Controllers\PublicController::class, 'about']);
-$router->get('/iletisim',    [Controllers\PublicController::class, 'contact']);
-$router->post('/iletisim',   [Controllers\PublicController::class, 'contactStore']);
-$router->get('/sss',         [Controllers\PublicController::class, 'faq']);
-$router->get('/isletme/{id}', [Controllers\PublicController::class, 'venueDetail']);
+$router->get('/hakkimizda',          [Controllers\PublicController::class, 'about']);
+$router->get('/iletisim',            [Controllers\PublicController::class, 'contact']);
+$router->post('/iletisim',           [Controllers\PublicController::class, 'contactStore']);
+$router->get('/sss',                 [Controllers\PublicController::class, 'faq']);
+$router->get('/kvkk',                [Controllers\PublicController::class, 'kvkk']);
+$router->get('/gizlilik-politikasi', [Controllers\PublicController::class, 'kvkk']);
+$router->get('/guvenlik-politikasi', [Controllers\PublicController::class, 'securityPolicy']);
+$router->get('/tuketici-haklari',    [Controllers\PublicController::class, 'consumerRights']);
+$router->get('/isletme/{id}',        [Controllers\PublicController::class, 'venueDetail']);
 
 // ── Root redirect ─────────────────────────────────────────
 $router->get('/', [Controllers\AuthController::class, 'root']);

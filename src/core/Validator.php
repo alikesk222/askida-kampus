@@ -66,6 +66,24 @@ class Validator
         return $this;
     }
 
+    public function strongPassword(string $field, string $label = ''): static
+    {
+        $label = $label ?: $field;
+        $value = $this->data[$field] ?? '';
+        if (empty($value) || isset($this->errors[$field])) return $this;
+
+        if (!preg_match('/[A-Z]/', $value)) {
+            $this->errors[$field] = "$label en az bir büyük harf (A-Z) içermelidir.";
+        } elseif (!preg_match('/[a-z]/', $value)) {
+            $this->errors[$field] = "$label en az bir küçük harf (a-z) içermelidir.";
+        } elseif (!preg_match('/\d/', $value)) {
+            $this->errors[$field] = "$label en az bir rakam (0-9) içermelidir.";
+        } elseif (!preg_match('/[\W_]/', $value)) {
+            $this->errors[$field] = "$label en az bir özel karakter (!@#\$...) içermelidir.";
+        }
+        return $this;
+    }
+
     public function same(string $field, string $otherField, string $label = ''): static
     {
         $label = $label ?: $field;

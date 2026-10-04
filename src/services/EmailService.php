@@ -19,14 +19,25 @@ class EmailService
         $mailSettings = $settingsModel->getMailSettings();
         
         // SMTP ayarları - önce veritabanı, sonra .env fallback
+        $host = $mailSettings['host'] ?? ($_ENV['MAIL_HOST'] ?? '127.0.0.1');
+        $isLocal = in_array($host, ['localhost', '127.0.0.1'], true);
+
         $this->mailer->isSMTP();
-        $this->mailer->Host       = $mailSettings['host'] ?? ($_ENV['MAIL_HOST'] ?? '');
-        $this->mailer->SMTPAuth   = true;
-        $this->mailer->Username   = $mailSettings['username'] ?? ($_ENV['MAIL_USERNAME'] ?? '');
-        $this->mailer->Password   = $mailSettings['password'] ?? ($_ENV['MAIL_PASSWORD'] ?? '');
-        $this->mailer->SMTPSecure = $mailSettings['encryption'] ?? ($_ENV['MAIL_ENCRYPTION'] ?? 'tls');
-        $this->mailer->Port       = $mailSettings['port'] ?? ($_ENV['MAIL_PORT'] ?? 587);
+        $this->mailer->Host       = $host;
         $this->mailer->CharSet    = 'UTF-8';
+
+        if ($isLocal) {
+            // Yerel Postfix — auth veya şifreleme gerekmez
+            $this->mailer->SMTPAuth   = false;
+            $this->mailer->SMTPSecure = '';
+            $this->mailer->Port       = 25;
+        } else {
+            $this->mailer->SMTPAuth   = true;
+            $this->mailer->Username   = $mailSettings['username'] ?? ($_ENV['MAIL_USERNAME'] ?? '');
+            $this->mailer->Password   = $mailSettings['password'] ?? ($_ENV['MAIL_PASSWORD'] ?? '');
+            $this->mailer->SMTPSecure = $mailSettings['encryption'] ?? ($_ENV['MAIL_ENCRYPTION'] ?? 'tls');
+            $this->mailer->Port       = (int) ($mailSettings['port'] ?? ($_ENV['MAIL_PORT'] ?? 587));
+        }
         
         // Gönderen bilgileri
         $this->mailer->setFrom(
@@ -119,6 +130,77 @@ class EmailService
           <p style="color:#9ca3af;font-size:12px;margin:0;">
             © {$date[6]}{$date[7]}{$date[8]}{$date[9]} Ankara Yıldırım Beyazıt Üniversitesi<br>
             Askıda Kampüs Sistemi — İletişim Formu
+          </p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+HTML;
+    }
+
+    public function sendEmailVerification(string $email, string $name, string $code): bool
+    {
+        try {
+            $safeName = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+            $this->mailer->addAddress($email);
+            $this->mailer->isHTML(true);
+            $this->mailer->Subject = 'E-posta Doğrulama Kodu — Askıda Kampüs';
+            $this->mailer->Body    = $this->getVerificationTemplate($safeName, $code);
+            $this->mailer->AltBody = "Merhaba $name,\n\nDoğrulama kodunuz: $code\n\nBu kod 10 dakika geçerlidir.";
+            $this->mailer->send();
+            return true;
+        } catch (\Throwable $e) {
+            error_log('[ASKIDA_VERIFY_EMAIL] ' . $this->mailer->ErrorInfo);
+            return false;
+        }
+    }
+
+    private function getVerificationTemplate(string $name, string $code): string
+    {
+        $digits = str_split($code);
+        $boxes  = implode('', array_map(
+            fn($d) => "<span style='display:inline-block;width:44px;height:52px;line-height:52px;text-align:center;font-size:26px;font-weight:800;color:#0d1f3c;background:#f0f9ff;border:2px solid #b2ebf2;border-radius:8px;margin:0 3px;'>$d</span>",
+            $digits
+        ));
+
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="tr">
+<head><meta charset="UTF-8"><title>E-posta Doğrulama</title></head>
+<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f3f4f6;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:40px 0;">
+  <tr><td align="center">
+    <table width="520" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.10);">
+      <tr>
+        <td style="background:linear-gradient(135deg,#0d1f3c 0%,#00A3B4 100%);padding:36px 32px;text-align:center;">
+          <h1 style="color:#fff;margin:0;font-size:22px;font-weight:800;letter-spacing:-0.3px;">Askıda Kampüs</h1>
+          <p style="color:rgba(255,255,255,0.75);margin:6px 0 0;font-size:13px;">Ankara Yıldırım Beyazıt Üniversitesi</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:36px 32px;text-align:center;">
+          <div style="width:64px;height:64px;background:#e0f7fa;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <svg width="32" height="32" fill="none" stroke="#00A3B4" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <h2 style="color:#0d1f3c;font-size:20px;font-weight:700;margin:0 0 10px;">E-posta Adresinizi Doğrulayın</h2>
+          <p style="color:#6b7280;font-size:14px;line-height:1.7;margin:0 0 28px;">
+            Merhaba <strong style="color:#374151;">$name</strong>,<br>
+            Askıda Kampüs'e kaydınız için aşağıdaki 6 haneli doğrulama kodunu girin.
+          </p>
+
+          <div style="margin:0 auto 28px;">$boxes</div>
+
+          <p style="color:#9ca3af;font-size:12px;margin:0 0 4px;">Bu kod <strong>10 dakika</strong> geçerlidir.</p>
+          <p style="color:#d1d5db;font-size:11px;margin:0;">Bu kodu siz talep etmediyseniz görmezden gelebilirsiniz.</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#f9fafb;padding:20px 32px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:11px;margin:0;">
+            © <?= date('Y') ?> Ankara Yıldırım Beyazıt Üniversitesi — Askıda Kampüs
           </p>
         </td>
       </tr>

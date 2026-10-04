@@ -34,7 +34,7 @@
 
         <div class="border-b border-gray-200 pb-4">
             <h2 class="text-lg font-semibold text-gray-800 mb-1">SMTP Email Ayarları</h2>
-            <p class="text-sm text-gray-500">Şifre sıfırlama ve bağış teşekkür emaillerinin gönderimi için gereklidir</p>
+            <p class="text-sm text-gray-500">Şifre sıfırlama ve katkı teşekkür emaillerinin gönderimi için gereklidir</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -128,15 +128,15 @@
         <input type="hidden" name="tab" value="email">
 
         <div class="border-b border-gray-200 pb-4">
-            <h2 class="text-lg font-semibold text-gray-800 mb-1">Bağış Teşekkür Emaili</h2>
-            <p class="text-sm text-gray-500">Bağışçılara gönderilecek teşekkür emailinin içeriğini düzenleyin</p>
+            <h2 class="text-lg font-semibold text-gray-800 mb-1">Katkı Teşekkür Emaili</h2>
+            <p class="text-sm text-gray-500">Katkı sağlayanlara gönderilecek teşekkür emailinin içeriğini düzenleyin</p>
         </div>
 
         <!-- Email Subject -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Email Konusu</label>
             <input type="text" name="email_donation_subject" 
-                value="<?= e($emailSettings['donation_subject'] ?? 'Bağışınız İçin Teşekkür Ederiz - AYBÜ Askıda Kampüs') ?>"
+                value="<?= e($emailSettings['donation_subject'] ?? 'Katkınız İçin Teşekkür Ederiz - AYBÜ Askıda Kampüs') ?>"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4]"
                 required>
         </div>
@@ -148,7 +148,7 @@
                 value="<?= e($emailSettings['donation_greeting'] ?? 'Sayın {{donor_name}},') ?>"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4]"
                 required>
-            <p class="text-xs text-gray-500 mt-1">{{donor_name}} bağışçının adını gösterir</p>
+            <p class="text-xs text-gray-500 mt-1">{{donor_name}} katkı sağlayanın adını gösterir</p>
         </div>
 
         <!-- Body -->
@@ -156,9 +156,9 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">Ana İçerik</label>
             <textarea name="email_donation_body" rows="6"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4]"
-                required><?= e($emailSettings['donation_body'] ?? 'Ankara Yıldırım Beyazıt Üniversitesi İktisadi İşletmeler Müdürlüğü olarak, Askıda Kampüs projemize yapmış olduğunuz değerli bağış için en içten teşekkürlerimizi sunarız.
+                required><?= e($emailSettings['donation_body'] ?? 'Askıda Kampüs projesine sağlamış olduğunuz değerli katkı için en içten teşekkürlerimizi sunarız.
 
-Göstermiş olduğunuz bu duyarlılık ve sosyal sorumluluk bilinci, öğrencilerimizin kampüs yaşamına anlamlı bir katkı sağlamaktadır. Bağışınız, ihtiyaç sahibi öğrencilerimizin kampüs içerisindeki işletmelerden faydalanabilmesine vesile olacaktır.') ?></textarea>
+Göstermiş olduğunuz bu duyarlılık ve sosyal sorumluluk bilinci, öğrencilerimizin kampüs yaşamına anlamlı bir destek olmaktadır. Katkınız, öğrencilerimizin kampüs içerisindeki işletmelerden yararlanabilmesine vesile olacaktır.') ?></textarea>
         </div>
 
         <!-- Footer Text -->
@@ -166,7 +166,7 @@ Göstermiş olduğunuz bu duyarlılık ve sosyal sorumluluk bilinci, öğrencile
             <label class="block text-sm font-medium text-gray-700 mb-2">Alt Bilgi Metni</label>
             <textarea name="email_donation_footer_text" rows="4"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4]"
-                required><?= e($emailSettings['donation_footer_text'] ?? 'Bağışınız onaylandıktan sonra, belirlediğiniz ürünler işletme stoğuna eklenecek ve öğrencilerimiz tarafından rezerve edilebilecektir.
+                required><?= e($emailSettings['donation_footer_text'] ?? 'Katkınız onaylandıktan sonra, belirlediğiniz ürünler işletme stoğuna eklenecek ve öğrencilerimiz tarafından rezerve edilebilecektir.
 
 Destekleriniz için tekrar teşekkür eder, saygılarımızı sunarız.') ?></textarea>
         </div>
@@ -185,10 +185,10 @@ Askıda Kampüs Projesi') ?></textarea>
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <h3 class="text-sm font-semibold text-amber-800 mb-2">📝 Kullanılabilir Değişkenler</h3>
             <div class="text-sm text-amber-700 space-y-1">
-                <p><code class="bg-amber-100 px-2 py-0.5 rounded">{{donor_name}}</code> - Bağışçının adı</p>
+                <p><code class="bg-amber-100 px-2 py-0.5 rounded">{{donor_name}}</code> - Katkı sağlayanın adı</p>
                 <p><code class="bg-amber-100 px-2 py-0.5 rounded">{{venue_name}}</code> - İşletme adı</p>
                 <p><code class="bg-amber-100 px-2 py-0.5 rounded">{{total_amount}}</code> - Toplam tutar</p>
-                <p><code class="bg-amber-100 px-2 py-0.5 rounded">{{donation_date}}</code> - Bağış tarihi</p>
+                <p><code class="bg-amber-100 px-2 py-0.5 rounded">{{donation_date}}</code> - Katkı tarihi</p>
                 <p class="text-xs mt-2">Bu değişkenler email gönderilirken otomatik olarak gerçek değerlerle değiştirilir.</p>
             </div>
         </div>
@@ -221,6 +221,18 @@ Askıda Kampüs Projesi') ?></textarea>
                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4]"
                        required>
                 <p class="text-xs text-gray-500 mt-1">Bir öğrencinin haftada (Pazartesi–Pazar) yapabileceği maksimum rezervasyon sayısı.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Belge Onayı Başına Ek Hak</label>
+                <?php
+                    $sm = new Models\SettingsModel();
+                    $bonusQuota = (int) $sm->get('document_bonus_quota', 2);
+                ?>
+                <input type="number" name="document_bonus_quota" min="0" max="20"
+                       value="<?= $bonusQuota ?>"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A3B4] focus:border-[#00A3B4]"
+                       required>
+                <p class="text-xs text-gray-500 mt-1">Öğrencinin burs belgesi onaylanınca haftalık limitine eklenecek ürün hakkı sayısı.</p>
             </div>
         </div>
 

@@ -31,7 +31,7 @@
                     <li><a href="<?= url('sss') ?>"         style="color:#90a4be;text-decoration:none;font-size:13.5px;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='#90a4be'"><?= t('nav.faq') ?></a></li>
                     <li><a href="<?= url('iletisim') ?>"    style="color:#90a4be;text-decoration:none;font-size:13.5px;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='#90a4be'"><?= t('nav.contact') ?></a></li>
                     <li><a href="<?= url('misafir-bagis') ?>" style="color:#90a4be;text-decoration:none;font-size:13.5px;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='#90a4be'"><?= t('nav.donate') ?></a></li>
-                    <li><a href="<?= url('kayit') ?>"       style="color:#90a4be;text-decoration:none;font-size:13.5px;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='#90a4be'"><?= t('footer.student_reg') ?></a></li>
+                    <li><a href="<?= url('ogrenci-kayit') ?>"       style="color:#90a4be;text-decoration:none;font-size:13.5px;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='#90a4be'"><?= t('footer.student_reg') ?></a></li>
                 </ul>
             </div>
 
@@ -61,9 +61,10 @@
         <div style="border-top:1px solid rgba(255,255,255,0.08);max-width:1200px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
             <span style="font-size:12px;color:rgba(255,255,255,0.35);"><?= t('footer.rights', ['year' => date('Y')]) ?></span>
             <div style="display:flex;gap:20px;">
-                <a href="<?= url('iletisim') ?>" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='rgba(255,255,255,0.4)'"><?= t('footer.privacy') ?></a>
-                <a href="<?= url('iletisim') ?>" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='rgba(255,255,255,0.4)'"><?= t('footer.kvkk') ?></a>
-                <a href="<?= url('iletisim') ?>" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='rgba(255,255,255,0.4)'"><?= t('footer.accessibility') ?></a>
+                <a href="<?= url('kvkk') ?>" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='rgba(255,255,255,0.4)'"><?= t('footer.privacy') ?></a>
+                <a href="<?= url('kvkk') ?>" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='rgba(255,255,255,0.4)'"><?= t('footer.kvkk') ?></a>
+                <a href="<?= url('guvenlik-politikasi') ?>" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='rgba(255,255,255,0.4)'"><?= t('footer.accessibility') ?></a>
+                <a href="<?= url('tuketici-haklari') ?>" style="color:rgba(255,255,255,0.4);font-size:12px;text-decoration:none;" onmouseover="this.style.color='#00bcd4'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Tüketici Hakları</a>
             </div>
         </div>
     </footer>

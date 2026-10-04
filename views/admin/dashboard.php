@@ -14,7 +14,7 @@
     <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-[#00A3B4]">
         <p class="text-sm text-gray-500">Toplam Kullanıcı</p>
         <p class="text-3xl font-bold text-gray-800 mt-1"><?= e($stats['total_users']) ?></p>
-        <p class="text-xs text-gray-400 mt-1"><?= e($stats['students']) ?> öğrenci · <?= e($stats['donors']) ?> bağışçı</p>
+        <p class="text-xs text-gray-400 mt-1"><?= e($stats['students']) ?> öğrenci · <?= e($stats['donors']) ?> katkı sağlayan</p>
     </div>
     <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-indigo-500">
         <p class="text-sm text-gray-500">İşletmeler</p>
@@ -22,7 +22,7 @@
         <p class="text-xs text-gray-400 mt-1">Aktif kampüs işletmesi</p>
     </div>
     <div class="bg-white rounded-xl shadow-sm p-5 border-l-4 border-yellow-400">
-        <p class="text-sm text-gray-500">Bekleyen Bağış</p>
+        <p class="text-sm text-gray-500">Bekleyen Katkı</p>
         <p class="text-3xl font-bold text-gray-800 mt-1"><?= e($stats['waiting_donations']) ?></p>
         <p class="text-xs text-gray-400 mt-1">Toplam onaylı: ₺<?= number_format($stats['total_paid'], 2, ',', '.') ?></p>
     </div>
@@ -53,7 +53,7 @@
             </svg>
         </div>
         <div>
-            <p class="font-semibold text-gray-800 text-sm">Bağışlar</p>
+            <p class="font-semibold text-gray-800 text-sm">Katkılar</p>
             <p class="text-xs text-gray-400">Onayla, reddet, listele</p>
         </div>
     </a>

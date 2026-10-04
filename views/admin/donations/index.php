@@ -5,9 +5,9 @@
         <nav class="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
             <a href="<?= url('admin') ?>" class="hover:text-[#00A3B4] transition">Dashboard</a>
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            <span class="text-gray-600 font-medium">Bağışlar</span>
+            <span class="text-gray-600 font-medium">Katkılar</span>
         </nav>
-        <h1 class="text-2xl font-bold text-gray-800">Bağışlar</h1>
+        <h1 class="text-2xl font-bold text-gray-800">Katkılar</h1>
         <p class="text-gray-500 text-sm mt-1">Toplam <?= $total ?> kayıt</p>
     </div>
     <!-- Filtre -->
@@ -27,7 +27,7 @@
         <thead class="bg-gray-50">
             <tr>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">#</th>
-                <th class="px-5 py-3 text-left font-semibold text-gray-600">Bağışçı</th>
+                <th class="px-5 py-3 text-left font-semibold text-gray-600">Katkı Sağlayan</th>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">İşletme</th>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">Tutar</th>
                 <th class="px-5 py-3 text-left font-semibold text-gray-600">Durum</th>
@@ -44,8 +44,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <p class="text-gray-500 font-medium text-sm">Henüz bağış yok</p>
-                    <p class="text-gray-400 text-xs">Sisteme kayıtlı bağış bulunmamaktadır.</p>
+                    <p class="text-gray-500 font-medium text-sm">Henüz katkı yok</p>
+                    <p class="text-gray-400 text-xs">Sisteme kayıtlı katkı bulunmamaktadır.</p>
                 </div>
             </td></tr>
             <?php else: ?>
@@ -64,7 +64,7 @@
                     <?php if ($d['status'] === 'waiting_approval'): ?>
                     <form method="POST" action="<?= url('admin/bagislar/' . $d['id'] . '/onayla') ?>" class="inline">
                         <?= csrf_field() ?>
-                        <button type="submit" data-confirm="Bu bağışı onaylamak istiyor musunuz?"
+                        <button type="submit" data-confirm="Bu katkıyı onaylamak istiyor musunuz?"
                             class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-medium transition">
                             Onayla
                         </button>

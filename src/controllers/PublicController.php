@@ -106,6 +106,24 @@ class PublicController
         exit;
     }
 
+    public function kvkk(): void
+    {
+        $pageTitle = 'KVKK ve Gizlilik Politikası';
+        view('kvkk', compact('pageTitle'));
+    }
+
+    public function securityPolicy(): void
+    {
+        $pageTitle = 'Güvenlik Politikası';
+        view('guvenlik-politikasi', compact('pageTitle'));
+    }
+
+    public function consumerRights(): void
+    {
+        $pageTitle = 'Tüketici Hakları ve İptal/İade Politikası';
+        view('tuketici-haklari', compact('pageTitle'));
+    }
+
     public function venueDetail(string $id): void
     {
         $venueModel   = new VenueModel();

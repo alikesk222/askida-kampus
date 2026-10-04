@@ -13,16 +13,11 @@ class QrService
     }
 
     /**
-     * 8 haneli büyük harf + rakam claim code üretir
+     * 6 haneli rakam claim code üretir
      */
     public static function generateClaimCode(): string
     {
-        $chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ23456789';
-        $code  = '';
-        for ($i = 0; $i < 8; $i++) {
-            $code .= $chars[random_int(0, strlen($chars) - 1)];
-        }
-        return $code;
+        return str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     }
 
     /**

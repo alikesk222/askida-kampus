@@ -16,7 +16,7 @@
 
 <?php
 $cats = [
-    'donors'   => ['label' => 'Bağışçılar',  'color' => 'bg-teal-100 text-teal-800'],
+    'donors'   => ['label' => 'Katkı Sağlayanlar', 'color' => 'bg-teal-100 text-teal-800'],
     'students' => ['label' => 'Öğrenciler',  'color' => 'bg-blue-100 text-blue-800'],
     'general'  => ['label' => 'Genel',        'color' => 'bg-gray-100 text-gray-700'],
 ];

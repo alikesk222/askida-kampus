@@ -1,6 +1,27 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # ── BOT & TARAYICI ENGELLEMESI ──────────────────────────────
+
+    # 1. Boş User-Agent (tarayıcı robotları)
+    RewriteCond %{HTTP_USER_AGENT} ^-?$
+    RewriteRule ^ - [R=403,L]
+
+    # 2. Bilinen saldırı araçları
+    RewriteCond %{HTTP_USER_AGENT} (sqlmap|nikto|nmap|masscan|zgrab|dirbuster|gobuster|wfuzz|acunetix|netsparker|w3af|skipfish|havij|ZmEu|Morfeus|WPScan|OpenVAS|Burpsuite|NetSparker|jndi|${jndi|python-httpx) [NC]
+    RewriteRule ^ - [R=403,L]
+
+    # 3. WordPress / CMS zafiyet taramaları
+    RewriteCond %{REQUEST_URI} ^/?(\.|wp-admin|wp-login|xmlrpc|phpmyadmin|pma|myadmin|adminer|setup\.php|install\.php|config\.php|shell|c99|r57|b374k|webshell|eval-stdin|vendor/phpunit|composer\.phar|\.git|\.svn|\.htpasswd|\.DS_Store|backup|db_backup|dump\.sql) [NC]
+    RewriteRule ^ - [R=403,L]
+
+    # 4. Log4Shell / JNDI enjeksiyon denemeleri
+    RewriteCond %{QUERY_STRING} (\$\{jndi:|%24%7Bjndi%) [NC]
+    RewriteRule ^ - [R=403,L]
+
+    # ── NORMAL YÖNLENDİRME ──────────────────────────────────────
+    # Yerel: /askida/public/ | Production: /
+
     RewriteBase /askida/public/
 
     RewriteCond %{REQUEST_FILENAME} !-f
