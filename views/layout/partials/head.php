@@ -15,7 +15,7 @@ $__cssVer    = is_file($__cssPath) ? filemtime($__cssPath) : '1';
 ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= ($__headTitle && $__headTitle !== 'Askıda Kampüs') ? e($__headTitle) . ' — ' : '' ?>Askıda Kampüs</title>
+    <title><?= ($__headTitle && str_contains($__headTitle, 'Askıda Kampüs')) ? e($__headTitle) : (($__headTitle ? e($__headTitle) . ' — ' : '') . 'Askıda Kampüs') ?></title>
     <meta name="description" content="<?= e($metaDesc ?? t('footer.brand_desc')) ?>">
     <meta name="theme-color" content="#002D72">
     <link rel="icon" type="image/png" href="<?= asset('aybu.png') ?>">
