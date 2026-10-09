@@ -18,7 +18,7 @@ class StockModel
     {
         $stmt = $this->db->prepare(
             'SELECT ss.*, p.name AS product_name, p.category, p.price_snapshot,
-                    (ss.available_quantity - ss.reserved_quantity) AS free_quantity
+                    GREATEST(CAST(ss.available_quantity AS SIGNED) - CAST(ss.reserved_quantity AS SIGNED), 0) AS free_quantity
              FROM suspended_stocks ss
              INNER JOIN products p ON p.id = ss.product_id
              WHERE ss.venue_id = ?
@@ -96,7 +96,7 @@ class StockModel
     public function getFreeQuantity(int $venueId, int $productId): int
     {
         $stmt = $this->db->prepare(
-            'SELECT (available_quantity - reserved_quantity) AS free
+            'SELECT GREATEST(CAST(available_quantity AS SIGNED) - CAST(reserved_quantity AS SIGNED), 0) AS free
              FROM suspended_stocks WHERE venue_id = ? AND product_id = ? LIMIT 1'
         );
         $stmt->execute([$venueId, $productId]);
@@ -107,7 +107,7 @@ class StockModel
     public function getTotalAvailable(int $venueId): int
     {
         $stmt = $this->db->prepare(
-            'SELECT COALESCE(SUM(available_quantity - reserved_quantity), 0)
+            'SELECT COALESCE(SUM(GREATEST(CAST(available_quantity AS SIGNED) - CAST(reserved_quantity AS SIGNED), 0)), 0)
              FROM suspended_stocks WHERE venue_id = ?'
         );
         $stmt->execute([$venueId]);

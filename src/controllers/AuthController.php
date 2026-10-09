@@ -26,7 +26,7 @@ class AuthController
             'venues' => (int) $db->query('SELECT COUNT(*) FROM venues WHERE is_active = 1')->fetchColumn(),
             'donations' => (int) $db->query('SELECT COUNT(*) FROM donations WHERE status = "paid"')->fetchColumn(),
             'reservations' => (int) $db->query('SELECT COUNT(*) FROM reservations WHERE status = "claimed"')->fetchColumn(),
-            'stock' => (int) $db->query('SELECT COALESCE(SUM(available_quantity - reserved_quantity), 0) FROM suspended_stocks')->fetchColumn(),
+            'stock' => (int) $db->query('SELECT COALESCE(SUM(GREATEST(CAST(available_quantity AS SIGNED) - CAST(reserved_quantity AS SIGNED), 0)), 0) FROM suspended_stocks')->fetchColumn(),
         ];
 
         view('home', compact('venues', 'stats'));
