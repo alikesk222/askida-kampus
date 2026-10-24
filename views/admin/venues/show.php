@@ -158,7 +158,7 @@
                                 <div class="flex items-center justify-end gap-2">
                                     <!-- Görsel Güncelle butonu -->
                                     <button type="button"
-                                        onclick="openEditModal(<?= $p['id'] ?>, '<?= e(addslashes($p['name'])) ?>', '<?= e(addslashes($p['category'] ?? '')) ?>', '<?= $p['price_snapshot'] ?>', '<?= e(addslashes($p['description'] ?? '')) ?>', <?= $p['is_active'] ?>, '<?= $p['image_url'] ? url($p['image_url']) : '' ?>')"
+                                        onclick="openEditModal(<?= $p['id'] ?>, '<?= e(addslashes($p['name'])) ?>', '<?= e(addslashes($p['category'] ?? '')) ?>', '<?= $p['price_snapshot'] ?>', '<?= e(addslashes($p['description'] ?? '')) ?>', <?= $p['is_active'] ?>, '<?= $p['image_url'] ? e(url($p['image_url'])) : '' ?>')"
                                         class="btn btn-sm btn-outline">
                                         Düzenle
                                     </button>

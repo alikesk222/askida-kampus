@@ -329,6 +329,8 @@
     'donor_verify.success'        => 'Your email has been verified! Welcome to the system.',
     'donor_verify.session_expired'=> 'Session has expired. Please sign up again.',
     'donor_verify.not_verified'   => 'Your email address must be verified.',
+    'donor_verify.too_many'       => 'Too many incorrect attempts. Request a new code.',
+    'donor_verify.resend_wait'    => 'Please wait a moment before requesting a new code.',
 
     /* ── Student Registration ── */
     'student_reg.page_title'        => 'Student Sign Up',
@@ -336,8 +338,8 @@
     'student_reg.hero_desc'         => 'Verify your AYBU email address to register',
     'student_reg.name'              => 'Full Name',
     'student_reg.email'             => 'University Email',
-    'student_reg.email_hint'        => 'Only @aybu.edu.tr email addresses are accepted',
-    'student_reg.email_domain_error'=> 'Please register with your university email address (@aybu.edu.tr).',
+    'student_reg.email_hint'        => 'Only @ogr.aybu.edu.tr email addresses are accepted',
+    'student_reg.email_domain_error'=> 'Please register with your student email address (@ogr.aybu.edu.tr).',
     'student_reg.email_taken'       => 'This email address is already registered. Please log in.',
     'student_reg.suggest_login'     => 'Click here to log in →',
     'student_reg.phone'             => 'Phone Number',
@@ -362,6 +364,8 @@
     'student_verify.expired'        => 'Verification code has expired. Please request a new one.',
     'student_verify.success'        => 'Your email has been verified! Welcome to the system.',
     'student_verify.session_expired'=> 'Session has expired. Please sign up again.',
+    'student_verify.too_many'       => 'Too many incorrect attempts. Request a new code.',
+    'student_verify.resend_wait'    => 'Please wait a moment before requesting a new code.',
 
     /* ── Student Document ── */
     'student_doc.page_title'     => 'My Documents',

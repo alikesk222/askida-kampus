@@ -47,6 +47,7 @@ $router->post('/admin/kullanicilar/{id}/ata', [Controllers\AdminController::clas
 $router->post('/admin/kullanicilar/{id}/haftalik-limit', [Controllers\AdminController::class, 'userSetWeeklyLimit']);
 $router->get('/admin/rezervasyonlar', [Controllers\AdminController::class, 'reservationsList']);
 $router->get('/admin/belgeler', [Controllers\AdminController::class, 'documents']);
+$router->get('/admin/belgeler/{id}/indir', [Controllers\AdminController::class, 'documentDownload']);
 $router->post('/admin/belgeler/{id}/incele', [Controllers\AdminController::class, 'documentReview']);
 $router->get('/admin/ayarlar', [Controllers\AdminController::class, 'settingsForm']);
 $router->post('/admin/ayarlar', [Controllers\AdminController::class, 'settingsUpdate']);
@@ -68,6 +69,7 @@ $router->post('/isletmeler/{id}/rezerve', [Controllers\StudentController::class,
 $router->get('/rezervasyonlarim', [Controllers\StudentController::class, 'reservations']);
 $router->get('/rezervasyonlarim/{id}/qr', [Controllers\StudentController::class, 'showQr']);
 $router->get('/ogrencim/belgeler', [Controllers\StudentController::class, 'documents']);
+$router->get('/ogrencim/belgeler/{id}/indir', [Controllers\StudentController::class, 'documentDownload']);
 $router->post('/ogrencim/belgeler/yukle', [Controllers\StudentController::class, 'documentUpload']);
 
 // ── Bağışçı ───────────────────────────────────────────────

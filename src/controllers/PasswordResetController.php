@@ -3,8 +3,10 @@
 namespace Controllers;
 
 use Core\CSRF;
+use Core\Policies;
 use Core\Validator;
 use Core\Database;
+use Models\AuditLogModel;
 use Models\UserModel;
 use Services\EmailService;
 
@@ -40,36 +42,30 @@ class PasswordResetController
             redirect('/sifremi-unuttum');
         }
 
-        $userModel = new UserModel();
-        $user = $userModel->findByEmail($email);
-
-        // Güvenlik için: Email bulunamasa bile başarılı mesajı göster
-        if (!$user) {
-            flash('success', 'Eğer bu e-posta adresine kayıtlı bir hesap varsa, şifre sıfırlama linki gönderildi.');
+        $generic = 'Eğer bu e-posta adresine kayıtlı bir hesap varsa, şifre sıfırlama linki gönderildi.';
+        $emailHash = Policies::tokenHash(strtolower($email));
+        $audit = new AuditLogModel();
+        $limited = $audit->countSince('password_reset_request', 60, client_ip()) >= 5
+            || $audit->countSince('password_reset_request', 60, null, null, $emailHash) >= 5;
+        if ($limited) {
+            flash('success', $generic);
             redirect('/sifremi-unuttum');
         }
+        $audit->log('password_reset_request', null, null, null, ['email_hash' => $emailHash]);
 
-        // Token oluştur
-        $token = bin2hex(random_bytes(32));
-        
-        // Eski tokenları sil
-        $stmt = $this->db->prepare("DELETE FROM password_resets WHERE email = ?");
-        $stmt->execute([$email]);
-
-        // Yeni token kaydet
-        $stmt = $this->db->prepare("INSERT INTO password_resets (email, token) VALUES (?, ?)");
-        $stmt->execute([$email, $token]);
-
-        // Email gönder
-        $emailService = new EmailService();
-        $sent = $emailService->sendPasswordResetEmail($email, $token);
-
-        if ($sent) {
-            flash('success', 'Şifre sıfırlama linki e-posta adresinize gönderildi.');
-        } else {
-            flash('error', 'E-posta gönderilemedi. Lütfen daha sonra tekrar deneyin.');
+        $user = (new UserModel())->findByEmail($email);
+        if ($user) {
+            $token = bin2hex(random_bytes(32));
+            $this->db->prepare('DELETE FROM password_resets WHERE email = ?')->execute([$email]);
+            $this->db->prepare('INSERT INTO password_resets (email, token) VALUES (?, ?)')
+                ->execute([$email, Policies::tokenHash($token)]);
+            $sent = (new EmailService())->sendPasswordResetEmail($email, $token);
+            if (!$sent) {
+                error_log('Şifre sıfırlama e-postası gönderilemedi.');
+            }
         }
 
+        flash('success', $generic);
         redirect('/sifremi-unuttum');
     }
 
@@ -90,7 +86,7 @@ class PasswordResetController
             WHERE email = ? AND token = ? 
             AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
         ");
-        $stmt->execute([$email, $token]);
+        $stmt->execute([$email, Policies::tokenHash($token)]);
         $reset = $stmt->fetch();
 
         if (!$reset) {
@@ -125,7 +121,7 @@ class PasswordResetController
 
         if (!$validator->passes()) {
             flash('errors', $validator->errors());
-            redirect("/sifre-sifirla?token=$token&email=" . urlencode($email));
+            redirect('/sifre-sifirla?token=' . urlencode($token) . '&email=' . urlencode($email));
         }
 
         // Token kontrolü
@@ -134,7 +130,7 @@ class PasswordResetController
             WHERE email = ? AND token = ? 
             AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
         ");
-        $stmt->execute([$email, $token]);
+        $stmt->execute([$email, Policies::tokenHash($token)]);
         $reset = $stmt->fetch();
 
         if (!$reset) {
@@ -151,9 +147,7 @@ class PasswordResetController
             redirect('/giris');
         }
 
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        $stmt = $this->db->prepare("UPDATE users SET password = ? WHERE id = ?");
-        $stmt->execute([$hashedPassword, $user['id']]);
+        $userModel->updatePassword((int) $user['id'], $password);
 
         // Token'ı sil
         $stmt = $this->db->prepare("DELETE FROM password_resets WHERE email = ?");

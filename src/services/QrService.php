@@ -2,6 +2,9 @@
 
 namespace Services;
 
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
+
 class QrService
 {
     /**
@@ -13,7 +16,8 @@ class QrService
     }
 
     /**
-     * 6 haneli rakam claim code üretir
+     * Kasadaki okuyucu ve sözlü teslim 6 haneli kod kullanır (kolon CHAR(6)).
+     * Kod üçüncü bir servise gönderilmez; görüntü bu sunucuda üretilir.
      */
     public static function generateClaimCode(): string
     {
@@ -21,39 +25,35 @@ class QrService
     }
 
     /**
-     * QR kodu için Google Chart API URL döndürür (harici bağımlılık gerekmez)
+     * img src için yerel SVG data URI. Dış ağ çağrısı yapmaz.
      */
     public static function getQrImageUrl(string $data, int $size = 200): string
     {
-        return 'https://api.qrserver.com/v1/create-qr-code/?size=' . $size . 'x' . $size
-             . '&data=' . urlencode($data)
-             . '&format=png&margin=10';
+        if (!class_exists(QRCode::class)) {
+            return '';
+        }
+        $scale = max(3, (int) round($size / 40));
+        $options = new QROptions([
+            'outputType' => QRCode::OUTPUT_MARKUP_SVG,
+            'outputBase64' => true,
+            'scale' => $scale,
+            'addQuietzone' => true,
+            'drawLightModules' => true,
+            'svgUseFillAttributes' => true,
+        ]);
+        try {
+            return (new QRCode($options))->render($data);
+        } catch (\Throwable $e) {
+            error_log('QR üretilemedi: ' . $e->getMessage());
+            return '';
+        }
     }
 
     /**
-     * QR PNG'sini public/qrcodes/ klasörüne indirir ve dosya yolunu döndürür.
-     * GD veya allow_url_fopen yoksa sadece URL döndürür.
+     * Eski çağrılar için. Dosyaya yazmak yerine yerel data URI döndürür.
      */
     public static function savePng(string $token, int $size = 200): string
     {
-        $filename  = $token . '.png';
-        $localPath = ROOT . '/public/qrcodes/' . $filename;
-        $publicUrl = url('qrcodes/' . $filename);
-
-        if (file_exists($localPath)) {
-            return $publicUrl;
-        }
-
-        if (!ini_get('allow_url_fopen')) {
-            return self::getQrImageUrl($token, $size);
-        }
-
-        $imgData = @file_get_contents(self::getQrImageUrl($token, $size));
-        if ($imgData !== false) {
-            file_put_contents($localPath, $imgData);
-            return $publicUrl;
-        }
-
         return self::getQrImageUrl($token, $size);
     }
 }

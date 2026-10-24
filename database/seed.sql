@@ -15,22 +15,15 @@ TRUNCATE TABLE venues;
 TRUNCATE TABLE users;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- Test kullanıcıları
-INSERT INTO users (name, email, password, role, university_verified, daily_limit, student_number, is_active) VALUES
-('Süper Admin', 'admin@askidakampus.com', '$2y$10$DdE/TfpFC6boWCwdfXAGBOBdBAuIFjd2MAmE0Hvs5HQo6ixuTHtaO', 'super-admin', 1, 3, NULL, 1),
-('Üniversite Admin', 'universite@askidakampus.com', '$2y$10$kj04Zj1JFDptdFKaXxX6qe4kbI57vE7Sorqy/oC4CxGP5YVuK1uV.', 'university-admin', 1, 3, NULL, 1),
-('İşletme Yöneticisi', 'admin.merkez@askidakampus.com', '$2y$10$fbmi9LdDKAleUlCwKPeyVuCWjqQRDqgus5Ay2eDTSzJtWrJUvWpYa', 'venue-admin', 1, 3, NULL, 1),
-('Ali Yılmaz', 'ogrenci@askidakampus.com', '$2y$10$WciiorIMIOV3O.mIPxX9aO9.sWxzPw5Ab7PaES1iM3CykSQCy60K6', 'student', 1, 3, '20210001', 1),
-('Ayşe Kaya', 'bagisci@askidakampus.com', '$2y$10$yvJ.wkPXtgD7D2yjIGM45evNzM.D6qzVtZ5.0e7YtLSEuRR13mHmy', 'donor', 1, 3, NULL, 1);
+-- Kullanıcılar seed dosyasına yazılmaz.
+-- Süper yönetici: ADMIN_EMAIL ve ADMIN_PASSWORD ortam değişkenleriyle
+--   php scripts/create_admin.php
 
 -- İşletmeler
 INSERT INTO venues (name, campus_name, slug, description, location, phone, opens_at, closes_at, is_active) VALUES
 ('Merkez Kafeterya', 'Esenboğa Kampüsü', 'merkez-kafeterya', 'Merkez kafeterya ve yemekhane', 'A Blok Zemin Kat', '0312 000 00 01', '08:00', '20:00', 1),
 ('Mühendislik Kantini', 'Esenboğa Kampüsü', 'muhendislik-kantini', 'Mühendislik Fakültesi kantini', 'B Blok Giriş', '0312 000 00 02', '08:30', '17:30', 1),
 ('Kütüphane Büfesi', 'Keçiören Kampüsü', 'kutuphane-bufesi', 'Kütüphane içi büfe', 'Kütüphane Giriş', '0312 000 00 03', '09:00', '18:00', 1);
-
--- Atamalar
-INSERT INTO venue_user (user_id, venue_id) VALUES (3, 1);
 
 -- Ürünler
 INSERT INTO products (venue_id, name, category, price_snapshot, description, is_active) VALUES

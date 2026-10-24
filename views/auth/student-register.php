@@ -33,7 +33,7 @@
                             <label for="email" class="form-label"><?= t('student_reg.email') ?></label>
                             <input type="email" id="email" name="email" value="<?= e($old['email'] ?? '') ?>"
                                 class="form-input<?= isset($errors['email']) ? ' is-invalid' : '' ?>"
-                                placeholder="2105081101@aybu.edu.tr" autocomplete="email" required>
+                                placeholder="2105081101@ogr.aybu.edu.tr" autocomplete="email" required>
                             <p class="form-help"><?= t('student_reg.email_hint') ?></p>
                             <?php if (isset($errors['email'])): ?>
                                 <p class="form-error"><?= e(is_array($errors['email']) ? ($errors['email'][0] ?? '') : $errors['email']) ?></p>

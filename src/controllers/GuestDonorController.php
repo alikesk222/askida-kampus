@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Core\CSRF;
+use Core\Policies;
 use Core\Validator;
 use Core\Database;
 use Models\VenueModel;
@@ -62,9 +63,18 @@ class GuestDonorController
         }
 
         $quantities = $_POST['qty'] ?? [];
+        if (!is_array($quantities) || count($quantities) > 100) {
+            flash('error', 'Çok fazla ürün satırı gönderildi.');
+            redirect("/misafir-bagis/$id");
+        }
         $items = [];
         foreach ($quantities as $productId => $qty) {
-            $qty = (int)$qty;
+            $parsed = Policies::parseBoundedQty(is_scalar($qty) ? (string) $qty : '');
+            if ($parsed === false) {
+                flash('error', 'Bir üründen en fazla 50 adet seçebilirsiniz.');
+                redirect("/misafir-bagis/$id");
+            }
+            $qty = $parsed;
             if ($qty <= 0) continue;
             $product = $productModel->findById((int)$productId);
             if (!$product || (int)$product['venue_id'] !== (int)$id) continue;

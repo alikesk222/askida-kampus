@@ -4,6 +4,8 @@ namespace Controllers;
 
 use Core\Auth;
 use Core\CSRF;
+use Core\Policies;
+use Core\SecretBox;
 use Core\Validator;
 use Models\UserModel;
 use Models\VenueModel;
@@ -13,6 +15,7 @@ use Models\ReservationModel;
 use Models\FaqModel;
 use Models\SettingsModel;
 use Models\StudentDocumentModel;
+use Services\DocumentStorage;
 use Services\DonationService;
 
 class AdminController
@@ -227,11 +230,7 @@ class AdminController
         // Resmi sil isteği
         if (!empty($_POST['remove_image'])) {
             $imageUrl = null;
-            if ($product['image_url']) {
-                $oldPath = ROOT . '/public/' . ltrim($product['image_url'], '/');
-                if (file_exists($oldPath))
-                    @unlink($oldPath);
-            }
+            $this->unlinkProductImage($product['image_url'] ?? null);
         }
 
         // Yeni resim yüklendi mi?
@@ -241,12 +240,7 @@ class AdminController
                 flash('error', 'Görsel yüklenirken hata oluştu.');
                 redirect("/admin/isletmeler/$id");
             }
-            // Eski dosyayı sil
-            if ($product['image_url']) {
-                $oldPath = ROOT . '/public/' . ltrim($product['image_url'], '/');
-                if (file_exists($oldPath))
-                    @unlink($oldPath);
-            }
+            $this->unlinkProductImage($product['image_url'] ?? null);
             $imageUrl = $newUrl;
         }
 
@@ -274,11 +268,15 @@ class AdminController
             return null;
 
         $mimeType = mime_content_type($file['tmp_name']);
-        if (!in_array($mimeType, $allowedTypes))
+        if (!in_array($mimeType, $allowedTypes, true))
+            return null;
+        if (getimagesize($file['tmp_name']) === false)
             return null;
 
-        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filename = 'product_' . uniqid() . '.' . strtolower($ext);
+        $ext = Policies::imageExtensionForMime($mimeType);
+        if ($ext === null)
+            return null;
+        $filename = 'product_' . bin2hex(random_bytes(8)) . '.' . $ext;
         $uploadDir = ROOT . '/public/assets/images/products/';
 
         if (!is_dir($uploadDir)) {
@@ -292,6 +290,22 @@ class AdminController
         return 'assets/images/products/' . $filename;
     }
 
+    private function unlinkProductImage(?string $imageUrl): void
+    {
+        if (!$imageUrl) {
+            return;
+        }
+        $base = realpath(ROOT . '/public/assets/images/products');
+        $path = realpath(ROOT . '/public/' . ltrim($imageUrl, '/'));
+        if ($base === false || $path === false || !is_file($path)) {
+            return;
+        }
+        if (!str_starts_with($path, $base . DIRECTORY_SEPARATOR)) {
+            return;
+        }
+        @unlink($path);
+    }
+
     public function productDelete(string $id, string $pid): void
     {
         CSRF::verify();
@@ -299,9 +313,7 @@ class AdminController
         $product = $productModel->findById((int) $pid);
         // Görseli de sil
         if ($product && $product['image_url']) {
-            $imgPath = ROOT . '/public/' . ltrim($product['image_url'], '/');
-            if (file_exists($imgPath))
-                @unlink($imgPath);
+            $this->unlinkProductImage($product['image_url']);
         }
         $productModel->delete((int) $pid);
         flash('success', 'Ürün silindi.');
@@ -329,7 +341,7 @@ class AdminController
             $service->approve((int) $id, Auth::id());
             flash('success', 'Bağış onaylandı ve stok güncellendi.');
         } catch (\Throwable $e) {
-            flash('error', $e->getMessage());
+            flash('error', safe_error_message($e, 'Bağış onaylanamadı.'));
         }
         redirect('/admin/bagislar');
     }
@@ -376,6 +388,12 @@ class AdminController
             redirect('/admin/kullanicilar');
         }
 
+        $role = (string) ($_POST['role'] ?? '');
+        if (!in_array($role, Policies::assignableRoles((string) Auth::role()), true)) {
+            flash('error', 'Bu rolü atama yetkiniz yok.');
+            redirect('/admin/kullanicilar');
+        }
+
         $userModel = new UserModel();
         if ($userModel->findByEmail(trim($_POST['email']))) {
             flash('error', 'Bu e-posta zaten kayıtlı.');
@@ -386,14 +404,14 @@ class AdminController
             'name'                => trim($_POST['name']),
             'email'               => trim($_POST['email']),
             'password'            => $_POST['password'],
-            'role'                => $_POST['role'],
+            'role'                => $role,
             'student_number'      => trim($_POST['student_number'] ?? '') ?: null,
             'phone'               => trim($_POST['phone'] ?? '') ?: null,
             'university_verified' => 1,  // admin tarafından oluşturulanlar otomatik doğrulanmış
         ]);
 
         // venue-admin ise işletmeye ata
-        if (!empty($_POST['venue_id']) && $_POST['role'] === 'venue-admin') {
+        if (!empty($_POST['venue_id']) && $role === 'venue-admin') {
             $userModel->assignVenue($userId, (int) $_POST['venue_id']);
         }
 
@@ -408,6 +426,13 @@ class AdminController
         $user = $userModel->findById((int) $id);
         if (!$user) {
             flash('error', 'Kullanıcı bulunamadı.');
+            redirect('/admin/kullanicilar');
+        }
+        $this->assertCanManageUser($user);
+
+        $newRole = (string) ($_POST['role'] ?? '');
+        if (!in_array($newRole, Policies::assignableRoles((string) Auth::role()), true)) {
+            flash('error', 'Bu rolü atama yetkiniz yok.');
             redirect('/admin/kullanicilar');
         }
 
@@ -439,7 +464,7 @@ class AdminController
         $fields = [
             'name'           => trim($_POST['name']),
             'email'          => trim($_POST['email']),
-            'role'           => $_POST['role'],
+            'role'           => $newRole,
             'weekly_limit'   => $weeklyLimit,
             'student_number' => trim($_POST['student_number'] ?? '') ?: null,
             'is_active'      => isset($_POST['is_active']) ? 1 : 0,
@@ -465,6 +490,12 @@ class AdminController
     {
         CSRF::verify();
         $userModel = new UserModel();
+        $user = $userModel->findById((int) $id);
+        if (!$user) {
+            flash('error', 'Kullanıcı bulunamadı.');
+            redirect('/admin/kullanicilar');
+        }
+        $this->assertCanManageUser($user);
         $userModel->toggleActive((int) $id);
         flash('success', 'Kullanıcı durumu güncellendi.');
         redirect('/admin/kullanicilar');
@@ -479,6 +510,7 @@ class AdminController
             flash('error', 'Yalnızca işletme yöneticileri işletmeye atanabilir.');
             redirect('/admin/kullanicilar');
         }
+        $this->assertCanManageUser($user);
         $venueId = (int) ($_POST['venue_id'] ?? 0);
         if (!$venueId) {
             flash('error', 'Geçerli bir işletme seçin.');
@@ -500,6 +532,7 @@ class AdminController
             flash('error', 'Yalnızca öğrencilere haftalık limit atanabilir.');
             redirect('/admin/kullanicilar');
         }
+        $this->assertCanManageUser($user);
 
         $raw = $_POST['weekly_limit'] ?? '';
         // Boş veya "varsayılan" ise NULL (global ayar kullanılır)
@@ -642,8 +675,11 @@ class AdminController
 
     public function settingsForm(): void
     {
+        Auth::requireRole(['super-admin']);
         $settingsModel = new SettingsModel();
         $mailSettings = $settingsModel->getMailSettings();
+        $mailPasswordSet = ($mailSettings['password'] ?? '') !== '';
+        unset($mailSettings['password']);
 
         // Email template ayarlarını getir
         $emailSettings = [
@@ -658,7 +694,7 @@ class AdminController
 
         $pageTitle = 'Sistem Ayarları';
         $errors = flash('errors') ?? [];
-        view('admin/settings', compact('pageTitle', 'mailSettings', 'emailSettings', 'weeklyLimit', 'errors'));
+        view('admin/settings', compact('pageTitle', 'mailSettings', 'emailSettings', 'weeklyLimit', 'errors', 'mailPasswordSet'));
     }
 
     public function settingsUpdate(): void
@@ -674,7 +710,16 @@ class AdminController
             $settingsModel->set('mail_host', $_POST['mail_host'] ?? '', 'SMTP sunucu adresi');
             $settingsModel->set('mail_port', $_POST['mail_port'] ?? '587', 'SMTP port numarası');
             $settingsModel->set('mail_username', $_POST['mail_username'] ?? '', 'SMTP kullanıcı adı');
-            $settingsModel->set('mail_password', $_POST['mail_password'] ?? '', 'SMTP şifresi');
+            $newMailPassword = (string) ($_POST['mail_password'] ?? '');
+            if ($newMailPassword !== '') {
+                try {
+                    $settingsModel->set('mail_password', SecretBox::seal($newMailPassword), 'SMTP şifresi');
+                } catch (\Throwable $e) {
+                    error_log('SMTP şifresi kaydedilemedi: ' . $e->getMessage());
+                    flash('error', 'SMTP şifresi kaydedilemedi. Sunucuda APP_SECRET en az 16 karakter olmalı.');
+                    redirect('/admin/ayarlar');
+                }
+            }
             $settingsModel->set('mail_encryption', $_POST['mail_encryption'] ?? 'tls', 'Şifreleme türü');
             $settingsModel->set('mail_from_address', $_POST['mail_from_address'] ?? '', 'Gönderen email adresi');
             $settingsModel->set('mail_from_name', $_POST['mail_from_name'] ?? 'AYBÜ Askıda Kampüs', 'Gönderen adı');
@@ -740,5 +785,36 @@ class AdminController
         }
 
         redirect('/admin/belgeler');
+    }
+
+    public function documentDownload(string $id): void
+    {
+        $doc = (new StudentDocumentModel())->findById((int) $id);
+        if (!$doc) {
+            http_response_code(404);
+            view('errors/404');
+            return;
+        }
+        $path = DocumentStorage::resolve((string) $doc['file_path']);
+        if ($path === null) {
+            http_response_code(404);
+            view('errors/404');
+            return;
+        }
+        DocumentStorage::send($path, (string) $doc['file_name']);
+    }
+
+    private function assertCanManageUser(array $user): void
+    {
+        $actor = Auth::user();
+        if (!$actor || !Policies::canManageUser(
+            (string) $actor['role'],
+            (int) $actor['id'],
+            (string) $user['role'],
+            (int) $user['id']
+        )) {
+            flash('error', 'Bu kullanıcıyı yönetme yetkiniz yok.');
+            redirect('/admin/kullanicilar');
+        }
     }
 }

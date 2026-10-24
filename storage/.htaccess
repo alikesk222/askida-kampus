@@ -1,0 +1,4 @@
+# Belge deposu web'den okunmasın. PHP readfile ile sunar.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>

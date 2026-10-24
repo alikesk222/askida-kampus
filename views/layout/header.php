@@ -50,8 +50,10 @@
                 ['admin/rezervasyonlar', 'Rezervasyonlar', $icClip, str_contains($currentPath, '/rezervasyonlar'), null, 0],
                 ['admin/belgeler', 'Belgeler', $icDoc, str_contains($currentPath, '/belgeler'), null, (int) $docBadge],
                 ['admin/sss', 'SSS', $icHelp, str_contains($currentPath, '/sss'), null, 0],
-                ['admin/ayarlar', 'Ayarlar', $icCog, str_contains($currentPath, '/ayarlar'), null, 0],
             ];
+            if ($role === 'super-admin') {
+                $menu[] = ['admin/ayarlar', 'Ayarlar', $icCog, str_contains($currentPath, '/ayarlar'), null, 0];
+            }
         } elseif ($role === 'venue-admin') {
             $menu = [
                 ['isletme', 'Panel', $icHome, $currentPath === '/isletme', null, 0],

@@ -33,6 +33,28 @@ class AuditLogModel
         ]);
     }
 
+    public function countSince(string $action, int $minutes, ?string $ip = null, ?int $userId = null, ?string $emailHash = null): int
+    {
+        $minutes = max(1, min($minutes, 1440));
+        $sql = 'SELECT COUNT(*) FROM audit_logs WHERE action = ? AND created_at > DATE_SUB(NOW(), INTERVAL ' . $minutes . ' MINUTE)';
+        $params = [$action];
+        if ($ip !== null) {
+            $sql .= ' AND ip_address = ?';
+            $params[] = $ip;
+        }
+        if ($userId !== null) {
+            $sql .= ' AND user_id = ?';
+            $params[] = $userId;
+        }
+        if ($emailHash !== null) {
+            $sql .= " AND JSON_UNQUOTE(JSON_EXTRACT(new_values, '$.email_hash')) = ?";
+            $params[] = $emailHash;
+        }
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
+
     public function getRecent(int $limit = 50): array
     {
         $stmt = $this->db->prepare(

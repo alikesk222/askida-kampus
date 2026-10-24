@@ -62,6 +62,12 @@ class UserModel
         return (int) $this->db->lastInsertId();
     }
 
+    public function updatePassword(int $id, string $plain): void
+    {
+        $hash = password_hash($plain, PASSWORD_BCRYPT, ['cost' => 12]);
+        $this->db->prepare('UPDATE users SET password = ? WHERE id = ?')->execute([$hash, $id]);
+    }
+
     public function setWeeklyLimit(int $id, ?int $limit): void
     {
         $this->db->prepare('UPDATE users SET weekly_limit = ? WHERE id = ?')->execute([$limit, $id]);

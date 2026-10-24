@@ -153,7 +153,7 @@
                             <div class="flex items-start gap-3">
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center gap-2 flex-wrap">
-                                        <a href="<?= asset($doc['file_path']) ?>" target="_blank"
+                                        <a href="<?= url('ogrencim/belgeler/' . (int) $doc['id'] . '/indir') ?>" target="_blank"
                                            class="link text-sm font-semibold truncate">
                                             <?= e($doc['file_name']) ?>
                                         </a>
@@ -176,7 +176,7 @@
                                 </div>
 
                                 <!-- Dosyayı görüntüle -->
-                                <a href="<?= asset($doc['file_path']) ?>" target="_blank"
+                                <a href="<?= url('ogrencim/belgeler/' . (int) $doc['id'] . '/indir') ?>" target="_blank"
                                    class="btn btn-ghost btn-icon flex-shrink-0"
                                    title="<?= t('student_doc.view_file') ?>" aria-label="<?= t('student_doc.view_file') ?>">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

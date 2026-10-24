@@ -88,7 +88,14 @@ cp .env.example .env
 # 3. Veritabanını oluştur
 mysql -u root -p < database/schema.sql
 mysql -u root -p askida_kampus < database/seed.sql
+
+# 4. Süper yöneticiyi oluşturun (parolayı repoya yazmayın)
+ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='uzun-rastgele-parola' php scripts/create_admin.php
 ```
+
+Mevcut bir veritabanında e-posta doğrulama kodlarının özetlenebilmesi için
+`database/migrate_security.sql` dosyasını bir kez çalıştırın. Öğrenci belgeleri
+web kökünün dışındaki `storage/documents/` dizinine yazılır.
 
 ### `.env` Yapılandırması
 
@@ -107,15 +114,11 @@ DB_PASS=
 
 ---
 
-## 👤 Test Kullanıcıları
+## 👤 İlk yönetici
 
-| Rol | E-posta | Şifre |
-|-----|---------|-------|
-| Süper Admin | admin@askidakampus.com | Admin@1234! |
-| İşletme Admin | isletme@askidakampus.com | Admin@1234! |
-| Kasiyer | kasiyer@askidakampus.com | Admin@1234! |
-| Öğrenci | ogrenci@askidakampus.com | Admin@1234! |
-| Bağışçı | bagisci@askidakampus.com | Admin@1234! |
+Hazır parola tablosu yoktur. Yönetici hesabını kurulum adımındaki
+`scripts/create_admin.php` ile oluşturun. Canlı sunucuda Apache vhost içine
+`SetEnv APP_ENV production` ekleyin ve `APP_SECRET` değerini benzersiz tutun.
 
 ---
 

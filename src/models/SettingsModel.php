@@ -67,7 +67,11 @@ class SettingsModel
         
         foreach ($settings as $setting) {
             $key = str_replace('mail_', '', $setting['setting_key']);
-            $result[$key] = $setting['setting_value'];
+            $value = (string) $setting['setting_value'];
+            if ($key === 'password') {
+                $value = \Core\SecretBox::open($value);
+            }
+            $result[$key] = $value;
         }
         
         return $result;

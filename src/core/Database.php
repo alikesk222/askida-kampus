@@ -27,7 +27,8 @@ class Database
                     PDO::ATTR_EMULATE_PREPARES   => false,
                 ]);
             } catch (PDOException $e) {
-                die('Veritabanı bağlantısı kurulamadı: ' . $e->getMessage());
+                error_log('Veritabanı bağlantısı kurulamadı: ' . $e->getMessage());
+                die('Veritabanı bağlantısı kurulamadı.');
             }
         }
         return self::$instance;

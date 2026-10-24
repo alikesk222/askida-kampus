@@ -1,5 +1,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Docroot proje köküyse döküm, kaynak ve betikler yine de servis edilmesin
+    RewriteRule ^(database|src|cron|vendor|storage|scripts|lang)(/|$) - [F,L]
+    RewriteRule \.sql$ - [F,L]
     
     # Dinamik base path - otomatik algılama
     RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$

@@ -1,6 +1,11 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # HSTS yalnızca istemci HTTPS ile geliyorsa (alt alan adlarını kapsamaz)
+    RewriteCond %{HTTPS} =on [OR]
+    RewriteCond %{HTTP:X-Forwarded-Proto} =https
+    RewriteRule ^ - [E=ASKIDA_HTTPS:1]
+
     # ── BOT & TARAYICI ENGELLEMESI ──────────────────────────────
 
     # 1. Boş User-Agent (tarayıcı robotları)
@@ -34,6 +39,10 @@
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.tailwindcss.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+    Header always set Strict-Transport-Security "max-age=15552000" env=ASKIDA_HTTPS
+    Header always set Strict-Transport-Security "max-age=15552000" env=REDIRECT_ASKIDA_HTTPS
 </IfModule>
 
 # PHP ayarları

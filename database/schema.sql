@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     daily_limit         TINYINT UNSIGNED NOT NULL DEFAULT 3,
     student_number      VARCHAR(50) NULL UNIQUE,
     phone               VARCHAR(20) NULL,
-    email_verify_token  CHAR(6) NULL,
+    email_verify_token  VARCHAR(64) NULL,
     email_verify_expires DATETIME NULL,
     is_active           TINYINT(1) NOT NULL DEFAULT 1,
     created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

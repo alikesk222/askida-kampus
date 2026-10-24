@@ -8,6 +8,7 @@ use Models\UserModel;
 use Models\VenueModel;
 use Models\StockModel;
 use Models\DonationModel;
+use Models\AuditLogModel;
 use Models\ReservationModel;
 use Services\DonationService;
 use Services\ReservationService;
@@ -92,7 +93,7 @@ class VenueAdminController
             $service->approve((int) $id, Auth::id());
             flash('success', 'Bağış onaylandı ve stok güncellendi.');
         } catch (\Throwable $e) {
-            flash('error', $e->getMessage());
+            flash('error', safe_error_message($e, 'Bağış onaylanamadı.'));
         }
         redirect('/isletme/bagislar');
     }
@@ -117,6 +118,11 @@ class VenueAdminController
         header('Content-Type: application/json');
 
         $code = trim($_GET['kod'] ?? '');
+        $audit = new AuditLogModel();
+        if ($audit->countSince('claim_lookup_failed', 15, null, Auth::id()) >= 30) {
+            echo json_encode(['found' => false, 'message' => 'Çok fazla deneme. Lütfen 15 dakika sonra tekrar deneyin.']);
+            exit;
+        }
         if (strlen($code) < 6) {
             echo json_encode(['found' => false]);
             exit;
@@ -126,11 +132,13 @@ class VenueAdminController
         $reservation = $reservationModel->findByClaimCode($code);
 
         if (!$reservation) {
+            $audit->log('claim_lookup_failed', 'reservation', null, null, ['reason' => 'missing']);
             echo json_encode(['found' => false, 'message' => 'Rezervasyon bulunamadı.']);
             exit;
         }
 
         if ((int) $reservation['venue_id'] !== $this->venueId) {
+            $audit->log('claim_lookup_failed', 'reservation', (int) $reservation['id'], null, ['reason' => 'other_venue']);
             echo json_encode(['found' => false, 'message' => 'Bu rezervasyon başka bir işletmeye aittir.']);
             exit;
         }
@@ -183,16 +191,24 @@ class VenueAdminController
             redirect('/isletme');
         }
 
+        $audit = new AuditLogModel();
+        if ($audit->countSince('claim_lookup_failed', 15, null, Auth::id()) >= 30) {
+            flash('error', 'Çok fazla deneme. Lütfen 15 dakika sonra tekrar deneyin.');
+            redirect('/isletme');
+        }
+
         $code = trim($_POST['claim_code']);
         $reservationModel = new ReservationModel();
         $reservation = $reservationModel->findByClaimCode($code);
 
         if (!$reservation) {
+            $audit->log('claim_lookup_failed', 'reservation', null, null, ['reason' => 'missing']);
             flash('error', 'Geçersiz teslim kodu.');
             redirect('/isletme');
         }
 
         if ((int) $reservation['venue_id'] !== $this->venueId) {
+            $audit->log('claim_lookup_failed', 'reservation', (int) $reservation['id'], null, ['reason' => 'other_venue']);
             flash('error', 'Bu rezervasyon başka bir işletmeye aittir.');
             redirect('/isletme');
         }
@@ -202,7 +218,7 @@ class VenueAdminController
             $service->claim((int) $reservation['id'], Auth::id());
             flash('success', 'Rezervasyon başarıyla teslim alındı! (' . e($code) . ')');
         } catch (\Throwable $e) {
-            flash('error', $e->getMessage());
+            flash('error', safe_error_message($e, 'Teslim alınamadı.'));
         }
         redirect('/isletme');
     }

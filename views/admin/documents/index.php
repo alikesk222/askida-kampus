@@ -104,11 +104,11 @@ $filtered = array_values(array_filter($documents, fn($d) =>
                                 </svg>
                             </div>
                             <div>
-                                <a href="<?= asset($doc['file_path']) ?>" target="_blank" rel="noopener"
+                                <a href="<?= url('admin/belgeler/' . (int) $doc['id'] . '/indir') ?>" target="_blank" rel="noopener"
                                    class="link text-sm font-medium max-w-[180px] truncate block">
                                     <?= e($doc['file_name']) ?>
                                 </a>
-                                <a href="<?= asset($doc['file_path']) ?>" target="_blank" rel="noopener"
+                                <a href="<?= url('admin/belgeler/' . (int) $doc['id'] . '/indir') ?>" target="_blank" rel="noopener"
                                    class="link text-xs">
                                     Görüntüle →
                                 </a>
