@@ -1,0 +1,4 @@
+# Eski yüklemeler bu klasörde kalmış olabilir. Doğrudan URL ile açılmasın.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>

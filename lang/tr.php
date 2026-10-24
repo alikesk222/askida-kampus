@@ -329,6 +329,8 @@
     'donor_verify.success'        => 'E-posta adresiniz doğrulandı! Sisteme hoş geldiniz.',
     'donor_verify.session_expired'=> 'Oturum süresi dolmuş. Lütfen tekrar kayıt olun.',
     'donor_verify.not_verified'   => 'E-posta adresinizi doğrulamanız gerekmektedir.',
+    'donor_verify.too_many'       => 'Çok fazla hatalı deneme. Yeni kod isteyin.',
+    'donor_verify.resend_wait'    => 'Yeni kod istemek için biraz bekleyin.',
 
     /* ── Öğrenci Kaydı ── */
     'student_reg.page_title'        => 'Öğrenci Kaydı',
@@ -336,8 +338,8 @@
     'student_reg.hero_desc'         => 'AYBÜ e-posta adresinizi doğrulayarak sisteme kaydolun',
     'student_reg.name'              => 'Ad Soyad',
     'student_reg.email'             => 'Üniversite E-postası',
-    'student_reg.email_hint'        => 'Sadece @aybu.edu.tr uzantılı e-postalar kabul edilir',
-    'student_reg.email_domain_error'=> 'Lütfen üniversite uzantılı (@aybu.edu.tr) e-posta adresiniz ile kayıt yapınız.',
+    'student_reg.email_hint'        => 'Sadece @ogr.aybu.edu.tr uzantılı e-postalar kabul edilir',
+    'student_reg.email_domain_error'=> 'Lütfen öğrenci e-postanız (@ogr.aybu.edu.tr) ile kayıt yapınız.',
     'student_reg.email_taken'       => 'Bu e-posta adresi zaten kayıtlı. Lütfen giriş yapın.',
     'student_reg.suggest_login'     => 'Giriş yapmak için tıklayın →',
     'student_reg.phone'             => 'Telefon Numarası',
@@ -362,6 +364,8 @@
     'student_verify.expired'        => 'Doğrulama kodunun süresi dolmuş. Lütfen tekrar gönderin.',
     'student_verify.success'        => 'E-posta adresiniz doğrulandı! Sisteme hoş geldiniz.',
     'student_verify.session_expired'=> 'Oturum süresi dolmuş. Lütfen tekrar kayıt olun.',
+    'student_verify.too_many'       => 'Çok fazla hatalı deneme. Yeni kod isteyin.',
+    'student_verify.resend_wait'    => 'Yeni kod istemek için biraz bekleyin.',
 
     /* ── Öğrenci Belge ── */
     'student_doc.page_title'     => 'Belgelerim',

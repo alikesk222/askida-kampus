@@ -76,10 +76,16 @@
                     <!-- SMTP Password -->
                     <div>
                         <label class="form-label">SMTP Şifresi</label>
-                        <input type="password" name="mail_password" value="<?= e($mailSettings['password'] ?? '') ?>"
+                        <input type="password" name="mail_password" value=""
                             class="form-input"
-                            placeholder="••••••••" required>
-                        <p class="form-help">Email hesabınızın şifresi</p>
+                            placeholder="••••••••" autocomplete="new-password">
+                        <p class="form-help">
+                            <?php if (!empty($mailPasswordSet)): ?>
+                                Kayıtlı bir şifre var. Değiştirmek istemiyorsanız boş bırakın.
+                            <?php else: ?>
+                                Email hesabınızın şifresi. Kaydedildikten sonra tekrar gösterilmez.
+                            <?php endif; ?>
+                        </p>
                     </div>
 
                     <!-- Encryption -->

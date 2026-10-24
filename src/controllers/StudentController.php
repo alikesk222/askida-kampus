@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Core\Auth;
 use Core\CSRF;
+use Core\Policies;
 use Models\SettingsModel;
 use Models\VenueModel;
 use Models\ProductModel;
@@ -11,6 +12,7 @@ use Models\StockModel;
 use Models\ReservationModel;
 use Models\StudentDocumentModel;
 use Core\Database;
+use Services\DocumentStorage;
 use Services\ReservationService;
 use Services\QrService;
 
@@ -95,8 +97,18 @@ class StudentController
         $items = [];
         $hasAny = false;
 
+        if (is_array($quantities) && count($quantities) > 100) {
+            flash('error', 'Çok fazla ürün satırı gönderildi.');
+            redirect("/isletmeler/$id/rezerve");
+        }
+
         foreach ($quantities as $productId => $qty) {
-            $qty = (int)$qty;
+            $parsed = Policies::parseBoundedQty(is_scalar($qty) ? (string) $qty : '');
+            if ($parsed === false) {
+                flash('error', 'Bir üründen en fazla 50 adet seçebilirsiniz.');
+                redirect("/isletmeler/$id/rezerve");
+            }
+            $qty = $parsed;
             if ($qty <= 0) continue;
             $hasAny = true;
             $product = $productModel->findById((int)$productId);
@@ -119,7 +131,7 @@ class StudentController
             flash('success', 'Rezervasyonunuz oluşturuldu! Kod: ' . $result['claim_code']);
             redirect('/rezervasyonlarim/' . $result['id'] . '/qr');
         } catch (\Throwable $e) {
-            flash('error', $e->getMessage());
+            flash('error', safe_error_message($e, 'Rezervasyon oluşturulamadı.'));
             redirect("/isletmeler/$id/rezerve");
         }
     }
@@ -193,26 +205,44 @@ class StudentController
             redirect('/ogrencim/belgeler');
         }
 
-        $ext      = match($mimeType) {
+        $ext = match ($mimeType) {
             'application/pdf' => 'pdf',
-            'image/jpeg'      => 'jpg',
-            'image/png'       => 'png',
-            'image/webp'      => 'webp',
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
         };
-        $fileName = 'doc_' . Auth::id() . '_' . time() . '.' . $ext;
-        $destDir  = ROOT . '/public/assets/documents/';
-        $destPath = $destDir . $fileName;
 
-        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+        try {
+            $storedPath = DocumentStorage::store(Auth::id(), $file['tmp_name'], $ext);
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
             flash('error', t('student_doc.upload_error'));
             redirect('/ogrencim/belgeler');
         }
 
         $docModel = new StudentDocumentModel();
-        $docModel->create(Auth::id(), 'documents/' . $fileName, $file['name']);
+        $docModel->create(Auth::id(), $storedPath, $file['name']);
 
         flash('success', t('student_doc.upload_success'));
         redirect('/ogrencim/belgeler');
+    }
+
+    public function documentDownload(string $id): void
+    {
+        $docModel = new StudentDocumentModel();
+        $doc = $docModel->findById((int) $id);
+        if (!$doc || (int) $doc['student_id'] !== Auth::id()) {
+            http_response_code(404);
+            view('errors/404');
+            return;
+        }
+        $path = DocumentStorage::resolve((string) $doc['file_path']);
+        if ($path === null) {
+            http_response_code(404);
+            view('errors/404');
+            return;
+        }
+        DocumentStorage::send($path, (string) $doc['file_name']);
     }
 
     // Efektif haftalık limiti dinamik hesapla:

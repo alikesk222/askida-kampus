@@ -110,12 +110,7 @@ class AuthController
 
     private function getClientIp(): string
     {
-        // Cloudflare gerçek IP başlığı
-        $cfIp = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? '';
-        if ($cfIp && filter_var($cfIp, FILTER_VALIDATE_IP)) {
-            return $cfIp;
-        }
-        return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        return client_ip();
     }
 
     private function isRateLimited(string $ip): bool

@@ -50,7 +50,7 @@ $faqIdx = 0;
                         </svg>
                     </button>
                     <div class="faq-answer" id="faq-a-<?= $faqIdx ?>" role="region" aria-labelledby="faq-q-<?= $faqIdx ?>" hidden>
-                        <?= $lang === 'en' ? $item['answer_en'] : $item['answer_tr'] ?>
+                        <?= nl2br(e($lang === 'en' ? $item['answer_en'] : $item['answer_tr'])) ?>
                     </div>
                 </div>
                 <?php endforeach; ?>

@@ -4,6 +4,8 @@
 
 # Yüklenen dosyalar
 public/uploads/
+storage/documents/*
+!storage/documents/.gitkeep
 
 # PHP geçici dosyaları
 *.log

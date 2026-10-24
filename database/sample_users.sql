@@ -5,9 +5,6 @@
 -- ============================================================
 USE askida_kampus;
 
--- Tüm şifreler: Test1234!
--- Hash: $2y$10$UQLdaFGYBjXpRynHW5i3k.5nSwGY6VyO.KRKrE3A9lKhQJVrmpOSa
-
 -- ── Üniversite Adminleri (her kampüs grubu için bir tane) ──────────────────
 
 INSERT INTO users (name, email, password, role, university_verified, is_active) VALUES

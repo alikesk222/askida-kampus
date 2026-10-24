@@ -6,15 +6,27 @@ if (file_exists(ROOT . '/vendor/autoload.php')) {
     require ROOT . '/vendor/autoload.php';
 }
 
-// Ortam tespiti: canlı host ise production .env yükle
-$currentHost = $_SERVER['HTTP_HOST'] ?? php_uname('n');
-$isProduction = str_contains($currentHost, 'alikesik.com.tr');
+// Ortam dosyası. Host başlığının alt dizgisine bakılmaz (alikesik.com.tr.evil gibi).
+// Canlıda Apache SetEnv APP_ENV production kullanın. Bu yoksa yalnızca tam
+// alikesik.com.tr / www.alikesik.com.tr production dosyasını seçer.
+$envFromServer = getenv('APP_ENV');
+if ($envFromServer === false || $envFromServer === '') {
+    $envFromServer = $_SERVER['APP_ENV'] ?? '';
+}
+$envFromServer = is_string($envFromServer) ? strtolower(trim($envFromServer)) : '';
 
-$envFile = $isProduction
-    ? ROOT . '/.env.production'
-    : ROOT . '/.env';
+$httpHost = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
+$httpHost = preg_replace('/:\d+$/', '', $httpHost) ?? '';
+$isKnownProdHost = preg_match('/^(www\.)?alikesik\.com\.tr$/', $httpHost) === 1;
 
-// Fallback: production dosyası yoksa standart .env'e dön
+if ($envFromServer === 'production' || ($envFromServer === '' && $isKnownProdHost)) {
+    $envFile = ROOT . '/.env.production';
+} elseif (PHP_SAPI === 'cli' && $envFromServer === '' && is_file(ROOT . '/.env.production') && !is_file(ROOT . '/.env')) {
+    $envFile = ROOT . '/.env.production';
+} else {
+    $envFile = ROOT . '/.env';
+}
+
 if (!file_exists($envFile)) {
     $envFile = ROOT . '/.env';
 }
@@ -29,16 +41,16 @@ if (file_exists($envFile)) {
     }
 }
 
-define('APP_ENV', $_ENV['APP_ENV'] ?? 'development');
+define('APP_ENV', $_ENV['APP_ENV'] ?? 'production');
 
-// Hata gösterimi: production'da kapat
-if (APP_ENV === 'production') {
+// Hatalar yalnızca açıkça development iken ekrana yazılır.
+if (APP_ENV === 'development') {
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL);
+} else {
     ini_set('display_errors', '0');
     ini_set('log_errors', '1');
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-} else {
-    ini_set('display_errors', '1');
-    error_reporting(E_ALL);
 }
 
 // BASE_URL + SCRIPT_BASE
@@ -72,7 +84,9 @@ if (session_status() === PHP_SESSION_NONE) {
         'lifetime' => 0,
         'path'     => $cookiePath,
         'domain'   => '',
-        'secure'   => APP_ENV === 'production',
+        'secure'   => APP_ENV === 'production'
+            || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https'),
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
@@ -108,3 +122,20 @@ if (!in_array($__langCode, ['tr', 'en'], true)) {
     $__langCode = 'tr';
 }
 $GLOBALS['__lang'] = require ROOT . '/lang/' . $__langCode . '.php';
+
+// Oturumdaki rol ve aktiflik her istekte veritabanından yenilenir.
+// Devre dışı bırakılan hesap aynı istekte düşer.
+if (PHP_SAPI !== 'cli' && !empty($_SESSION['auth_user']['id'])) {
+    try {
+        $freshUser = (new Models\UserModel())->findById((int) $_SESSION['auth_user']['id']);
+        if (!$freshUser || empty($freshUser['is_active'])) {
+            Core\Auth::logout();
+        } else {
+            $_SESSION['auth_user']['name'] = $freshUser['name'];
+            $_SESSION['auth_user']['email'] = $freshUser['email'];
+            $_SESSION['auth_user']['role'] = $freshUser['role'];
+        }
+    } catch (\Throwable $e) {
+        error_log('Oturum yenilenemedi: ' . $e->getMessage());
+    }
+}

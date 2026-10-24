@@ -8,6 +8,7 @@ use Core\Validator;
 use Core\Database;
 use Models\UserModel;
 use Services\EmailService;
+use Services\VerificationService;
 
 class RegisterController
 {
@@ -56,7 +57,16 @@ class RegisterController
 
         if ($existing) {
             if ($existing['university_verified'] == 0 && $existing['role'] === 'donor') {
-                $token = $this->generateAndSaveToken((int) $existing['id']);
+                $userId = (int) $existing['id'];
+                $userModel->updatePassword($userId, (string) $_POST['password']);
+                if (!VerificationService::canResend($userId)) {
+                    $_SESSION['pending_donor_verify_id'] = $userId;
+                    $_SESSION['pending_donor_verify_email'] = $email;
+                    flash('info', t('donor_verify.resend_wait'));
+                    redirect('/bagisci-kayit/dogrula');
+                }
+                $token = VerificationService::issue($userId);
+                VerificationService::markResent($userId);
                 $this->sendVerificationEmail($email, $existing['name'], $token);
                 $_SESSION['pending_donor_verify_id']    = $existing['id'];
                 $_SESSION['pending_donor_verify_email'] = $email;
@@ -77,7 +87,7 @@ class RegisterController
             'university_verified' => 0,
         ]);
 
-        $token = $this->generateAndSaveToken($userId);
+        $token = VerificationService::issue($userId);
         $this->sendVerificationEmail($email, trim($_POST['name']), $token);
 
         $_SESSION['pending_donor_verify_id']    = $userId;
@@ -120,22 +130,21 @@ class RegisterController
             redirect('/bagisci-kayit/dogrula');
         }
 
-        $db   = Database::getInstance();
-        $stmt = $db->prepare(
-            'SELECT email_verify_token, email_verify_expires FROM users WHERE id = ? AND email = ? LIMIT 1'
-        );
-        $stmt->execute([$userId, $email]);
-        $row = $stmt->fetch();
-
-        if (!$row || $row['email_verify_token'] !== $code) {
+        $result = VerificationService::check($userId, $email, $code);
+        if ($result === 'expired') {
+            flash('errors', ['code' => t('donor_verify.expired')]);
+            redirect('/bagisci-kayit/dogrula');
+        }
+        if ($result === 'locked') {
+            flash('errors', ['code' => t('donor_verify.too_many')]);
+            redirect('/bagisci-kayit/dogrula');
+        }
+        if ($result !== 'ok') {
             flash('errors', ['code' => t('donor_verify.wrong_code')]);
             redirect('/bagisci-kayit/dogrula');
         }
 
-        if (new \DateTime() > new \DateTime($row['email_verify_expires'])) {
-            flash('errors', ['code' => t('donor_verify.expired')]);
-            redirect('/bagisci-kayit/dogrula');
-        }
+        $db = Database::getInstance();
 
         $db->prepare(
             'UPDATE users SET university_verified = 1, email_verify_token = NULL, email_verify_expires = NULL, is_active = 1 WHERE id = ?'
@@ -168,23 +177,16 @@ class RegisterController
             redirect('/bagisci-kayit');
         }
 
-        $token = $this->generateAndSaveToken($userId);
+        if (!VerificationService::canResend($userId)) {
+            flash('error', t('donor_verify.resend_wait'));
+            redirect('/bagisci-kayit/dogrula');
+        }
+        $token = VerificationService::issue($userId);
+        VerificationService::markResent($userId);
         $this->sendVerificationEmail($email, $user['name'], $token);
 
         flash('success', t('donor_verify.resend_success'));
         redirect('/bagisci-kayit/dogrula');
-    }
-
-    private function generateAndSaveToken(int $userId): string
-    {
-        $token   = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        $expires = date('Y-m-d H:i:s', strtotime('+10 minutes'));
-
-        Database::getInstance()->prepare(
-            'UPDATE users SET email_verify_token = ?, email_verify_expires = ? WHERE id = ?'
-        )->execute([$token, $expires, $userId]);
-
-        return $token;
     }
 
     private function sendVerificationEmail(string $email, string $name, string $token): void

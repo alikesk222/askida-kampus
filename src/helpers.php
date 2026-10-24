@@ -138,6 +138,35 @@ if (!function_exists('current_lang')) {
     }
 }
 
+if (!function_exists('client_ip')) {
+    function client_ip(): string
+    {
+        // Cloudflare kullanılıyorsa gerçek IP'yi mod_remoteip REMOTE_ADDR'a yazsın.
+        // İstemcinin gönderdiği CF-Connecting-IP başlığına bakılmaz.
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+        return is_string($ip) && filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '0.0.0.0';
+    }
+}
+
+if (!function_exists('safe_error_message')) {
+    /**
+     * Kullanıcıya gösterilecek iş kuralı mesajları RuntimeException'dır.
+     * PDOException da RuntimeException olduğu için ayrıca elenir.
+     */
+    function safe_error_message(\Throwable $e, string $fallback): string
+    {
+        if ($e instanceof \PDOException) {
+            error_log($e->getMessage());
+            return $fallback;
+        }
+        if ($e instanceof \RuntimeException) {
+            return $e->getMessage();
+        }
+        error_log($e->getMessage());
+        return $fallback;
+    }
+}
+
 if (!function_exists('format_date')) {
     function format_date(?string $date, string $format = 'd.m.Y H:i'): string
     {

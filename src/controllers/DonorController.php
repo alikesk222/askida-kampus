@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Core\Auth;
 use Core\CSRF;
+use Core\Policies;
 use Core\Validator;
 use Models\VenueModel;
 use Models\ProductModel;
@@ -52,10 +53,19 @@ class DonorController
         if (!$venue || !$venue['is_active']) { http_response_code(404); view('errors/404'); return; }
 
         $quantities = $_POST['qty'] ?? [];
+        if (!is_array($quantities) || count($quantities) > 100) {
+            flash('error', 'Çok fazla ürün satırı gönderildi.');
+            redirect("/bagis/$id");
+        }
         $items = [];
 
         foreach ($quantities as $productId => $qty) {
-            $qty = (int)$qty;
+            $parsed = Policies::parseBoundedQty(is_scalar($qty) ? (string) $qty : '');
+            if ($parsed === false) {
+                flash('error', 'Bir üründen en fazla 50 adet seçebilirsiniz.');
+                redirect("/bagis/$id");
+            }
+            $qty = $parsed;
             if ($qty <= 0) continue;
             $product = $productModel->findById((int)$productId);
             if (!$product || (int)$product['venue_id'] !== (int)$id) continue;
@@ -82,7 +92,7 @@ class DonorController
             flash('success', 'Bağışınız alındı! Ödemeniz onaylandıktan sonra stoğa eklenecektir.');
             redirect('/bagislarim');
         } catch (\Throwable $e) {
-            flash('error', $e->getMessage());
+            flash('error', safe_error_message($e, 'Bağış kaydedilemedi.'));
             redirect("/bagis/$id");
         }
     }
